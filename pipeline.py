@@ -100,7 +100,7 @@ def select_topic(topics):
 
 
 # ---------------- 写脚本 ----------------
-def write_scripts_llm(topic, market, platform, facts, lib):
+def write_scripts_llm(topic, market, platform, facts, lib, brief=""):
     """DeepSeek 按提示词现写 3 版脚本。每句同时给出画面概念和地点，供素材召回用。"""
     prompt = open(os.path.join(DATA, "script_prompt.md"), encoding="utf-8").read()
     vocab = sorted({t for c in lib["clips"] for t in c["tags"]})
@@ -119,7 +119,7 @@ def write_scripts_llm(topic, market, platform, facts, lib):
 地点表：{"、".join(places)}
 三版要用不同的开头角度。"""
     user = json.dumps({
-        "选题": topic, "目标观众所在国家": market, "发布平台": platform,
+        "选题": topic, "目标观众所在国家": market, "发布平台": platform, "创作要求": brief,
         "事实库": [f["text"] for f in facts["facts"]],
         "提醒": "事实库里没有的班次、时刻、价格不要写；实在要写就写进 claims，交人工核对。优惠只能用事实库里的 up to 30%（分段买票）和搜码 UK20 额外 20%。不要提任何第三方品牌或公司名（铁路公司、App、食品等），我们自己的 App 就叫 the app。",
     }, ensure_ascii=False)
@@ -352,11 +352,11 @@ def redraft(swaps_path, draft_root):
     print(f"redraft: {n} swaps, draft checked")
 
 
-def generate_script_session(topic, market, platform):
+def generate_script_session(topic, market, platform, brief=""):
     """Only write scripts; keep the existing preview, audio and draft intact."""
     import uuid
     facts, lib = load("facts.json"), load("library.json")
-    raw, usage, _, _ = write_scripts_llm(topic, market, platform, facts, lib)
+    raw, usage, _, _ = write_scripts_llm(topic, market, platform, facts, lib, brief)
     variants = []
     for v in raw:
         checks = check_script(v, facts)

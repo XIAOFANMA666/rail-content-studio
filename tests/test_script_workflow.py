@@ -214,3 +214,19 @@ class ScriptWorkflowTests(unittest.TestCase):
             html = studio.page()
         self.assertNotIn(original['title'], html)
         self.assertIn('\\u003c/script>', html)
+
+    def test_creation_brief_is_forwarded_and_oversized_brief_is_rejected(self):
+        with patch('pipeline.generate_script_session', return_value=self.session) as generate, patch.object(studio.llm, 'model_config', return_value={'api_key': 'test'}):
+            status, _ = self.post('/api/scripts', {'topic': '夜车', 'brief': '面向周末出游人群，不编造优惠。'})
+            self.assertEqual(status, 200)
+            generate.assert_called_once_with('夜车', '英国', 'TikTok', '面向周末出游人群，不编造优惠。')
+            generate.reset_mock()
+            self.assertEqual(self.post('/api/scripts', {'topic': '夜车', 'brief': 'x' * 2001})[0], 400)
+            generate.assert_not_called()
+
+    def test_creation_brief_reaches_model_prompt(self):
+        import pipeline
+        from script_edit import load
+        with patch.object(studio.llm, 'script_json', return_value=({'variants': load('script_candidates.json')['variants']}, {})) as model:
+            pipeline.write_scripts_llm('夜车', '英国', 'TikTok', load('facts.json'), load('library.json'), '开头突出夜间出行')
+        self.assertEqual(json.loads(model.call_args.args[1])['创作要求'], '开头突出夜间出行')
