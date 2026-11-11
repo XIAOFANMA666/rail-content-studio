@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: group-video-review
+    runtime: docker
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: DEEPSEEK_API_KEY
+        sync: false
+      - key: TEAM_ACCESS_PASSWORD
+        sync: false
+      - key: WHISPER_MODEL
+        value: tiny.en

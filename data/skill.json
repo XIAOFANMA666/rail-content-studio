@@ -1,0 +1,178 @@
+{
+ "name": "冷知识路线类 v0.3",
+ "from": "规则的结构按业务访谈整理；数值目前是示例，等拿到业务方的爆款成片，用 tools/distill_skill.py 量出来再替换",
+ "rules": [
+  {
+   "id": "S1",
+   "group": "结构",
+   "rule": "五句结构：冷知识开头 → 路线 → 画面 → 利益点 → 搜码钩子；每句不超过 14 个词",
+   "source": "访谈",
+   "why": "业务方的做法：前半段用冷知识或路线吸引人，后半段放优惠钩子"
+  },
+  {
+   "id": "S2",
+   "group": "结构",
+   "rule": "第 1 句不出现价格、折扣、优惠码",
+   "source": "访谈",
+   "why": "利益点放在前 3 秒，会被平台判成营销视频限流"
+  },
+  {
+   "id": "S3",
+   "group": "镜头",
+   "rule": "单个镜头不超过 3.2 秒",
+   "param": "max_shot_s",
+   "source": "示例值",
+   "why": "保持短视频的节奏；具体秒数待蒸馏"
+  },
+  {
+   "id": "S4",
+   "group": "镜头",
+   "rule": "每句配 1–3 个镜头，切点落在换句的地方",
+   "source": "示例值",
+   "why": "画面跟着口播走，不在一句话中间乱切"
+  },
+  {
+   "id": "S5",
+   "group": "镜头",
+   "rule": "素材跳过开头 0.5 秒再用",
+   "param": "clip_skip_head_s",
+   "source": "示例值",
+   "why": "避开起幅的抖动"
+  },
+  {
+   "id": "S6",
+   "group": "字幕",
+   "rule": "英文字幕每行不超过 42 个字符，最多两行",
+   "param": "subtitle.max_chars_per_line",
+   "source": "行业规范",
+   "why": "英文字幕的通行规范，手机上一眼能读完"
+  },
+  {
+   "id": "S7",
+   "group": "字幕",
+   "rule": "白色粗体加描边，放在画面下方",
+   "source": "示例值",
+   "why": "压在任何画面上都看得清"
+  },
+  {
+   "id": "S8",
+   "group": "花字",
+   "rule": "开头花字最多停 2.8 秒",
+   "param": "opening_huazi_max_s",
+   "source": "示例值",
+   "why": "点题后就让出画面"
+  },
+  {
+   "id": "S9",
+   "group": "花字",
+   "rule": "利益点贴纸在这句开始后 0.3 秒出现，停 2.6 秒",
+   "param": "benefit_sticker_offset_s",
+   "source": "示例值",
+   "why": "先听到再看到，加深印象"
+  },
+  {
+   "id": "S10",
+   "group": "花字",
+   "rule": "结尾优惠码至少停 1.5 秒",
+   "param": "cta_min_s",
+   "source": "示例值",
+   "why": "留够时间让人看清、记住"
+  },
+  {
+   "id": "S11",
+   "group": "配音",
+   "rule": "英式口音；语速 130–190 词/分钟；句间停 0.15 秒，片尾留 0.6 秒",
+   "param": "voice.wpm_range",
+   "source": "访谈 + 示例值",
+   "why": "目标观众在英国；停顿的秒数待蒸馏"
+  }
+ ],
+ "voice": {
+  "engine": "MiniMax 配音接口（有 key 时）/ macOS 系统语音（没 key 时兜底）",
+  "voice": "Daniel（英式男声）",
+  "rate_wpm": 175,
+  "minimax_voice": "English_Graceful_Lady",
+  "minimax_speed": 1.15,
+  "minimax_note": "账号里唯一的英式口音英文音色（女声）；想换美式男声改成 English_Trustworthy_Man",
+  "wpm_range": [
+   130,
+   190
+  ]
+ },
+ "gap_between_lines_s": 0.15,
+ "tail_s": 0.6,
+ "max_shot_s": 3.2,
+ "clip_skip_head_s": 0.5,
+ "subtitle": {
+  "size": 7.0,
+  "color": [
+   1,
+   1,
+   1
+  ],
+  "bold": true,
+  "border_width": 45,
+  "y": -0.62,
+  "max_chars_per_line": 42
+ },
+ "huazi": {
+  "size": 11.0,
+  "color": [
+   1.0,
+   0.84,
+   0.18
+  ],
+  "bold": true,
+  "border_width": 55,
+  "y": 0.4
+ },
+ "opening_huazi_max_s": 2.8,
+ "benefit_sticker_offset_s": 0.3,
+ "benefit_sticker_len_s": 2.6,
+ "cta_min_s": 1.5,
+ "measured": {
+  "source": "1 条我们自己生成、剪映导出的成片（用来验证工具能跑，不代表爆款规律）",
+  "videos": 1,
+  "shots": 10,
+  "shot_median_s": 2.23,
+  "shot_p90_s": 2.73,
+  "shot_max_s": 2.74,
+  "words_per_minute": 145,
+  "max_words_per_sentence": 14,
+  "price_in_first_3s": 0,
+  "cta_at_end": 1,
+  "duration_median_s": 23.8,
+  "compare": [
+   {
+    "item": "单个镜头最长",
+    "setting": "3.2 秒",
+    "measured": "中位 2.23 秒，90% 在 2.73 秒内，最长 2.74 秒",
+    "verdict": "一致"
+   },
+   {
+    "item": "语速",
+    "setting": "130–190 词/分钟",
+    "measured": "145 词/分钟",
+    "verdict": "一致"
+   },
+   {
+    "item": "每句最多几个词",
+    "setting": "14 个",
+    "measured": "14 个",
+    "verdict": "一致"
+   },
+   {
+    "item": "开头 3 秒不提价格",
+    "setting": "不提",
+    "measured": "1 / 1 条没提",
+    "verdict": "一致"
+   },
+   {
+    "item": "结尾有行动引导",
+    "setting": "有",
+    "measured": "1 / 1 条有",
+    "verdict": "一致"
+   }
+  ]
+ }
+}

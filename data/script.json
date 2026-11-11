@@ -1,0 +1,7 @@
+{
+  "title": "伦敦 → 苏格兰卧铺冷知识",
+  "country": "英国",
+  "platform": "TikTok",
+  "lines": [],
+  "note": "lines 由 pipeline.py 在\"写脚本\"一步从 script_candidates.json 里选出"
+}

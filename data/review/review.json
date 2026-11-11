@@ -1,0 +1,285 @@
+{
+ "note": "模拟的发布记录：脚本是流水线真实生成过的，账号、作品编号和发布时间是编的。真实落地时由发布环节写入。",
+ "generated_at": "2026-11-11 02:07",
+ "hit_views": 1000,
+ "reports": [
+  {
+   "file": "report_2026-11-09.csv",
+   "rows": 9
+  },
+  {
+   "file": "report_2026-11-10.csv",
+   "rows": 10
+  }
+ ],
+ "latest": "2026-11-10 09:00",
+ "rows": [
+  {
+   "work_id": "W01",
+   "platform": "TikTok",
+   "account": "@uk_rail_01",
+   "script_id": "S01",
+   "title": "从伦敦坐卧铺夜车去苏格兰高地",
+   "genre": "冷知识",
+   "views": 1100,
+   "fetched_at": "2026-11-10 09:00",
+   "tags": [
+    "值得继续测"
+   ],
+   "delta": 200,
+   "new_hit": true,
+   "note": ""
+  },
+  {
+   "work_id": "W02",
+   "platform": "Instagram",
+   "account": "@ukrail.daily",
+   "script_id": "S01",
+   "title": "从伦敦坐卧铺夜车去苏格兰高地",
+   "genre": "冷知识",
+   "views": 410,
+   "fetched_at": "2026-11-10 09:00",
+   "tags": [],
+   "delta": 90,
+   "new_hit": false,
+   "note": ""
+  },
+  {
+   "work_id": "W03",
+   "platform": "TikTok",
+   "account": "@uk_rail_02",
+   "script_id": "S02",
+   "title": "坐火车穿越瑞士阿尔卑斯，窗外就是马特洪峰",
+   "genre": "冷知识",
+   "views": 170,
+   "fetched_at": "2026-11-10 09:00",
+   "tags": [],
+   "delta": 20,
+   "new_hit": false,
+   "note": ""
+  },
+  {
+   "work_id": "W04",
+   "platform": "TikTok",
+   "account": "@uk_rail_01",
+   "script_id": "S03",
+   "title": "从巴黎坐火车去阿姆斯特丹，周末两日游",
+   "genre": "路线推荐",
+   "views": 640,
+   "fetched_at": "2026-11-10 09:00",
+   "tags": [],
+   "delta": 40,
+   "new_hit": false,
+   "note": ""
+  },
+  {
+   "work_id": "W05",
+   "platform": "Instagram",
+   "account": "@ukrail.daily",
+   "script_id": "S04",
+   "title": "坐火车从罗马去威尼斯，一天看两座城",
+   "genre": "路线推荐",
+   "views": 530,
+   "fetched_at": "2026-11-10 09:00",
+   "tags": [],
+   "delta": 30,
+   "new_hit": false,
+   "note": ""
+  },
+  {
+   "work_id": "W06",
+   "platform": "TikTok",
+   "account": "@uk_rail_02",
+   "script_id": "S05",
+   "title": "伦敦出发的 3 条一日游火车路线",
+   "genre": "路线推荐",
+   "views": 0,
+   "fetched_at": "2026-11-10 09:00",
+   "tags": [
+    "零播"
+   ],
+   "delta": 0,
+   "new_hit": false,
+   "note": ""
+  },
+  {
+   "work_id": "W07",
+   "platform": "TikTok",
+   "account": "@uk_rail_03",
+   "script_id": "S06",
+   "title": "周末坐火车去湖区",
+   "genre": "路线推荐",
+   "views": 260,
+   "fetched_at": "2026-11-10 09:00",
+   "tags": [],
+   "delta": 80,
+   "new_hit": false,
+   "note": ""
+  },
+  {
+   "work_id": "W08",
+   "platform": "TikTok",
+   "account": "@uk_rail_03",
+   "script_id": "S07",
+   "title": "英国火车票分段买更便宜",
+   "genre": "优惠券",
+   "views": 240,
+   "fetched_at": "2026-11-09 09:00",
+   "tags": [
+    "待补"
+   ],
+   "delta": null,
+   "new_hit": false,
+   "note": "这次没取到，保留 2026-11-09 09:00 的读数"
+  },
+  {
+   "work_id": "W09",
+   "platform": "TikTok",
+   "account": "@uk_rail_01",
+   "script_id": "S08",
+   "title": "黑五英国火车票限时优惠",
+   "genre": "热点",
+   "views": 2300,
+   "fetched_at": "2026-11-10 09:00",
+   "tags": [
+    "值得继续测"
+   ],
+   "delta": 800,
+   "new_hit": false,
+   "note": ""
+  }
+ ],
+ "unmatched": [
+  {
+   "work_id": "X99",
+   "platform": "TikTok",
+   "views": "75",
+   "fetched_at": "2026-11-10 09:00",
+   "status": "ok",
+   "report": "report_2026-11-10.csv"
+  }
+ ],
+ "genres": {
+  "优惠券": {
+   "works": 1,
+   "hits": 0,
+   "rate": 0.273,
+   "note": "只有 1 条，样本太少，用全部作品的千播率代替"
+  },
+  "冷知识": {
+   "works": 3,
+   "hits": 1,
+   "rate": 0.4,
+   "note": ""
+  },
+  "热点": {
+   "works": 1,
+   "hits": 1,
+   "rate": 0.273,
+   "note": "只有 1 条，样本太少，用全部作品的千播率代替"
+  },
+  "路线推荐": {
+   "works": 4,
+   "hits": 0,
+   "rate": 0.167,
+   "note": ""
+  }
+ },
+ "overall_rate": 0.273,
+ "genre_hit_rate": {
+  "优惠券": 0.273,
+  "冷知识": 0.4,
+  "热点": 0.273,
+  "路线推荐": 0.167
+ },
+ "topics_before": [
+  {
+   "id": "T1",
+   "title": "伦敦到苏格兰，睡一觉就到（卧铺冷知识）",
+   "genre": [
+    "冷知识",
+    "路线推荐"
+   ],
+   "score": 0.98
+  },
+  {
+   "id": "T3",
+   "title": "伦敦出发的 3 条一日游火车路线",
+   "genre": [
+    "路线推荐"
+   ],
+   "score": 0.807
+  },
+  {
+   "id": "T4",
+   "title": "黑五英国火车票限时优惠",
+   "genre": [
+    "热点",
+    "优惠券"
+   ],
+   "score": 0.722
+  },
+  {
+   "id": "T2",
+   "title": "英国火车票分段买更便宜",
+   "genre": [
+    "优惠券"
+   ],
+   "score": 0.609
+  }
+ ],
+ "topics_after": [
+  {
+   "id": "T1",
+   "title": "伦敦到苏格兰，睡一觉就到（卧铺冷知识）",
+   "genre": [
+    "冷知识",
+    "路线推荐"
+   ],
+   "score": 0.98
+  },
+  {
+   "id": "T2",
+   "title": "英国火车票分段买更便宜",
+   "genre": [
+    "优惠券"
+   ],
+   "score": 0.781
+  },
+  {
+   "id": "T4",
+   "title": "黑五英国火车票限时优惠",
+   "genre": [
+    "热点",
+    "优惠券"
+   ],
+   "score": 0.781
+  },
+  {
+   "id": "T3",
+   "title": "伦敦出发的 3 条一日游火车路线",
+   "genre": [
+    "路线推荐"
+   ],
+   "score": 0.629
+  }
+ ],
+ "retest": {
+  "high": {
+   "work_id": "W01",
+   "title": "从伦敦坐卧铺夜车去苏格兰高地",
+   "views": 1100,
+   "platform": "TikTok"
+  },
+  "low": {
+   "work_id": "W03",
+   "title": "坐火车穿越瑞士阿尔卑斯，窗外就是马特洪峰",
+   "views": 170,
+   "platform": "TikTok"
+  },
+  "difference": "过千那条第一句用提问开场（\"Did you know...?\"），没过千那条第一句是陈述句（\"The Matterhorn is...\"）。",
+  "change": "把没过千那条的第一句改成提问式开场，例如\"Did you know you can see the Matterhorn right from your train window?\"，其余不动。",
+  "metric": "前3秒完播率",
+  "model": "DeepSeek · deepseek-chat"
+ }
+}

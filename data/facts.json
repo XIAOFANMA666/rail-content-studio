@@ -1,0 +1,12 @@
+{
+  "note": "事实库：脚本只能使用这里有出处的事实。真实落地时由运营维护，价格和班次由火车票产品团队实时更新。",
+  "facts": [
+    {"id": "F1", "text": "Caledonian Sleeper 每晚从伦敦尤斯顿站开往苏格兰。", "source": "https://www.ontheluce.com/the-caledonian-sleeper/"},
+    {"id": "F2", "text": "去高地（Inverness / Fort William / Aberdeen）的 Highlander 晚上约 20:30–21:15 发车；午夜前约 23:45 发车的是去爱丁堡、格拉斯哥的 Lowlander。", "source": "https://railtravelstation.com/caledonian-sleeper-1s25-london-euston-inverness/"},
+    {"id": "F3", "text": "分段买票（A–B + B–C）可能比直达票便宜，最高优惠幅度由产品团队提供（示例：up to 30%，待确认）。", "source": "业务访谈：A 到 C 的价格会比 A 到 B 加 B 到 C 贵"},
+    {"id": "F4", "text": "新客搜码 UK20 额外 20% 优惠（示例券，上限由产品团队设定）。", "source": "业务访谈：优惠券提到上限 4 欧、20%"}
+  ],
+  "conflicts": [
+    {"if_all": ["midnight", "highland"], "msg": "事实冲突：午夜前发车的是去爱丁堡、格拉斯哥的 Lowlander；去高地的 Highlander 晚上 8–9 点就发车（F2）"}
+  ]
+}

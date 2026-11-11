@@ -1,0 +1,11 @@
+work_id,platform,views,fetched_at,status
+W01,TikTok,1100,2026-11-10 09:00,ok
+W02,Instagram,410,2026-11-10 09:00,ok
+W03,TikTok,170,2026-11-10 09:00,ok
+W04,TikTok,640,2026-11-10 09:00,ok
+W05,Instagram,530,2026-11-10 09:00,ok
+W06,TikTok,0,2026-11-10 09:00,ok
+W07,TikTok,260,2026-11-10 09:00,ok
+W08,TikTok,,2026-11-10 09:00,failed
+W09,TikTok,2300,2026-11-10 09:00,ok
+X99,TikTok,75,2026-11-10 09:00,ok

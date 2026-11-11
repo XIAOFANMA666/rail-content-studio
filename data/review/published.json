@@ -1,0 +1,135 @@
+{
+ "note": "模拟的发布记录：脚本是流水线真实生成过的，账号、作品编号和发布时间是编的。真实落地时由发布环节写入。",
+ "market": "英国",
+ "works": [
+  {
+   "work_id": "W01",
+   "platform": "TikTok",
+   "account": "@uk_rail_01",
+   "script_id": "S01",
+   "title": "从伦敦坐卧铺夜车去苏格兰高地",
+   "genre": "冷知识",
+   "published": "2026-11-08",
+   "production": "AI 粗剪 + 人工精修",
+   "lines": [
+    "Did you know some trains are hotels on wheels?",
+    "The Caledonian Sleeper runs every night from London to Scotland.",
+    "You board at Euston, settle into your cabin, and wake up to Highland views.",
+    "Split your ticket and save up to 30% on the journey.",
+    "New here? Search UK20 in the app for an extra 20% off."
+   ]
+  },
+  {
+   "work_id": "W02",
+   "platform": "Instagram",
+   "account": "@ukrail.daily",
+   "script_id": "S01",
+   "title": "从伦敦坐卧铺夜车去苏格兰高地",
+   "genre": "冷知识",
+   "published": "2026-11-08",
+   "production": "AI 粗剪 + 人工精修",
+   "lines": [
+    "Did you know some trains are hotels on wheels?",
+    "The Caledonian Sleeper runs every night from London to Scotland.",
+    "You board at Euston, settle into your cabin, and wake up to Highland views.",
+    "Split your ticket and save up to 30% on the journey.",
+    "New here? Search UK20 in the app for an extra 20% off."
+   ]
+  },
+  {
+   "work_id": "W03",
+   "platform": "TikTok",
+   "account": "@uk_rail_02",
+   "script_id": "S02",
+   "title": "坐火车穿越瑞士阿尔卑斯，窗外就是马特洪峰",
+   "genre": "冷知识",
+   "published": "2026-11-08",
+   "production": "AI 粗剪 + 人工精修",
+   "lines": [
+    "The Matterhorn is one of the most iconic peaks in the Alps.",
+    "Trains in Switzerland offer panoramic windows with views of the Alps.",
+    "Imagine gliding past snow-capped peaks and lush valleys.",
+    "Split ticketing can save you up to 30% on train travel.",
+    "Search UK20 in the app for an extra 20% off your first trip."
+   ]
+  },
+  {
+   "work_id": "W04",
+   "platform": "TikTok",
+   "account": "@uk_rail_01",
+   "script_id": "S03",
+   "title": "从巴黎坐火车去阿姆斯特丹，周末两日游",
+   "genre": "路线推荐",
+   "published": "2026-11-08",
+   "production": "AI 粗剪 + 人工精修",
+   "lines": [
+    "Amsterdam has more canals than Venice, but it's not in Italy.",
+    "From Paris, you can reach Amsterdam by train in just over three hours.",
+    "Picture yourself cycling along the canals, feeling the gentle breeze.",
+    "Book split tickets and save up to 30% on your journey.",
+    "Open the app and search UK20 for an extra 20% off."
+   ]
+  },
+  {
+   "work_id": "W05",
+   "platform": "Instagram",
+   "account": "@ukrail.daily",
+   "script_id": "S04",
+   "title": "坐火车从罗马去威尼斯，一天看两座城",
+   "genre": "路线推荐",
+   "published": "2026-11-08",
+   "production": "AI 粗剪 + 人工精修",
+   "lines": [
+    "Rome to Venice by train: two cities in one day.",
+    "The journey takes you through the Italian countryside.",
+    "Picture rolling hills and vineyards from your window.",
+    "Split your ticket and save up to 30%.",
+    "Search UK20 in the app for an extra 20% off."
+   ]
+  },
+  {
+   "work_id": "W06",
+   "platform": "TikTok",
+   "account": "@uk_rail_02",
+   "script_id": "S05",
+   "title": "伦敦出发的 3 条一日游火车路线",
+   "genre": "路线推荐",
+   "published": "2026-11-08",
+   "production": "AI 粗剪 + 人工精修",
+   "lines": []
+  },
+  {
+   "work_id": "W07",
+   "platform": "TikTok",
+   "account": "@uk_rail_03",
+   "script_id": "S06",
+   "title": "周末坐火车去湖区",
+   "genre": "路线推荐",
+   "published": "2026-11-08",
+   "production": "AI 粗剪 + 人工精修",
+   "lines": []
+  },
+  {
+   "work_id": "W08",
+   "platform": "TikTok",
+   "account": "@uk_rail_03",
+   "script_id": "S07",
+   "title": "英国火车票分段买更便宜",
+   "genre": "优惠券",
+   "published": "2026-11-08",
+   "production": "AI 粗剪 + 人工精修",
+   "lines": []
+  },
+  {
+   "work_id": "W09",
+   "platform": "TikTok",
+   "account": "@uk_rail_01",
+   "script_id": "S08",
+   "title": "黑五英国火车票限时优惠",
+   "genre": "热点",
+   "published": "2026-11-08",
+   "production": "AI 粗剪 + 人工精修",
+   "lines": []
+  }
+ ]
+}

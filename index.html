@@ -1,0 +1,903 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>轨道 · AI 内容工作台</title>
+<script>
+(()=>{let theme;try{theme=localStorage.getItem('rail-theme')}catch(_){}document.documentElement.dataset.theme=theme==='light'||theme==='dark'?theme:matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Sans+SC:wght@400;500;700&display=swap">
+<style>
+
+:root{--bg:#f7f7f2;--panel:#fff;--panel-2:#eeeee8;--panel-3:#e2e4dc;--line:#dedfd8;--fg:#20211f;--muted:#626660;--dim:#73776f;--accent:#2551d0;--accent-ink:#fff;--good:#27634a;--warn:#8a5a12;--bad:#aa3830;--trk-v:#27634a;--font-ui:"PingFang SC","Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;--font-mono:ui-monospace,"SFMono-Regular",Consolas,monospace;color-scheme:light}
+*{box-sizing:border-box}[hidden]{display:none!important}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 var(--font-ui)}button,input,select{font:inherit}button{cursor:pointer;color:inherit}button,a,input,select,summary{ -webkit-tap-highlight-color:transparent}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:4px}button:disabled{opacity:.45;cursor:not-allowed}button{transition:background .16s,color .16s,transform .12s,border-color .16s}button:not(:disabled):active{transform:scale(.98)}a{color:var(--accent);text-underline-offset:4px}.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}.wrap{max-width:1440px;margin:auto;padding:0 48px 36px}.top{height:88px;display:flex;align-items:center;gap:48px;border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:12px;flex-shrink:0;font-size:22px;font-weight:650;letter-spacing:-1px}.brand-mark{width:25px;height:25px;position:relative;border:2px solid var(--accent);border-radius:50%}.brand-mark:after{content:"";position:absolute;left:7px;top:-4px;width:6px;height:29px;background:var(--bg);border-left:2px solid var(--accent);border-right:2px solid var(--accent);transform:rotate(32deg)}.nav{display:flex;gap:30px;align-self:stretch}.nav button{position:relative;border:0;background:none;padding:0 2px;color:var(--muted);font-size:14px}.nav button[aria-current=page]{color:var(--fg);font-weight:600}.nav button[aria-current=page]:after{content:"";height:3px;background:var(--accent);position:absolute;bottom:-1px;left:0;right:0}.nav button:hover{color:var(--accent)}.mode{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}.mode:before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent)}.page-head{display:flex;justify-content:space-between;align-items:center;gap:24px;padding:40px 0 28px}.eyebrow{font-size:11px;letter-spacing:.16em;color:var(--muted);margin:0 0 8px}.page-head h1{font-size:34px;line-height:1.2;letter-spacing:-1.3px;font-weight:600;margin:0}.page-head p{margin:12px 0 0;color:var(--muted);font-size:14px}.head-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.btn{border:1px solid var(--line);background:transparent;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500}.btn:hover{background:var(--panel-2);border-color:#a5aaa0}.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}.btn.primary:hover{background:#1d43b4}.btn.text{border-color:transparent;padding:8px 12px}.btn.text:hover{background:var(--panel-2)}.btn.small{padding:7px 12px;font-size:12px}.workspace{animation:enter .22s ease-out}@keyframes enter{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}.compose-bar{padding:0 0 24px}.ask{display:grid;grid-template-columns:minmax(0,1fr) 100px 155px auto;gap:10px;align-items:center}.ask input,.ask select{border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:var(--panel);color:var(--fg);min-width:0}.ask-hint{font-size:12px;color:var(--muted);margin:9px 0 0}.ask-hint b{font-weight:500;color:var(--warn)}.pipeline-strip{display:flex;align-items:center;gap:24px;border-block:1px solid var(--line);padding:16px 0;margin-bottom:28px}.pipeline-stages{display:flex;gap:12px;align-items:center;list-style:none;padding:0;margin:0;flex:1}.pipeline-stages li{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--dim);flex:1}.pipeline-stages li:not(:last-child):after{content:"";height:1px;background:var(--line);flex:1;margin-left:6px}.stage-dot{width:6px;height:6px;border-radius:50%;background:var(--line);flex-shrink:0}.pipeline-stages li.done{color:var(--fg)}.pipeline-stages li.done .stage-dot{background:var(--good)}.pipeline-stages li.run .stage-dot{background:var(--accent);box-shadow:0 0 0 4px #2551d012}.pipeline-stages li.run{color:var(--accent)}.studio-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:48px;align-items:start}.preview-column{min-width:0}.section-label{display:flex;align-items:center;justify-content:space-between;margin:0 0 16px;font-size:12px;color:var(--muted)}.monitor{display:flex;flex-direction:column;align-items:center;padding:26px 24px 18px;background:#eaece5;border-radius:12px;position:relative}.screen{position:relative;width:min(100%,258px);aspect-ratio:9/16;border-radius:8px;overflow:hidden;background:#151715}.screen video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0}.screen video.on{opacity:1}.ph{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:24px;color:#c6cbc2;font-size:13px;z-index:1}.ph b{display:block;font-size:18px;color:#fff;margin-bottom:8px}.huazi{position:absolute;left:12px;right:12px;top:19%;text-align:center;font-weight:800;font-size:20px;color:#ffd62e;text-shadow:0 0 3px #000,0 2px 0 #000;line-height:1.2;white-space:pre-line}.sub{position:absolute;left:14px;right:14px;bottom:12%;text-align:center;font-weight:700;font-size:13px;color:#fff;text-shadow:0 0 3px #000,0 1px 0 #000;line-height:1.35;text-wrap:balance}.transport{display:flex;align-items:center;gap:14px;margin-top:16px;width:100%;max-width:360px}.play{width:32px;height:32px;flex-shrink:0;border:0;border-radius:50%;background:var(--fg);display:grid;place-items:center}.play svg{width:12px;height:12px;fill:#fff}.tc{font-size:11px;color:var(--muted);white-space:nowrap}.scrub{min-width:30px;width:100%;accent-color:var(--accent);height:3px}.zh{font-size:12px;color:var(--muted);margin-top:14px;text-align:center;max-width:420px;min-height:20px}.note{font-size:12px;color:var(--muted);margin:12px 0;line-height:1.7}.inspector{min-width:0}.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.section-head h2{margin:0;font-size:19px;font-weight:600;letter-spacing:-.3px}.seg-tabs{display:flex;gap:6px;margin-bottom:22px}.seg-tabs button,.shot-tabs button{border:0;background:transparent;padding:7px 12px;font-size:12px;border-radius:6px;color:var(--muted)}.seg-tabs button:hover,.shot-tabs button:hover{background:var(--panel-2)}.seg-tabs button.on,.shot-tabs button.on{color:var(--accent);background:#2551d00c;font-weight:600}.seg-tabs button.gapped{border-bottom:1px dashed var(--warn)}.seg-title{font-size:11px;color:var(--muted);margin-bottom:8px}.seg-en{font-size:21px;line-height:1.45;letter-spacing:-.3px;font-weight:500}.seg-zh{font-size:13px;margin-top:8px;color:var(--muted)}.chips{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}.chip{font-size:11px;color:var(--muted);padding:1px 6px;background:var(--panel-2);border-radius:3px}.chip.hit{color:var(--good);background:#27634a09}.chip.bad{color:var(--bad)}.chip.warn{color:var(--warn)}.shot-tabs{display:flex;gap:8px;margin:16px 0 0;border-top:1px solid var(--line);padding-top:12px}.cands{max-height:332px;overflow:auto;scrollbar-width:thin;margin-top:10px}.cand{display:grid;grid-template-columns:88px 1fr auto;align-items:center;gap:14px;padding:12px 8px 12px 0;border-bottom:1px solid var(--line);transition:background .16s}.cand:hover{background:#eeeee8}.cand.sel{position:relative}.cand.sel .nm{color:var(--accent)}.cand img{width:88px;height:62px;object-fit:cover;border-radius:5px}.cand .nm{font-size:13px;font-weight:500}.cand .meta{font-size:11px;color:var(--muted);margin-top:3px}.cand .pct{font-size:12px;color:var(--muted);text-align:right}.cand .chips{margin:5px 0 0}.cand button{font-size:12px;padding:5px 10px;border:1px solid var(--line);background:transparent;border-radius:5px;color:var(--accent);margin-top:5px}.cand button:hover{background:var(--accent);border-color:var(--accent);color:white}.edits{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:18px}.edits .primary{margin-left:auto}.gap{font-size:12px;padding:10px 0;color:var(--warn)}.details-row{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:34px;border-top:1px solid var(--line)}details{min-width:0}summary{cursor:pointer;list-style:none;padding:17px 0;font-size:13px;display:flex;align-items:center;gap:12px}summary::-webkit-details-marker{display:none}summary:after{content:"+";margin-left:auto;font-size:19px;color:var(--dim);font-weight:400}details[open]>summary:after{content:"−"}details>summary small{font-size:11px;color:var(--dim)}.kv{display:grid;grid-template-columns:90px 1fr;gap:9px 20px;font-size:13px;margin:4px 0 20px}.kv dt{color:var(--muted)}.kv dd{margin:0;overflow-wrap:anywhere}.steps{list-style:none;padding:0;margin:0}.steps li{display:grid;grid-template-columns:12px 1fr auto;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);font-size:13px;color:var(--dim)}.steps .v{display:block;color:var(--muted);font-size:12px;margin-top:3px}.steps .ms{font-size:11px}.steps li.done,.steps li.run{color:var(--fg)}.steps li.link.done{cursor:pointer}.steps li.link.done:hover .k{color:var(--accent)}.dot{width:6px;height:6px;border:1px solid var(--dim);border-radius:50%;margin-top:8px}.done .dot{background:var(--good);border-color:var(--good)}.run .dot{background:var(--accent);border-color:var(--accent)}.empty{font-size:13px;color:var(--muted);line-height:1.8;margin:8px 0}.dims{display:grid;gap:0;margin:16px 0}.dim{padding:15px 0;border-bottom:1px solid var(--line)}.dim .t{display:flex;justify-content:space-between;align-items:center;gap:16px;font-size:14px;font-weight:500}.dim .why{font-size:12px;color:var(--muted);margin-top:8px}.band{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;padding:2px 7px;border-radius:4px;background:var(--panel-2);white-space:nowrap}.band.ok{color:var(--good);background:#27634a0c}.band.mid{color:var(--warn);background:#8a5a120d}.band.bad{color:var(--bad);background:#aa38300c}.rules,.ck{list-style:none;padding:0;margin:12px 0;display:grid;gap:10px;font-size:12px;color:var(--muted)}.rules li{display:grid;grid-template-columns:15px 1fr;gap:8px}.rules b{color:var(--fg);font-weight:500}.ok-ic{color:var(--good)}.bad-ic,.err{color:var(--bad)}.err{font-size:12px;white-space:pre-wrap}.review-list{font-size:13px;color:var(--muted);padding-left:20px;line-height:1.9}.sep{border:0;border-top:1px solid var(--line);margin:24px 0}.foot-wrap{border-top:1px solid var(--line);margin-top:40px}.foot{font-size:12px;color:var(--muted);display:grid;gap:12px;padding-bottom:20px}.foot a{display:inline-block;margin-right:6px}.video-review{max-width:1100px;margin:auto}.upload-area{padding:36px 0 40px;display:grid;grid-template-columns:1fr 1fr;gap:64px;border-block:1px solid var(--line)}.upload-intro h2{font-size:27px;line-height:1.35;letter-spacing:-.6px;margin:0 0 16px;font-weight:500}.upload-intro p{max-width:390px}.upload-control{display:flex;flex-direction:column;gap:16px;align-items:flex-start;justify-content:center}.upload-control label{font-size:13px;color:var(--muted)}.upload-control input{font-size:13px;width:100%;min-width:0}.upload-control input::file-selector-button{font:inherit;padding:10px 14px;border:1px solid var(--line);border-radius:6px;background:white;margin-right:12px;cursor:pointer}.review-meta{font-size:12px;color:var(--muted);margin-bottom:24px}.score-head{display:flex;align-items:baseline;gap:16px;margin-top:32px}.score-num{font-size:64px;letter-spacing:-3px;line-height:1.2}.video-review h3{font-size:20px;font-weight:500;margin:28px 0 12px}.video-review video{width:100%;max-height:460px;background:#151715;border-radius:8px}.video-review select,.video-review input[type=text]{font:inherit;font-size:12px;padding:7px 10px;border:1px solid var(--line);border-radius:6px;background:var(--panel);max-width:100%;color:var(--fg)}.src{font-size:10px;margin:0 7px;color:var(--dim)}.src.low{color:var(--warn)}.seek{font-size:12px;border:1px solid var(--line);padding:4px 8px;border-radius:5px;background:transparent;color:var(--accent)}.seek:hover{background:var(--panel-2)}.tip{color:var(--muted)}.analytics-top{display:flex;gap:40px;padding:22px 0;border-block:1px solid var(--line);margin-bottom:28px}.stat-label{font-size:12px;color:var(--muted)}.stat-value{font-size:28px;letter-spacing:-1px;font-weight:500;margin-right:7px}.analytics-grid{display:grid;grid-template-columns:minmax(0,2.4fr) minmax(245px,1fr);gap:42px;align-items:start}.analytics-grid>*,.analytics-bottom>*{min-width:0}.analytics-grid aside{border-left:1px solid var(--line);padding-left:28px}.analytics-grid h2{font-size:19px;font-weight:500;margin:0 0 20px}.analytics-grid h3{font-size:16px;font-weight:500;margin:22px 0 8px}.analytics-grid aside p{font-size:13px;line-height:1.9;color:var(--muted)}.retest-change{font-size:19px!important;line-height:1.6!important;color:var(--fg)!important;font-weight:500}.table-wrap{overflow:auto;width:100%}table{border-collapse:collapse;width:100%;font-size:13px}th,td{text-align:left;padding:16px 10px;border-bottom:1px solid var(--line);vertical-align:top}th{font-size:11px;font-weight:500;color:var(--muted);white-space:nowrap;padding-top:0;padding-bottom:12px}td:first-child,th:first-child{padding-left:0}td small{font-size:11px;color:var(--muted)}tbody tr:hover{background:#eeeee86b}td.numeric,th.numeric{text-align:right;white-space:nowrap}.work-id{font-size:10px;letter-spacing:.06em;color:var(--dim);display:block;margin-bottom:4px}.data-note{font-size:12px;color:var(--muted);margin:20px 0}.analytics-bottom{display:grid;grid-template-columns:1fr 1.5fr;gap:40px;margin-top:32px;border-top:1px solid var(--line);padding-top:28px}.analytics-bottom h2{font-size:18px;font-weight:500}.modal{position:fixed;inset:0;background:#171c244d;backdrop-filter:blur(5px);z-index:30;display:grid;place-items:center;padding:24px}.modal-card{background:var(--bg);width:min(880px,100%);max-height:88vh;overflow:auto;padding:32px;border-radius:12px;box-shadow:0 24px 90px #15213026;animation:enter .18s}.modal-card h3{font-size:24px;font-weight:550;margin:0 0 18px;letter-spacing:-.6px}.modal-card h4{font-size:17px;margin:18px 0 10px;font-weight:550}.modal-card p{font-size:13px;color:var(--muted)}.modal-card small{color:var(--muted)}.modal-card table{margin:20px 0}.modal-card .path{padding:12px 0;font:12px/1.6 var(--font-mono);overflow-wrap:anywhere;border-bottom:1px solid var(--line)}.vt{display:grid;gap:20px}.var{padding:20px 0;border-bottom:1px solid var(--line)}.var h4{display:flex;gap:12px;align-items:center}.var ol{font-size:14px;line-height:1.8;padding-left:20px}.var li{padding:4px 0}.var.ok h4{color:var(--accent)}table.skill tr.grp td{font-weight:600;color:var(--accent);padding-top:25px}.library-tools{display:flex;gap:16px;margin-bottom:20px}.library-tools input{width:100%;padding:12px;border:1px solid var(--line);background:var(--panel);border-radius:6px;font:inherit}.library-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px 18px}.library-item img{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:5px}.library-item h4{font-size:12px;margin:8px 0 2px}.library-item p{font-size:11px;margin:0}.library-item a{font-size:11px}.hosting-notice{font-size:13px;color:var(--warn);padding:12px 0}.empty-page{padding:70px 0;max-width:620px}.empty-page h2{font-size:26px;font-weight:500}.hosted .compose-only,.hosted #footWrap{display:none}
+.review-result-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-bottom:24px}.review-result-grid video{max-height:420px}@media(max-width:740px){.review-result-grid{grid-template-columns:1fr;gap:16px}}
+@media(min-width:1500px){.wrap{padding-inline:60px}.studio-grid{gap:64px}.screen{width:280px}}
+@media(max-width:1100px){.wrap{padding-inline:28px}.top{gap:28px}.studio-grid{gap:28px}.nav{gap:22px}.screen{width:240px}.analytics-grid{grid-template-columns:1fr}.analytics-grid aside{border-left:0;border-top:1px solid var(--line);padding:24px 0 0}.analytics-bottom{grid-template-columns:1fr}.head-actions .text{padding:8px}}
+@media(max-width:740px){.wrap{padding-inline:20px}.top{height:auto;min-height:75px;flex-wrap:wrap;gap:16px;padding-top:18px}.brand{font-size:20px}.mode{order:2}.nav{order:3;width:100%;gap:28px;height:48px}.page-head{padding:28px 0 22px;align-items:start;flex-direction:column;gap:16px}.page-head h1{font-size:29px}.head-actions{width:100%}.ask{grid-template-columns:1fr 1fr}.ask input{grid-column:1/-1}.ask .primary{grid-column:1/-1}.pipeline-strip{align-items:start;gap:10px;flex-wrap:wrap}.pipeline-stages{flex-basis:100%;gap:7px}.pipeline-stages li{font-size:10px;gap:5px}.pipeline-stages li:after{margin-left:2px!important}.studio-grid{grid-template-columns:1fr;gap:30px}.screen{width:250px}.monitor{padding:20px}.details-row{grid-template-columns:1fr;gap:0}.seg-en{font-size:19px}.upload-area{grid-template-columns:1fr;gap:24px;padding-block:26px}.upload-intro h2{font-size:23px}.analytics-top{gap:22px;flex-wrap:wrap}.stat-value{font-size:25px}.analytics-grid{gap:24px}.modal{padding:12px}.modal-card{padding:22px;max-height:90dvh}.modal-card table{min-width:580px}.modal-card .table-wrap{overflow:auto}.library-grid{grid-template-columns:repeat(2,1fr)}.cand{grid-template-columns:74px 1fr auto;gap:10px}.cand img{width:74px;height:58px}.data-table{min-width:640px}.score-num{font-size:50px}}
+@media(max-width:740px){#analyticsView,#analyticsContent,.analytics-grid,.analytics-bottom,.analytics-grid>section,.analytics-bottom>section,.table-wrap{min-width:0;max-width:100%}.analytics-grid,.analytics-bottom{display:block}.analytics-grid aside{margin-top:24px}.analytics-bottom>section+section{margin-top:28px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+:root[data-theme=dark]{--bg:#151719;--panel:#1c1f22;--panel-2:#24282c;--panel-3:#343a40;--line:#353b40;--fg:#eeefec;--muted:#b0b7bd;--dim:#929ca5;--accent:#91afff;--accent-ink:#111d38;--good:#91ceb0;--warn:#e7bb78;--bad:#ff9d95;--trk-v:#91ceb0;color-scheme:dark}
+.top-tools{margin-left:auto;display:flex;align-items:center;gap:20px}.top-tools .mode{margin-left:0;white-space:nowrap}.theme-toggle{display:flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:30px;padding:7px 12px;background:transparent;color:var(--muted);font-size:12px;white-space:nowrap}.theme-toggle:hover{background:var(--panel-2);color:var(--fg)}#themeIcon{font-size:17px;line-height:1}.monitor{background:var(--panel-3)}.cand:hover,tbody tr:hover{background:var(--panel-2)}.upload-control input::file-selector-button{background:var(--panel);color:var(--fg)}.play svg{fill:var(--bg)}.library-tools input{color:var(--fg)}[data-theme=dark] .btn.primary:hover{background:#b2c7ff}[data-theme=dark] .seg-tabs button.on,[data-theme=dark] .shot-tabs button.on{background:#91afff19}[data-theme=dark] .band.ok,[data-theme=dark] .chip.hit{background:#91ceb015}[data-theme=dark] .band.mid{background:#e7bb7815}[data-theme=dark] .band.bad{background:#ff9d9515}[data-theme=dark] .modal{background:#0008}
+.works-toolbar{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:0 0 18px;border-bottom:1px solid var(--line)}.platform-tabs{display:flex;gap:24px}.platform-tab{border:0;padding:8px 0;background:transparent;font-size:14px;color:var(--muted);position:relative}.platform-tab[aria-pressed=true]{color:var(--fg);font-weight:600}.platform-tab[aria-pressed=true]:after{content:"";position:absolute;bottom:-19px;left:0;right:0;height:2px;background:var(--accent)}.works-controls{display:flex;gap:20px;align-items:center}.works-controls select{background:transparent;color:var(--muted);border:0;font-size:12px;padding:8px 4px;max-width:100%}.view-switch{display:flex;padding:3px;border:1px solid var(--line);border-radius:7px}.view-switch button{border:0;background:transparent;padding:6px 12px;border-radius:4px;font-size:12px;color:var(--muted)}.view-switch button[aria-pressed=true]{background:var(--panel-3);color:var(--fg)}.works-caption{display:flex;justify-content:space-between;gap:14px;color:var(--dim);font-size:11px;margin:20px 0 10px}.work-list{display:grid}.work-entry{width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:transparent;padding:22px 0;display:grid;grid-template-columns:44px minmax(0,1fr) 140px 92px 22px;gap:22px;align-items:center;border-radius:0;transition:background .18s,transform .18s}.work-entry:hover{background:var(--panel-2)}.work-entry:hover .work-arrow{transform:translateX(4px);color:var(--accent)}.work-mark{color:var(--dim);font:12px var(--font-mono);align-self:start;padding-top:5px}.work-copy{min-width:0}.work-title{display:block;font-size:16px;font-weight:550;line-height:1.5;letter-spacing:-.2px}.work-meta{display:block;font-size:11px;color:var(--muted);margin-top:7px;line-height:1.6}.work-status{display:block;font-size:11px;color:var(--muted)}.work-status.hit{color:var(--good)}.work-status.pending{color:var(--warn)}.work-value{text-align:right;display:block;font:22px/1.2 var(--font-mono);letter-spacing:-.8px}.work-value small{display:block;font:10px/1.6 var(--font-ui);color:var(--dim);margin-top:6px;letter-spacing:0}.work-arrow{font-size:20px;color:var(--dim);transition:transform .18s}.work-gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}.work-gallery .work-entry{border:1px solid var(--line);border-radius:9px;padding:22px;display:grid;grid-template-columns:1fr auto;gap:16px;align-content:start;min-height:245px}.work-gallery .work-mark{grid-column:1/-1;padding-top:0}.work-gallery .work-copy{grid-column:1/-1;min-height:79px}.work-gallery .work-status{grid-row:3;align-self:end}.work-gallery .work-value{grid-row:3}.work-gallery .work-arrow{display:none}.analysis-fold{border-top:1px solid var(--line);margin-top:36px}.analysis-fold>summary{font-size:14px;padding:24px 0}.analysis-fold .analytics-grid{display:block}.analysis-fold .analytics-grid aside{border:0;padding:12px 0;max-width:750px}.analysis-fold .analytics-bottom{margin-top:16px}.works-empty{padding:60px 0;text-align:center;color:var(--muted)}.work-detail-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}.work-detail-head .eyebrow{margin:0}.work-detail-title{max-width:650px;line-height:1.45}.work-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;border-block:1px solid var(--line);padding:26px 0;margin:28px 0}.work-metric dt{font-size:12px;color:var(--muted)}.work-metric dd{font:34px/1.3 var(--font-mono);letter-spacing:-1px;margin:10px 0 5px}.work-metric small{font-size:11px;display:block}.metric-explainer{font-size:13px;color:var(--muted);line-height:1.8}.work-media-empty{border-block:1px solid var(--line);padding:18px 0;margin:24px 0}.work-media-empty p{margin:5px 0 0}.work-media-empty strong{font-size:13px;font-weight:500}.work-record{display:grid;grid-template-columns:100px 1fr;gap:10px;font-size:13px;margin:18px 0}.work-record dt{color:var(--muted)}.work-record dd{margin:0;overflow-wrap:anywhere}
+@media(max-width:1100px){.top{gap:22px}.top-tools{gap:12px}.top-tools .mode{display:none}.work-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:740px){.top-tools{order:2;margin-left:auto}.theme-toggle{padding:6px 10px}.works-toolbar{align-items:start;flex-direction:column;gap:16px}.platform-tabs{gap:24px}.platform-tab[aria-pressed=true]:after{bottom:0}.works-controls{width:100%;justify-content:space-between}.work-entry{grid-template-columns:minmax(0,1fr) 72px;gap:10px;padding:20px 0}.work-mark,.work-arrow{display:none}.work-title{font-size:15px}.work-copy{grid-column:1;grid-row:1}.work-value{grid-column:2;grid-row:1;font-size:20px}.work-status{grid-column:1/-1;grid-row:2}.work-gallery{grid-template-columns:1fr;gap:14px}.work-gallery .work-entry{min-height:0}.work-gallery .work-mark{display:block;grid-row:1}.work-gallery .work-copy{grid-row:2;min-height:0}.work-gallery .work-status{grid-column:1}.work-metrics{gap:12px}.work-metric dd{font-size:25px}.work-metric dt,.work-metric small{font-size:10px}.work-detail-title{font-size:21px!important}.analysis-fold>summary{align-items:start}.analysis-fold>summary small{display:none}}
+/* Editing workspace: persistent navigation, three working lanes, shared timeline. */
+:root{--accent:#946707;--accent-ink:#fff;--editor-accent:#b18422;--sidebar-bg:#eeefec;--track-video:#e0eeeb;--track-audio:#ebe5f5;--track-subtitle:#f4ecd8;--track-sticker:#f5e5df}
+:root[data-theme=dark]{--bg:#101419;--panel:#181d24;--panel-2:#202630;--panel-3:#2b3440;--line:#323c49;--fg:#eff1f5;--muted:#adb7c5;--dim:#8e9baa;--accent:#f0c353;--accent-ink:#211b0c;--editor-accent:#f0c353;--sidebar-bg:#151a21;--track-video:#203b3e;--track-audio:#342e4c;--track-subtitle:#3c372a;--track-sticker:#47332f}
+.wrap{max-width:none;margin:0 0 0 210px;padding:0 24px 30px}.sidebar{position:fixed;inset:0 auto 0 0;width:210px;padding:28px 16px 22px;border-right:1px solid var(--line);background:var(--sidebar-bg);display:flex;flex-direction:column;z-index:10}.sidebar .brand{font-size:23px;gap:10px;letter-spacing:-.6px;padding:0 9px}.brand-name small{display:block;font-size:10px;font-weight:400;letter-spacing:.15em;color:var(--muted);margin-top:3px}.nav-caption{font-size:10px;letter-spacing:.12em;color:var(--dim);padding:0 14px;margin:42px 0 14px}.sidebar .nav{display:flex;flex-direction:column;align-self:stretch;gap:8px;height:auto;width:auto}.sidebar .nav button{display:flex;align-items:center;gap:12px;min-height:48px;padding:12px 14px;text-align:left;border-radius:7px;font-size:14px;white-space:nowrap}.sidebar .nav button svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}.sidebar .nav button:hover{background:var(--panel-3)}.sidebar .nav button[aria-current=page]{background:color-mix(in srgb,var(--accent) 15%,transparent);color:var(--accent)}.sidebar .nav button[aria-current=page]:after{inset:11px auto 11px 0;width:3px;height:auto;border-radius:2px}.sidebar-foot{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--dim);margin-top:auto;border-top:1px solid var(--line);padding:20px 12px 0}.sidebar-dot{width:6px;height:6px;border-radius:50%;background:var(--good)}.top{height:64px;gap:20px}.breadcrumb{display:flex;gap:14px;align-items:center;font-size:12px;color:var(--muted)}.breadcrumb strong{font-weight:500;color:var(--fg)}.top-tools{gap:20px}.page-head{padding:24px 0 18px;gap:18px}.page-head h1{font-size:29px;letter-spacing:-.8px}.page-head p{margin:8px 0 0;font-size:12px}.page-head .eyebrow{display:none}.head-actions{gap:8px}.head-actions .btn{padding:8px 12px}.generation-controls{border-top:1px solid var(--line);margin-bottom:16px}.generation-controls>summary{padding:11px 0;font-size:12px;color:var(--muted)}.generation-controls>summary small{font-size:10px}.generation-controls .compose-bar{padding-bottom:12px}.generation-controls .pipeline-strip{margin-bottom:0;padding:12px 0;border-bottom:0}.studio-grid{grid-template-columns:minmax(200px,.78fr) minmax(280px,1.1fr) minmax(280px,1fr);gap:14px;align-items:stretch}.studio-grid>section{min-width:0;border:1px solid var(--line);border-radius:9px;padding:16px;background:var(--panel);height:clamp(420px,calc(100dvh - 500px),536px);overflow:hidden}.studio-grid .section-head{margin-bottom:12px;gap:6px}.studio-grid .section-head h2{font-size:16px;letter-spacing:0}.material-column{display:flex;flex-direction:column}.material-search,.material-filter{color:var(--fg);background:var(--panel-2);border:1px solid var(--line);border-radius:6px;padding:9px 10px;font-size:11px;width:100%;min-width:0}.material-filter{width:100%;margin:10px 0 14px;padding:7px 9px;background:transparent}.material-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px 10px;align-content:start;overflow:auto;min-height:0;scrollbar-width:thin;flex:1}.material-item{border:0;padding:0;background:transparent;min-width:0;text-align:left}.material-image{position:relative;display:block;overflow:hidden;border-radius:5px;aspect-ratio:1.75;background:var(--panel-3)}.material-image img{width:100%;height:100%;object-fit:cover;transition:transform .22s}.material-item:hover img{transform:scale(1.05)}.material-duration{position:absolute;bottom:5px;right:4px;background:#12171dd9;color:#fff;font:10px var(--font-mono);padding:2px 4px;border-radius:3px}.material-used{position:absolute;left:4px;top:4px;background:#15232de6;color:#fff;font-size:9px;padding:1px 4px;border-radius:3px}.material-title{font-size:11px;display:block;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.material-id{font:10px var(--font-mono);color:var(--dim)}.material-note{font-size:10px;border-top:1px solid var(--line);padding-top:10px;margin:12px 0 0}.preview-column{display:flex;flex-direction:column}.preview-column .section-label{color:var(--fg);margin-bottom:12px;font-size:13px}.preview-column .section-label .mono{color:var(--muted);font-size:10px}.preview-column .monitor{background:transparent;border-radius:0;padding:0;flex:1;min-height:0;justify-content:center}.preview-column .screen{width:auto;height:clamp(250px,calc(100dvh - 660px),365px);max-height:365px;flex-shrink:0;max-width:100%;aspect-ratio:9/16}.preview-column .transport{gap:10px;margin-top:14px;max-width:none}.preview-column .tc{font-size:10px}.preview-column .zh{font-size:10px;margin-top:8px;min-height:28px}.preview-column #monNote{font-size:10px;line-height:1.5;margin:8px 0 0}.inspector{display:flex;flex-direction:column}.inspector #inspect{overflow:auto;scrollbar-width:thin;min-height:0;flex:1}.inspector .btn.text{padding:4px;font-size:10px}.inspector .seg-tabs{gap:2px;margin-bottom:14px;flex-wrap:wrap}.inspector .seg-tabs button{font-size:10px;padding:5px 7px}.inspector .seg-tabs button.on,.inspector .shot-tabs button.on{background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--accent)}.inspector .seg-title{font-size:10px;margin-bottom:6px}.inspector .seg-en{font-size:15px;line-height:1.5;letter-spacing:0}.inspector .seg-zh{font-size:11px;margin-top:6px}.inspector .chips{margin:8px 0;gap:4px}.inspector .chip{font-size:9px}.inspector .shot-tabs{margin-top:8px;padding-top:8px;gap:6px}.inspector .shot-tabs button{font-size:10px;padding:5px 9px}.inspector .cands{max-height:none;overflow:visible;margin-top:8px}.inspector .cand{grid-template-columns:65px minmax(0,1fr) 44px;gap:8px;padding:10px 0}.inspector .cand img{width:65px;height:48px}.inspector .cand .nm{font-size:11px}.inspector .cand .meta{font-size:9px;line-height:1.5}.inspector .cand .pct{font-size:10px}.inspector .cand button{font-size:10px;padding:3px 5px}.inspector .edits{border-top:1px solid var(--line);padding-top:10px;margin-top:10px;font-size:10px;gap:6px}.inspector .edits .btn{padding:5px 9px;font-size:11px}.material-player{display:block;width:100%;max-height:55vh;background:#080b0e;border-radius:7px}.timeline-panel{margin-top:16px;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--panel)}.timeline-heading{display:flex;align-items:center;gap:15px;padding:12px 16px;border-bottom:1px solid var(--line)}.timeline-heading h2{font-size:16px;margin:0;font-weight:600}.timeline-hint{font-size:10px;color:var(--dim)}.timeline-heading label{margin-left:auto;font-size:10px;color:var(--muted)}.timeline-heading input{width:100px;accent-color:var(--accent);height:3px}.timeline-scroll{overflow-x:auto;scrollbar-width:thin;padding:0 16px 8px}.timeline-canvas{position:relative;min-width:640px}.timeline-row{display:grid;grid-template-columns:58px minmax(0,1fr);gap:12px;margin-bottom:8px;align-items:center}.track-label{font-size:11px;color:var(--muted)}.track-lane{position:relative;height:28px;background:var(--panel-2);border-radius:4px;min-width:0}.ruler-row{margin-top:4px;margin-bottom:6px}.ruler-row .track-lane{height:29px;background:transparent;border-bottom:1px solid var(--line)}.video-row .track-lane{height:44px}.time-tick{position:absolute;bottom:0;transform:translateX(-1px);border:0;border-left:1px solid var(--dim);background:transparent;font:10px var(--font-mono);padding:0 0 9px 3px;color:var(--muted)}.time-end{position:absolute;right:0;top:2px;font:10px var(--font-mono);color:var(--muted)}.timeline-clip{position:absolute;top:0;height:100%;border:1px solid var(--line);border-radius:4px;overflow:hidden;text-align:left;white-space:nowrap;text-overflow:ellipsis;font-size:10px;padding:3px 7px;color:var(--fg);max-width:100%;box-sizing:border-box}.timeline-clip:hover{filter:brightness(1.12);z-index:2}.video-clip{background:var(--track-video);display:flex;align-items:center;gap:7px;padding:3px}.video-clip img{width:38px;height:100%;object-fit:cover;border-radius:3px}.video-clip span{min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:9px}.video-clip small{display:block;font-size:8px;color:var(--muted);margin-top:3px}.video-clip.active{border:2px solid var(--editor-accent);z-index:3}.audio-clip{background:var(--track-audio)}.subtitle-clip{background:var(--track-subtitle)}.sticker-clip{background:var(--track-sticker)}.playhead-area{position:absolute;top:24px;bottom:0;left:70px;right:0;pointer-events:none;z-index:4}.timeline-playhead{position:absolute;top:0;bottom:0;width:1px;background:var(--editor-accent)}.timeline-playhead:before{content:"";position:absolute;top:0;left:-4px;width:9px;height:10px;background:var(--editor-accent);clip-path:polygon(0 0,100% 0,100% 65%,50% 100%,0 65%)}.timeline-footer{display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--line);padding:9px 16px;font-size:10px;color:var(--muted)}.details-row{margin-top:18px;gap:28px}.foot-wrap{margin-top:20px}.btn.primary:hover{background:var(--editor-accent);color:var(--accent-ink)}[data-theme=dark] .btn.primary:hover{background:#f7d47d}.video-review{max-width:1100px}.analytics-top{margin-top:8px}
+@media(min-width:1680px){.studio-grid{grid-template-columns:300px minmax(360px,1.2fr) minmax(350px,1fr)}.studio-grid>section{height:580px}.preview-column .screen{height:410px;max-height:410px}}
+@media(max-width:1250px){.sidebar{width:72px;padding:24px 10px}.sidebar .brand{padding:0 10px}.brand-name,.nav-caption,.sidebar-foot span:last-child{display:none}.sidebar .nav{margin-top:36px}.sidebar .nav button{padding:14px;justify-content:center}.sidebar .nav button span{display:none}.sidebar-foot{justify-content:center;padding:16px 0 0}.wrap{margin-left:72px;padding-inline:18px}.studio-grid{grid-template-columns:minmax(190px,.75fr) minmax(240px,1fr) minmax(260px,1fr)}.top-tools .mode{display:none}}
+@media(max-width:980px){.studio-grid{grid-template-columns:minmax(180px,.7fr) minmax(260px,1fr)}.studio-grid>.inspector{grid-column:1/-1;height:auto;max-height:450px}.inspector #inspect{max-height:320px}.inspector .cands{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:20px}.page-head{align-items:start;flex-direction:column;gap:14px}.generation-controls>summary small{display:none}}
+@media(max-width:740px){.sidebar{width:54px;padding:22px 5px}.sidebar .brand{padding:0 9px}.brand-mark{width:23px;height:23px}.sidebar .nav button{padding:12px;min-height:44px}.sidebar .nav{margin-top:30px;gap:8px;order:initial}.wrap{margin-left:54px;padding:0 12px 24px}.top{min-height:58px;height:58px;padding-top:0;flex-wrap:nowrap;gap:8px}.breadcrumb>span{display:none}.breadcrumb{font-size:11px}.top-tools{gap:0}.theme-toggle{padding:5px 7px;font-size:10px}.page-head{padding:20px 0 14px}.page-head h1{font-size:25px}.head-actions{gap:5px;flex-wrap:wrap}.head-actions .btn{font-size:10px;padding:6px 8px}.studio-grid{display:flex;flex-direction:column;gap:12px}.studio-grid>section{padding:12px;height:auto}.studio-grid>.material-column{height:235px;order:1}.material-column .section-head{margin-bottom:8px}.material-search{padding:7px 9px}.material-filter{margin:7px 0}.material-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.material-note{display:none}.studio-grid>.preview-column{order:0}.preview-column .screen{height:350px;max-height:350px}.studio-grid>.inspector{order:2;max-height:540px}.inspector #inspect{max-height:400px}.inspector .cands{display:block}.timeline-heading{gap:8px;flex-wrap:wrap;padding:12px}.timeline-heading h2{font-size:14px}.timeline-hint{display:none}.timeline-heading input{width:76px}.timeline-scroll{padding-inline:12px}.timeline-footer{font-size:9px;padding:9px 12px}.timeline-footer>span:last-child{display:none}.details-row{gap:0}.work-metrics{gap:10px}.work-gallery{grid-template-columns:1fr}.works-caption{flex-wrap:wrap}.analytics-top{gap:14px}.stat-value{font-size:23px}.stat-label{font-size:10px}.platform-tabs{gap:18px}.platform-tab{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.material-image img{transition:none}}
+
+
+/* Keep explanations on demand; visible text names content, actions, and states. */
+.sidebar .nav{margin-top:40px}.ask-hint:empty{display:none}.info-button{display:inline-grid;place-items:center;width:22px;height:22px;padding:0;flex-shrink:0;border:1px solid var(--line);border-radius:50%;background:transparent;color:var(--muted);font:italic 12px/1 Georgia,serif;vertical-align:middle}.info-button:hover,.info-button:focus-visible{color:var(--accent);border-color:var(--accent);background:var(--panel-2)}.info-tooltip{position:fixed;z-index:100;padding:12px 14px;border:1px solid var(--line);border-radius:8px;box-shadow:0 8px 24px #0002;background:var(--panel);color:var(--fg);font:12px/1.7 var(--font-ui);max-width:290px;overflow-wrap:anywhere}.matching-info{margin:8px 0}.inspector .cand .info-button{width:18px;height:18px;font-size:11px;margin:0 0 0 4px;color:var(--muted)}.review-cost{font-size:12px;color:var(--muted)}.upload-intro h2{font-size:25px}.preview-column .monitor{justify-content:center}.preview-column .screen{height:clamp(280px,calc(100dvh - 620px),400px);max-height:400px}.material-grid{gap:14px 10px}.material-title{margin-bottom:3px}.work-metric dt .info-button{width:18px;height:18px}.analytics-bottom h2 .info-button{margin-left:5px}@media(max-width:740px){.sidebar .nav{margin-top:30px}.preview-column .screen{height:350px;max-height:350px}.info-tooltip{max-width:calc(100vw - 24px)}}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <aside class="sidebar" aria-label="侧边导航">
+    <div class="brand" aria-label="轨道内容工作台"><span class="brand-mark" aria-hidden="true"></span><span class="brand-name">轨道 <small>内容工作台</small></span></div>
+    <nav class="nav" aria-label="工作区">
+      <button type="button" data-view="create" aria-label="素材与粗剪" aria-current="page" class="compose-only"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 4v16M17 4v16M3 9h4m-4 6h4m10-6h4m-4 6h4"/></svg><span>素材与粗剪</span></button>
+      <button type="button" data-view="evaluate" aria-label="成片评测"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 4-5 8-8 9-3-1-8-5-8-9V6zM8 12l3 3 5-6"/></svg><span>成片评测</span></button>
+      <button type="button" data-view="analytics" id="reviewBtn" aria-label="数据复盘" class="compose-only"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10h4v10m2 0V4h4v16m2 0V7h4v13"/></svg><span>数据复盘</span></button>
+    </nav>
+  </aside>
+  <header class="top"><div class="breadcrumb"><span>内容工作台</span><span aria-hidden="true">／</span><strong id="breadcrumbTitle">素材与粗剪</strong></div>
+    <div class="top-tools"><span class="mode" id="modeLabel">运行回放</span><button class="theme-toggle" id="themeToggle" type="button" aria-label="切换到暗黑模式"><span id="themeIcon" aria-hidden="true">◐</span><span id="themeText">暗黑模式</span></button></div>
+  </header>
+  <div class="page-head">
+    <div><h1 id="viewTitle">素材与粗剪</h1><p id="viewDescription"></p></div>
+    <div class="head-actions compose-only" id="createActions">
+      <button type="button" class="btn text" id="skillBtn">剪辑规则</button>
+      <button type="button" class="btn" id="draftBtn" disabled>查看剪映草稿 ↗</button>
+    </div>
+  </div>
+  <main>
+    <section id="createView" class="workspace" aria-label="素材与粗剪">
+      <details class="generation-controls"><summary>新建粗剪</summary>
+      <section id="askPanel" class="compose-bar" hidden aria-label="输入选题">
+        <form class="ask" id="askForm">
+          <input id="askTopic" placeholder="输入一个选题，例如：坐火车穿越瑞士阿尔卑斯" required maxlength="80" aria-label="选题">
+          <select id="askMarket" aria-label="目标观众所在国家"><option>英国</option></select>
+          <select id="askPlatform" aria-label="发布平台"><option>TikTok</option><option>Instagram</option><option>YouTube Shorts</option></select>
+          <button class="btn primary" id="askGo" type="submit">生成粗剪 →</button>
+        </form>
+        <p class="ask-hint" id="askHint" role="status"></p>
+      </section>
+      <div class="pipeline-strip"><ol class="pipeline-stages" id="stageStrip" aria-label="生成进度"></ol><button class="btn small" id="gen">回放已有运行</button></div>
+      </details>
+      <div class="studio-grid">
+        <section class="material-column" aria-label="素材库">
+          <div class="section-head"><h2>素材库</h2><span class="stat-label" id="materialCount"></span></div>
+          <input id="materialSearch" class="material-search" type="search" placeholder="搜索名称、地点或标签" aria-label="搜索素材名称、地点或标签">
+          <select id="materialFilter" class="material-filter" aria-label="素材范围"><option value="all">全部素材</option><option value="used">当前使用</option><option value="candidates">当前分句候选</option></select>
+          <div id="materialGrid" class="material-grid"></div>
+        </section>
+        <section class="preview-column" aria-label="视频预览">
+          <div class="section-label"><span>视频预览</span><span class="mono">9:16 · <span id="durationLabel"></span></span></div>
+          <div class="monitor">
+            <div class="screen" id="screen"><div class="ph" id="ph"><div><b>从这里开始</b>回放已有运行，查看粗剪结果。</div></div><div class="huazi" id="huazi" hidden></div><div class="sub" id="sub" hidden></div></div>
+            <div class="transport"><button class="play" id="play" aria-label="播放" disabled><svg viewBox="0 0 16 16" id="playIc"><path d="M4 2l10 6-10 6z"/></svg></button><input class="scrub" id="scrub" type="range" min="0" max="1" value="0" step="0.05" aria-label="视频进度" disabled><span class="tc mono" id="tc">00:00.0 / 00:00.0</span></div>
+
+          </div>
+        </section>
+        <section class="inspector" aria-label="逐句检查画面">
+          <div class="section-head"><h2 id="inspectorTitle">镜头编辑</h2><button type="button" class="btn text small" id="scriptBtn">查看脚本 ↗</button></div>
+          <div id="inspect"><p class="empty">回放或生成粗剪后，在这里逐句查看和替换候选镜头。</p></div>
+          <div class="edits" id="edits" hidden></div>
+        </section>
+      </div>
+      <section class="timeline-panel" aria-label="粗剪时间轴">
+        <div class="timeline-heading"><h2>时间轴</h2><button type="button" class="info-button" id="timelineInfo" aria-label="时间轴操作说明" data-help="点击片段可定位播放，缩放可查看细节；裁剪、转场和字幕样式需在剪映中调整。">i</button><label for="timelineZoom">缩放</label><input id="timelineZoom" type="range" min="1" max="3" value="1" step="0.25" aria-label="时间轴缩放"></div>
+        <div class="timeline-scroll"><div id="timelineCanvas" class="timeline-canvas"><div id="timelineTracks"></div><div class="playhead-area" aria-hidden="true"><div id="timelinePlayhead" class="timeline-playhead"></div></div></div></div>
+        <div class="timeline-footer"><span id="timelineStatus"></span></div>
+      </section>
+      <div class="details-row">
+        <div><details><summary>草稿检查</summary><div id="scoreBox"><p class="empty">生成后显示检查结果。</p></div></details><details><summary>国家与平台规则</summary><p class="empty">依据脚本与人工素材标签，仍需人工确认。</p><ul class="rules" id="rules"><li>生成后显示规则检查结果。</li></ul></details></div>
+        <div><details><summary>任务信息</summary><dl class="kv" id="kv"></dl></details><details id="runDetails"><summary>运行记录</summary><ol class="steps" id="steps" aria-live="polite"></ol></details></div>
+      </div>
+    </section>
+    <section id="evaluateView" class="workspace" hidden aria-label="成片评测">
+      <div id="videoReviewPanel">
+        <div class="video-review">
+          <div class="upload-area"><div class="upload-intro"><h2>上传成片</h2><p class="empty">MP4 / MOV / M4V · 最大 100 MB · 最长 3 分钟</p></div>
+          <div class="upload-control"><label for="reviewFile">选择导出的成片</label><input id="reviewFile" type="file" accept=".mp4,.mov,.m4v,video/mp4,video/quicktime"><button class="btn primary" id="reviewGo" type="button">开始评测</button><span class="review-cost">将发送画面与转写文本进行评测，产生 API 费用。</span><div id="reviewStatus" class="empty" role="status" aria-live="polite"></div></div></div>
+          <div class="review-meta"><details><summary>评测方式与数据处理</summary><p id="reviewPrivacy">声音在本机转写，抽取的画面和转写文字发送给所配置的评测模型，不发送原始音频。调用会产生费用。</p><p id="reviewModel">首次使用可能需要下载本地语音识别模型。默认针对英语配音，结果需要人工核验。</p></details></div>
+          <div id="videoReviewResult"></div>
+        </div>
+      </div>
+    </section>
+    <section id="analyticsView" class="workspace" hidden aria-label="数据复盘"><div id="analyticsContent"></div></section>
+  </main>
+  <details class="foot-wrap compose-only" id="footWrap"><summary>素材来源与能力说明</summary><div class="foot" id="foot"></div></details>
+</div>
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-label="工作台详情"><div class="modal-card" id="modalCard" tabindex="-1"></div></div>
+<div id="infoTooltip" class="info-tooltip" role="tooltip" hidden></div>
+<script>
+const R = {"mode": "live", "run_id": "20261111005639", "topic": {"note": "示例数据：历史爆款率为模拟值，真实落地时从 BI 的播放数据算出；营销节点来自营销部门的年度 roadmap。", "month": "11 月", "nodes": [{"name": "入冬 · 夜车出行", "weight": 1.0}, {"name": "黑五促销", "weight": 0.8}], "pool": [{"id": "T1", "title": "伦敦到苏格兰，睡一觉就到（卧铺冷知识）", "genre": ["冷知识", "路线推荐"], "node": "入冬 · 夜车出行", "benefit_fit": 0.9, "hit": 1.0, "node_w": 1.0, "score": 0.98}, {"id": "T3", "title": "伦敦出发的 3 条一日游火车路线", "genre": ["路线推荐"], "node": "入冬 · 夜车出行", "benefit_fit": 0.6, "hit": 0.77, "node_w": 1.0, "score": 0.807}, {"id": "T4", "title": "黑五英国火车票限时优惠", "genre": ["热点", "优惠券"], "node": "黑五促销", "benefit_fit": 1.0, "hit": 0.56, "node_w": 0.8, "score": 0.722}, {"id": "T2", "title": "英国火车票分段买更便宜", "genre": ["优惠券"], "node": "黑五促销", "benefit_fit": 1.0, "hit": 0.34, "node_w": 0.8, "score": 0.609}], "chosen": "INPUT", "input": "坐火车穿越瑞士阿尔卑斯，窗外就是马特洪峰"}, "scripts": {"generated_by": "DeepSeek（deepseek-chat，2026-11-09 04:07 现场生成，2241 tokens，7.0 秒）", "variants": [{"id": "A", "idea": "以马特洪峰是“山中之王”的冷知识开头，突出阿尔卑斯火车路线的壮丽。", "lines": [{"en": "The Matterhorn is one of the most iconic peaks in the Alps.", "zh": "马特洪峰是阿尔卑斯山脉最具标志性的山峰之一。", "role": "开头 · 冷知识", "on_screen": "ICONIC ALPINE PEAK", "tags": ["matterhorn", "mountain"], "places": ["阿尔卑斯"]}, {"en": "Trains in Switzerland offer panoramic windows with views of the Alps.", "zh": "瑞士的火车提供全景车窗，可以欣赏阿尔卑斯山景。", "role": "铺垫 · 路线", "tags": ["train", "window", "scenery"], "places": ["瑞士"]}, {"en": "Imagine gliding past snow-capped peaks and lush valleys.", "zh": "想象一下滑过白雪覆盖的山峰和郁郁葱葱的山谷。", "role": "画面 · 情绪", "tags": ["scenery", "snow"], "places": ["阿尔卑斯"]}, {"en": "Split ticketing can save you up to 30% on train travel.", "zh": "分段买票可以节省高达30%的火车旅行费用。", "role": "利益点 · 省钱", "on_screen": "SAVE UP TO 30%", "tags": ["ticket"], "places": ["英国"]}, {"en": "Search UK20 in the app for an extra 20% off your first trip.", "zh": "在App中搜索UK20，首次旅行额外享受20%折扣。", "role": "结尾 · 搜码钩子", "on_screen": "UK20", "tags": ["app", "phone"], "places": []}], "claims": [], "checks": [{"name": "开头不放利益点（R1）", "ok": true, "msg": "第 1 句没有价格或优惠"}, {"name": "每句不超过 14 个词", "ok": true, "msg": "都在 14 个词以内"}, {"name": "价格写 up to / extra（R4）", "ok": true, "msg": "价格表述合规"}, {"name": "事实核查（对照事实库）", "ok": true, "msg": "没有和事实库冲突的说法"}], "ok": true}, {"id": "B", "idea": "以冰川快车是世界上最慢的快车这一冷知识开头，强调旅程的悠闲与风景。", "lines": [{"en": "The Glacier Express is known as the world's slowest express train.", "zh": "冰川快车被称为世界上最慢的快车。", "role": "开头 · 冷知识", "on_screen": "SLOWEST EXPRESS TRAIN", "tags": ["train", "scenery"], "places": ["瑞士"]}, {"en": "It winds through the Swiss Alps, offering breathtaking views.", "zh": "它蜿蜒穿过瑞士阿尔卑斯山，提供令人惊叹的景色。", "role": "铺垫 · 路线", "tags": ["train", "mountain", "scenery"], "places": ["瑞士", "阿尔卑斯"]}, {"en": "You can relax and watch the world go by from your seat.", "zh": "你可以放松身心，从座位上看着世界流逝。", "role": "画面 · 情绪", "tags": ["window", "scenery", "train"], "places": []}, {"en": "With split ticketing, you could save up to 30% on your journey.", "zh": "通过分段买票，你的旅程可以节省高达30%。", "role": "利益点 · 省钱", "on_screen": "SAVE UP TO 30%", "tags": ["ticket"], "places": ["英国"]}, {"en": "Open the app and search UK20 for an extra 20% off.", "zh": "打开App搜索UK20，额外享受20%折扣。", "role": "结尾 · 搜码钩子", "on_screen": "UK20", "tags": ["app", "phone"], "places": []}], "claims": [], "checks": [{"name": "开头不放利益点（R1）", "ok": true, "msg": "第 1 句没有价格或优惠"}, {"name": "每句不超过 14 个词", "ok": true, "msg": "都在 14 个词以内"}, {"name": "价格写 up to / extra（R4）", "ok": true, "msg": "价格表述合规"}, {"name": "事实核查（对照事实库）", "ok": true, "msg": "没有和事实库冲突的说法"}], "ok": true}, {"id": "C", "idea": "以瑞士火车以准点闻名这一冷知识开头，突出高效与美景的结合。", "lines": [{"en": "Swiss trains are famous for their punctuality and efficiency.", "zh": "瑞士火车以其准点和高效而闻名。", "role": "开头 · 冷知识", "on_screen": "PUNCTUAL & EFFICIENT", "tags": ["train", "station"], "places": ["瑞士"]}, {"en": "You can travel through the Alps with ease and comfort.", "zh": "你可以轻松舒适地穿越阿尔卑斯山。", "role": "铺垫 · 路线", "tags": ["train", "mountain"], "places": ["瑞士", "阿尔卑斯"]}, {"en": "Picture yourself gazing at the Matterhorn from a cozy train.", "zh": "想象一下在舒适的火车的凝视马特洪峰。", "role": "画面 · 情绪", "tags": ["matterhorn", "train", "window"], "places": ["阿尔卑斯"]}, {"en": "Split ticketing can offer up to 30% savings on your trip.", "zh": "分段买票可以为你的旅行提供高达30%的节省。", "role": "利益点 · 省钱", "on_screen": "SAVE UP TO 30%", "tags": ["ticket"], "places": ["英国"]}, {"en": "Search UK20 in the app for an extra 20% off.", "zh": "在App中搜索UK20，额外享受20%折扣。", "role": "结尾 · 搜码钩子", "on_screen": "UK20", "tags": ["app", "phone"], "places": []}], "claims": [], "checks": [{"name": "开头不放利益点（R1）", "ok": true, "msg": "第 1 句没有价格或优惠"}, {"name": "每句不超过 14 个词", "ok": true, "msg": "都在 14 个词以内"}, {"name": "价格写 up to / extra（R4）", "ok": true, "msg": "价格表述合规"}, {"name": "事实核查（对照事实库）", "ok": true, "msg": "没有和事实库冲突的说法"}], "ok": true}], "chosen": "A", "rejected": [], "facts": [{"id": "F1", "text": "Caledonian Sleeper 每晚从伦敦尤斯顿站开往苏格兰。", "source": "https://www.ontheluce.com/the-caledonian-sleeper/"}, {"id": "F2", "text": "去高地（Inverness / Fort William / Aberdeen）的 Highlander 晚上约 20:30–21:15 发车；午夜前约 23:45 发车的是去爱丁堡、格拉斯哥的 Lowlander。", "source": "https://railtravelstation.com/caledonian-sleeper-1s25-london-euston-inverness/"}, {"id": "F3", "text": "分段买票（A–B + B–C）可能比直达票便宜，最高优惠幅度由产品团队提供（示例：up to 30%，待确认）。", "source": "业务访谈：A 到 C 的价格会比 A 到 B 加 B 到 C 贵"}, {"id": "F4", "text": "新客搜码 UK20 额外 20% 优惠（示例券，上限由产品团队设定）。", "source": "业务访谈：优惠券提到上限 4 欧、20%"}]}, "title": "坐火车穿越瑞士阿尔卑斯，窗外就是马特洪峰", "country": "英国", "platform": "TikTok", "skill": {"name": "冷知识路线类 v0.3", "from": "规则的结构按业务访谈整理；数值目前是示例，等拿到业务方的爆款成片，用 tools/distill_skill.py 量出来再替换", "rules": [{"id": "S1", "group": "结构", "rule": "五句结构：冷知识开头 → 路线 → 画面 → 利益点 → 搜码钩子；每句不超过 14 个词", "source": "访谈", "why": "业务方的做法：前半段用冷知识或路线吸引人，后半段放优惠钩子"}, {"id": "S2", "group": "结构", "rule": "第 1 句不出现价格、折扣、优惠码", "source": "访谈", "why": "利益点放在前 3 秒，会被平台判成营销视频限流"}, {"id": "S3", "group": "镜头", "rule": "单个镜头不超过 3.2 秒", "param": "max_shot_s", "source": "示例值", "why": "保持短视频的节奏；具体秒数待蒸馏"}, {"id": "S4", "group": "镜头", "rule": "每句配 1–3 个镜头，切点落在换句的地方", "source": "示例值", "why": "画面跟着口播走，不在一句话中间乱切"}, {"id": "S5", "group": "镜头", "rule": "素材跳过开头 0.5 秒再用", "param": "clip_skip_head_s", "source": "示例值", "why": "避开起幅的抖动"}, {"id": "S6", "group": "字幕", "rule": "英文字幕每行不超过 42 个字符，最多两行", "param": "subtitle.max_chars_per_line", "source": "行业规范", "why": "英文字幕的通行规范，手机上一眼能读完"}, {"id": "S7", "group": "字幕", "rule": "白色粗体加描边，放在画面下方", "source": "示例值", "why": "压在任何画面上都看得清"}, {"id": "S8", "group": "花字", "rule": "开头花字最多停 2.8 秒", "param": "opening_huazi_max_s", "source": "示例值", "why": "点题后就让出画面"}, {"id": "S9", "group": "花字", "rule": "利益点贴纸在这句开始后 0.3 秒出现，停 2.6 秒", "param": "benefit_sticker_offset_s", "source": "示例值", "why": "先听到再看到，加深印象"}, {"id": "S10", "group": "花字", "rule": "结尾优惠码至少停 1.5 秒", "param": "cta_min_s", "source": "示例值", "why": "留够时间让人看清、记住"}, {"id": "S11", "group": "配音", "rule": "英式口音；语速 130–190 词/分钟；句间停 0.15 秒，片尾留 0.6 秒", "param": "voice.wpm_range", "source": "访谈 + 示例值", "why": "目标观众在英国；停顿的秒数待蒸馏"}], "voice": {"engine": "MiniMax 配音接口（有 key 时）/ macOS 系统语音（没 key 时兜底）", "voice": "Daniel（英式男声）", "rate_wpm": 175, "minimax_voice": "English_Graceful_Lady", "minimax_speed": 1.15, "minimax_note": "账号里唯一的英式口音英文音色（女声）；想换美式男声改成 English_Trustworthy_Man", "wpm_range": [130, 190], "used": "MiniMax English_Graceful_Lady"}, "gap_between_lines_s": 0.15, "tail_s": 0.6, "max_shot_s": 3.2, "clip_skip_head_s": 0.5, "subtitle": {"size": 7.0, "color": [1, 1, 1], "bold": true, "border_width": 45, "y": -0.62, "max_chars_per_line": 42}, "huazi": {"size": 11.0, "color": [1.0, 0.84, 0.18], "bold": true, "border_width": 55, "y": 0.4}, "opening_huazi_max_s": 2.8, "benefit_sticker_offset_s": 0.3, "benefit_sticker_len_s": 2.6, "cta_min_s": 1.5, "measured": {"source": "1 条我们自己生成、剪映导出的成片（用来验证工具能跑，不代表爆款规律）", "videos": 1, "shots": 10, "shot_median_s": 2.23, "shot_p90_s": 2.73, "shot_max_s": 2.74, "words_per_minute": 145, "max_words_per_sentence": 14, "price_in_first_3s": 0, "cta_at_end": 1, "duration_median_s": 23.8, "compare": [{"item": "单个镜头最长", "setting": "3.2 秒", "measured": "中位 2.23 秒，90% 在 2.73 秒内，最长 2.74 秒", "verdict": "一致"}, {"item": "语速", "setting": "130–190 词/分钟", "measured": "145 词/分钟", "verdict": "一致"}, {"item": "每句最多几个词", "setting": "14 个", "measured": "14 个", "verdict": "一致"}, {"item": "开头 3 秒不提价格", "setting": "不提", "measured": "1 / 1 条没提", "verdict": "一致"}, {"item": "结尾有行动引导", "setting": "有", "measured": "1 / 1 条有", "verdict": "一致"}]}}, "total_s": 23.79, "segments": [{"i": 0, "en": "The Matterhorn is one of the most iconic peaks in the Alps.", "zh": "马特洪峰是阿尔卑斯山脉最具标志性的山峰之一。", "role": "开头 · 冷知识", "start": 0.0, "dur": 4.38, "voice_s": 4.23, "audio": "output/tts/line1", "need": ["matterhorn", "mountain"], "places": ["阿尔卑斯"], "candidates": [{"id": "m40", "title": "马特洪峰下的山地铁路", "coverage": 1.0, "matched": ["matterhorn", "mountain"], "quality": 4, "issues": [], "excluded": null, "loc_hit": 1, "clip_s": 11.97}, {"id": "m42", "title": "马特洪峰与弯道铁路", "coverage": 1.0, "matched": ["matterhorn", "mountain"], "quality": 4, "issues": [], "excluded": null, "loc_hit": 1, "clip_s": 6.67}, {"id": "m12", "title": "阿尔卑斯雪山湖", "coverage": 0.33, "matched": ["mountain"], "quality": 5, "issues": [], "excluded": null, "loc_hit": 1, "clip_s": 9.19}, {"id": "m41", "title": "瑞士雪山小火车", "coverage": 0.33, "matched": ["mountain"], "quality": 5, "issues": [], "excluded": null, "loc_hit": 1, "clip_s": 12.0}, {"id": "m03", "title": "列车穿过绿色山谷", "coverage": 0.33, "matched": ["mountain"], "quality": 4, "issues": [], "excluded": null, "loc_hit": 0, "clip_s": 8.6}], "shots": [{"clip": "m40", "title": "马特洪峰下的山地铁路", "start": 0.0, "dur": 2.19, "src_in": 0.5, "coverage": 1.0, "quality": 4, "issues": [], "excluded": null}, {"clip": "m42", "title": "马特洪峰与弯道铁路", "start": 2.19, "dur": 2.19, "src_in": 0.5, "coverage": 1.0, "quality": 4, "issues": [], "excluded": null}], "stickers": [{"kind": "开头花字", "text": "ICONIC ALPINE PEAK", "start": 0.0, "dur": 2.8}], "gap": null, "subtitle": "The Matterhorn is one of the most iconic\npeaks in the Alps."}, {"i": 1, "en": "Trains in Switzerland offer panoramic windows with views of the Alps.", "zh": "瑞士的火车提供全景车窗，可以欣赏阿尔卑斯山景。", "role": "铺垫 · 路线", "start": 4.38, "dur": 5.11, "voice_s": 4.96, "audio": "output/tts/line2", "need": ["train", "window", "scenery"], "places": ["瑞士"], "candidates": [{"id": "m41", "title": "瑞士雪山小火车", "coverage": 0.55, "matched": ["train"], "quality": 5, "issues": [], "excluded": null, "loc_hit": 1, "clip_s": 12.0}, {"id": "m40", "title": "马特洪峰下的山地铁路", "coverage": 0.55, "matched": ["train"], "quality": 4, "issues": [], "excluded": null, "loc_hit": 1, "clip_s": 11.97}, {"id": "m42", "title": "马特洪峰与弯道铁路", "coverage": 0.55, "matched": ["train"], "quality": 4, "issues": [], "excluded": null, "loc_hit": 1, "clip_s": 6.67}, {"id": "m14", "title": "火车上用手机", "coverage": 0.82, "matched": ["train", "window"], "quality": 4, "issues": [], "excluded": null, "loc_hit": 0, "clip_s": 5.29}, {"id": "m16", "title": "卧铺包厢窗景（清晨）", "coverage": 0.82, "matched": ["train", "window"], "quality": 4, "issues": [], "excluded": null, "loc_hit": 0, "clip_s": 8.89}, {"id": "m43", "title": "格林德瓦山谷小镇", "coverage": 0.18, "matched": ["scenery"], "quality": 4, "issues": [], "excluded": null, "loc_hit": 1, "clip_s": 7.23}, {"id": "m08", "title": "克鲁火车站站台（英格兰）", "coverage": 0.55, "matched": ["train"], "quality": 4, "issues": [], "excluded": "地点不符：画面是克鲁，脚本说的是瑞士", "loc_hit": 0, "clip_s": 11.0}], "shots": [{"clip": "m41", "title": "瑞士雪山小火车", "start": 4.38, "dur": 2.555, "src_in": 0.5, "coverage": 0.55, "quality": 5, "issues": [], "excluded": null}, {"clip": "m16", "title": "卧铺包厢窗景（清晨）", "start": 6.935, "dur": 2.555, "src_in": 0.5, "coverage": 0.82, "quality": 4, "issues": [], "excluded": null}], "stickers": [], "gap": null, "subtitle": "Trains in Switzerland offer panoramic\nwindows with views of the Alps."}, {"i": 2, "en": "Imagine gliding past snow-capped peaks and lush valleys.", "zh": "想象一下滑过白雪覆盖的山峰和郁郁葱葱的山谷。", "role": "画面 · 情绪", "start": 9.49, "dur": 4.33, "voice_s": 4.18, "audio": "output/tts/line3", "need": ["scenery", "snow"], "places": ["阿尔卑斯"], "candidates": [{"id": "m43", "title": "格林德瓦山谷小镇", "coverage": 0.67, "matched": ["scenery"], "quality": 4, "issues": [], "excluded": null, "loc_hit": 1, "clip_s": 7.23}, {"id": "m44", "title": "阿尔卑斯湖与山崖", "coverage": 0.67, "matched": ["scenery"], "quality": 4, "issues": [], "excluded": null, "loc_hit": 1, "clip_s": 12.0}, {"id": "m45", "title": "国王湖（德国巴伐利亚）", "coverage": 0.67, "matched": ["scenery"], "quality": 4, "issues": [], "excluded": null, "loc_hit": 1, "clip_s": 11.97}, {"id": "m18", "title": "意大利乡村风景（车上拍）", "coverage": 0.67, "matched": ["scenery"], "quality": 4, "issues": [], "excluded": null, "loc_hit": 0, "clip_s": 12.0}, {"id": "m47", "title": "悬崖边的大海（西班牙北部）", "coverage": 0.67, "matched": ["scenery"], "quality": 4, "issues": [], "excluded": null, "loc_hit": 0, "clip_s": 7.97}, {"id": "m41", "title": "瑞士雪山小火车", "coverage": 0.33, "matched": ["snow"], "quality": 5, "issues": [], "excluded": null, "loc_hit": 1, "clip_s": 12.0}, {"id": "m46", "title": "海岸悬崖（北爱尔兰）", "coverage": 0.67, "matched": ["scenery"], "quality": 3, "issues": [], "excluded": "地点不符：画面是北爱尔兰，脚本说的是阿尔卑斯", "loc_hit": 0, "clip_s": 9.17}], "shots": [{"clip": "m43", "title": "格林德瓦山谷小镇", "start": 9.49, "dur": 2.165, "src_in": 0.5, "coverage": 0.67, "quality": 4, "issues": [], "excluded": null}, {"clip": "m41", "title": "瑞士雪山小火车", "start": 11.655, "dur": 2.165, "src_in": 0.5, "coverage": 0.33, "quality": 5, "issues": [], "excluded": null}], "stickers": [], "gap": null, "subtitle": "Imagine gliding past snow-capped peaks\nand lush valleys."}, {"i": 3, "en": "Split ticketing can save you up to 30% on train travel.", "zh": "分段买票可以节省高达30%的火车旅行费用。", "role": "利益点 · 省钱", "start": 13.82, "dur": 4.51, "voice_s": 4.36, "audio": "output/tts/line4", "need": ["ticket"], "places": ["英国"], "candidates": [{"id": "m52", "title": "手机上的新冠健康通行码（不是车票，别配车票或 App 的句子）", "coverage": 0, "matched": [], "quality": 4, "issues": [], "excluded": "内容不符：画面是健康通行码，不是车票", "loc_hit": 0, "clip_s": 8.63}, {"id": "m13", "title": "售票机出票口", "coverage": 1.0, "matched": ["ticket"], "quality": 3, "issues": [], "excluded": null, "loc_hit": 0, "clip_s": 10.16}, {"id": "m53", "title": "刷卡过闸机", "coverage": 1.0, "matched": ["ticket"], "quality": 4, "issues": ["people"], "excluded": "地点不符：画面是墨西哥城地铁，脚本说的是英国", "loc_hit": 0, "clip_s": 7.17}], "shots": [{"clip": "m14", "title": "火车上用手机", "start": 13.82, "dur": 2.255, "src_in": 0.5, "coverage": 0, "quality": 4, "issues": [], "excluded": null}, {"clip": "m13", "title": "售票机出票口", "start": 16.075, "dur": 2.255, "src_in": 0.5, "coverage": 1.0, "quality": 3, "issues": [], "excluded": null}], "stickers": [{"kind": "利益点贴纸", "text": "SAVE UP TO 30%", "start": 14.12, "dur": 2.6}], "gap": null, "subtitle": "Split ticketing can save you up to 30% on\ntrain travel."}, {"i": 4, "en": "Search UK20 in the app for an extra 20% off your first trip.", "zh": "在App中搜索UK20，首次旅行额外享受20%折扣。", "role": "结尾 · 搜码钩子", "start": 18.33, "dur": 5.46, "voice_s": 4.86, "audio": "output/tts/line5", "need": ["app", "phone"], "places": [], "candidates": [{"id": "m05", "title": "手机上打开 App", "coverage": 1.0, "matched": ["app", "phone"], "quality": 4, "issues": [], "excluded": null, "loc_hit": 0, "clip_s": 30.95}, {"id": "m52", "title": "手机上的新冠健康通行码（不是车票，别配车票或 App 的句子）", "coverage": 0, "matched": [], "quality": 4, "issues": [], "excluded": "内容不符：画面是健康通行码，不是车票", "loc_hit": 0, "clip_s": 8.63}, {"id": "m14", "title": "火车上用手机", "coverage": 0.33, "matched": ["phone"], "quality": 4, "issues": [], "excluded": null, "loc_hit": 0, "clip_s": 5.29}, {"id": "m15", "title": "手持手机（背面）", "coverage": 0.33, "matched": ["phone"], "quality": 4, "issues": ["brand"], "excluded": null, "loc_hit": 0, "clip_s": 12.1}], "shots": [{"clip": "m05", "title": "手机上打开 App", "start": 18.33, "dur": 2.73, "src_in": 0.5, "coverage": 1.0, "quality": 4, "issues": [], "excluded": null}, {"clip": "m14", "title": "火车上用手机", "start": 21.06, "dur": 2.73, "src_in": 0.5, "coverage": 0.33, "quality": 4, "issues": [], "excluded": null}], "stickers": [{"kind": "结尾钩子", "text": "UK20", "start": 18.53, "dur": 5.26}], "gap": null, "subtitle": "Search UK20 in the app for an extra 20%\noff your first trip."}], "rules": [{"id": "R1", "name": "利益点不放前 3 秒", "why": "平台会判成营销视频限流", "ok": true, "msg": "前 3 秒没有价格或优惠信息"}, {"id": "R2", "name": "不出现可识别人脸、儿童", "why": "欧洲隐私合规", "ok": true, "msg": "所选镜头里没有可识别人脸（人工标注）"}, {"id": "R3", "name": "不出现第三方品牌标识", "why": "避免商标和广告纠纷", "ok": true, "msg": "没有第三方品牌标识"}, {"id": "R4", "name": "价格写\"up to / from\"", "why": "英国广告规范，不写绝对优惠", "ok": true, "msg": "价格都写了 up to / extra"}, {"id": "R5", "name": "英文字幕每行不超过 42 字符", "why": "移动端可读性", "ok": true, "msg": "字幕已按 42 字符自动断行"}, {"id": "R6", "name": "画面地点和脚本一致", "why": "找不到对的素材就标缺口，不拿别处画面凑", "ok": true, "msg": "已排除 2 个地点不符的镜头，所用镜头地点都和脚本一致"}], "score": {"subject": "已生成的剪映草稿：检查轨道信息和引用文件，尚未检查导出的视频", "checks": [{"name": "读取草稿", "status": "pass", "evidence": "已读取生成的 draft_info.json。"}, {"name": "画面和配音文件", "status": "pass", "evidence": "15 个画面和配音片段的引用文件均存在且非空；未检查文件能否解码。"}, {"name": "配音期间画面覆盖", "status": "pass", "evidence": "5 段配音中有 0 段未被对应轨道完整覆盖（允许 1 毫秒误差）。仅检查时间范围。"}, {"name": "配音期间字幕覆盖", "status": "pass", "evidence": "5 段配音中有 0 段未被对应轨道完整覆盖（允许 1 毫秒误差）。仅检查时间范围。"}, {"name": "镜头时长", "status": "pass", "evidence": "10 个画面片段中，0 个超过 3.2 秒（允许 0.05 秒误差）。"}], "pending": ["画面与脚本是否真正匹配", "配音内容、音量和字幕是否准确", "画质、节奏及观看体验", "人脸、品牌、事实和平台规则需人工核验", "最终导出视频是否正常播放"]}, "log": [{"step": "选题", "msg": "人工输入选题「坐火车穿越瑞士阿尔卑斯，窗外就是马特洪峰」（英国 · TikTok），跳过选题池打分", "ms": 1}, {"step": "写脚本", "msg": "DeepSeek 出 3 版初稿，审核拦下 0 版，采用 A 版", "ms": 7032}, {"step": "读取 Skill", "msg": "冷知识路线类 v0.3：单镜头 ≤ 3.2 秒、字幕/花字样式、利益点和结尾钩子规则", "ms": 7032}, {"step": "读取素材库", "msg": "53 段实拍，已打标签（地点、场景、清晰度、风险）", "ms": 7289}, {"step": "生成配音", "msg": "5 句，共 22.6 秒（MiniMax English_Graceful_Lady）", "ms": 12203}, {"step": "按语义和气口分段", "msg": "5 段，总时长 23.79 秒", "ms": 12204}, {"step": "本地素材库召回", "msg": "每句按画面概念召回 5 个候选；排除地点不符 2 个；10 个镜头", "ms": 12204}, {"step": "检索国家 / 平台规则", "msg": "英国 × TikTok，命中 6 条，通过 6 条", "ms": 12204}, {"step": "编排剪映轨道", "msg": "已生成剪映草稿「AI粗剪_坐火车穿越瑞士阿尔卑斯窗_1109-0407」：画面 10 段、配音 5 段、字幕 5 段、花字 3 个", "ms": 12272}, {"step": "草稿检查", "msg": "完成 5 项检查；画面内容等仍需人工核验", "ms": 12272}, {"step": "人工换镜头", "msg": "换了 1 个镜头，重新写入剪映草稿「AI粗剪_坐火车穿越瑞士阿尔卑斯窗_1109-0407」，已重新检查草稿", "ms": 12337}, {"step": "人工换镜头", "msg": "换了 2 个镜头，重新写入剪映草稿「AI粗剪_坐火车穿越瑞士阿尔卑斯窗_1109-0407」，已重新检查草稿", "ms": 12403}], "draft": {"name": "AI粗剪_坐火车穿越瑞士阿尔卑斯窗_1109-0407", "path": "本机生成后显示草稿路径", "shots": 10, "stickers": 3}, "usage": {"deepseek": {"prompt_tokens": 838, "completion_tokens": 1403, "total_tokens": 2241, "prompt_tokens_details": {"cached_tokens": 640}, "prompt_cache_hit_tokens": 640, "prompt_cache_miss_tokens": 198, "seconds": 7.0}, "minimax": {"characters": 299, "voice": "English_Graceful_Lady"}}, "clips": {"m01": {"title": "夜间列车进站", "file": "clips/m01.mp4", "tags": ["train", "night", "station"], "location": "未知", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/train-arriving-at-station-at-night-14536989/", "clip_s": 11.47}, "m02": {"title": "夜间站台停靠列车", "file": "clips/m02.mp4", "tags": ["train", "night", "station", "depart"], "location": "未知", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/a-train-is-parked-at-a-station-at-night-27549041/", "clip_s": 12.47}, "m03": {"title": "列车穿过绿色山谷", "file": "clips/m03.mp4", "tags": ["train", "mountain", "journey"], "location": "未知", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/scenic-train-journey-through-lush-green-mountains-33054658/", "clip_s": 8.6}, "m04": {"title": "卧铺铺位（车厢内）", "file": "clips/m04.mp4", "tags": ["sleeper", "cabin", "train"], "location": "未知", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/legs-of-person-laying-on-couchette-on-train-10430975/", "clip_s": 3.5}, "m05": {"title": "手机上打开 App", "file": "clips/m05.mp4", "tags": ["phone", "app"], "location": "未知", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/using-smartphone-display-for-mobile-applications-40326823/", "clip_s": 30.95}, "m06": {"title": "伦敦夜景（泰晤士河）", "file": "clips/m06.mp4", "tags": ["london", "night", "city"], "location": "伦敦", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/stunning-nighttime-view-of-london-skyline-32215140/", "clip_s": 11.68}, "m07": {"title": "伦敦塔桥夜景", "file": "clips/m07.mp4", "tags": ["london", "night", "city"], "location": "伦敦", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/nightview-of-tower-bridge-in-london-35991478/", "clip_s": 12.5}, "m08": {"title": "克鲁火车站站台（英格兰）", "file": "clips/m08.mp4", "tags": ["station", "train", "platform"], "location": "克鲁", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/modern-crewe-railway-station-platform-view-31273250/", "clip_s": 11.0}, "m09": {"title": "白天车站站台", "file": "clips/m09.mp4", "tags": ["station", "platform"], "location": "未知", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/modern-train-station-platform-with-arrival-38885403/", "clip_s": 8.67}, "m10": {"title": "山丘与湖泊（阴天）", "file": "clips/m10.mp4", "tags": ["lake", "mountain"], "location": "未知", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/scenery-with-hills-and-lake-12521200/", "clip_s": 18.0}, "m11": {"title": "阴天山湖", "file": "clips/m11.mp4", "tags": ["lake", "mountain"], "location": "未知", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/tranquil-mountain-lake-scene-with-overcast-sky-35426666/", "clip_s": 10.7}, "m12": {"title": "阿尔卑斯雪山湖", "file": "clips/m12.mp4", "tags": ["lake", "mountain"], "location": "阿尔卑斯", "quality": 5, "issues": [], "pexels": "https://www.pexels.com/video/serene-alpine-lake-with-majestic-mountains-38087912/", "clip_s": 9.19}, "m13": {"title": "售票机出票口", "file": "clips/m13.mp4", "tags": ["ticket", "station"], "location": "未知", "quality": 3, "issues": [], "pexels": "https://www.pexels.com/video/a-person-getting-a-ticket-from-the-machine-7252267/", "clip_s": 10.16}, "m14": {"title": "火车上用手机", "file": "clips/m14.mp4", "tags": ["phone", "train", "window"], "location": "未知", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/person-using-smartphone-on-train-33117489/", "clip_s": 5.29}, "m15": {"title": "手持手机（背面）", "file": "clips/m15.mp4", "tags": ["phone"], "location": "未知", "quality": 4, "issues": ["brand"], "pexels": "https://www.pexels.com/video/hand-holding-phone-with-icons-on-screen-11698130/", "clip_s": 12.1}, "m16": {"title": "卧铺包厢窗景（清晨）", "file": "clips/m16.mp4", "tags": ["sleeper", "cabin", "window", "morning", "train"], "location": "未知", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/tranquil-train-cabin-view-with-passenger-38302461/", "clip_s": 8.89}, "m17": {"title": "荷兰乡村列车（航拍）", "file": "clips/m17.mp4", "tags": ["train", "countryside", "field", "day", "aerial", "journey"], "location": "荷兰", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/a-train-is-traveling-through-a-field-20770650/", "clip_s": 11.97}, "m18": {"title": "意大利乡村风景（车上拍）", "file": "clips/m18.mp4", "tags": ["countryside", "mountain", "journey", "day", "scenery"], "location": "意大利", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/scenic-italian-countryside-from-a-train-32878229/", "clip_s": 12.0}, "m19": {"title": "夕阳下驶过乡村的列车", "file": "clips/m19.mp4", "tags": ["train", "countryside", "sunset", "journey"], "location": "荷兰", "quality": 3, "issues": [], "pexels": "https://www.pexels.com/video/scenic-train-passing-through-dutch-countryside-33122062/", "clip_s": 10.27}, "m20": {"title": "田野中的铁路（航拍）", "file": "clips/m20.mp4", "tags": ["train", "countryside", "field", "aerial", "journey"], "location": "荷兰", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/a-train-is-traveling-over-a-bridge-in-a-field-27636378/", "clip_s": 11.97}, "m21": {"title": "车窗外的风景", "file": "clips/m21.mp4", "tags": ["window", "cabin", "train", "journey"], "location": "未知", "quality": 3, "issues": [], "pexels": "https://www.pexels.com/video/scenic-views-through-train-window-36620147/", "clip_s": 11.2}, "m22": {"title": "车窗外的乡村", "file": "clips/m22.mp4", "tags": ["window", "cabin", "train", "countryside", "journey"], "location": "未知", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/scenic-train-journey-through-countryside-35110516/", "clip_s": 11.97}, "m23": {"title": "车窗外的城市天际线", "file": "clips/m23.mp4", "tags": ["window", "train", "city", "journey"], "location": "未知", "quality": 3, "issues": [], "pexels": "https://www.pexels.com/video/a-view-of-the-city-from-a-window-19057954/", "clip_s": 11.97}, "m24": {"title": "车门边看乡村风景", "file": "clips/m24.mp4", "tags": ["window", "cabin", "train", "countryside", "journey"], "location": "未知", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/scenic-train-journey-through-green-countryside-37533823/", "clip_s": 11.97}, "m25": {"title": "斯特拉斯堡火车站大厅", "file": "clips/m25.mp4", "tags": ["station", "day"], "location": "斯特拉斯堡", "quality": 4, "issues": ["people"], "pexels": "https://www.pexels.com/video/busy-train-station-in-strasbourg-france-32442350/", "clip_s": 8.2}, "m26": {"title": "雪山下的欧洲火车站", "file": "clips/m26.mp4", "tags": ["station", "train", "mountain", "day"], "location": "阿尔卑斯", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/busy-european-train-station-with-mountain-views-38076064/", "clip_s": 6.63}, "m27": {"title": "英国火车站站台", "file": "clips/m27.mp4", "tags": ["station", "platform", "day"], "location": "英国", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/charming-train-station-platform-view-31273252/", "clip_s": 11.6}, "m28": {"title": "空站台（晴天）", "file": "clips/m28.mp4", "tags": ["station", "platform", "day"], "location": "未知", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/empty-train-station-platform-on-sunny-day-34710735/", "clip_s": 11.3}, "m29": {"title": "埃菲尔铁塔与塞纳河", "file": "clips/m29.mp4", "tags": ["paris", "landmark", "city", "river", "day"], "location": "巴黎", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/eiffel-tower-and-seine-river-19197245/", "clip_s": 7.6}, "m30": {"title": "埃菲尔铁塔（晴天）", "file": "clips/m30.mp4", "tags": ["paris", "landmark", "city", "river", "boat", "day"], "location": "巴黎", "quality": 5, "issues": [], "pexels": "https://www.pexels.com/video/stunning-daytime-view-of-eiffel-tower-31449922/", "clip_s": 11.7}, "m31": {"title": "罗马斗兽场（白天）", "file": "clips/m31.mp4", "tags": ["rome", "landmark", "city", "day"], "location": "罗马", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/majestic-colosseum-in-rome-during-daytime-39488183/", "clip_s": 7.2}, "m32": {"title": "罗马斗兽场航拍（日落）", "file": "clips/m32.mp4", "tags": ["rome", "landmark", "city", "sunset", "aerial"], "location": "罗马", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/aerial-view-of-colosseum-at-sunset-in-rome-31791491/", "clip_s": 11.97}, "m33": {"title": "阿姆斯特丹运河边的老房子", "file": "clips/m33.mp4", "tags": ["amsterdam", "canal", "city", "day"], "location": "阿姆斯特丹", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/charming-amsterdam-canal-view-with-historic-buildings-34704500/", "clip_s": 11.37}, "m34": {"title": "阿姆斯特丹运河游船", "file": "clips/m34.mp4", "tags": ["amsterdam", "canal", "boat", "city", "day"], "location": "阿姆斯特丹", "quality": 4, "issues": ["people"], "pexels": "https://www.pexels.com/video/scenic-boat-ride-through-amsterdam-canals-29719988/", "clip_s": 12.0}, "m35": {"title": "爱丁堡城市街景", "file": "clips/m35.mp4", "tags": ["edinburgh", "city", "landmark", "day"], "location": "爱丁堡", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/scenic-edinburgh-cityscape-featuring-iconic-landmarks-35818153/", "clip_s": 11.97}, "m36": {"title": "爱丁堡司各特纪念塔（航拍）", "file": "clips/m36.mp4", "tags": ["edinburgh", "landmark", "city", "aerial", "day"], "location": "爱丁堡", "quality": 5, "issues": [], "pexels": "https://www.pexels.com/video/iconic-scott-monument-tower-in-edinburgh-39638121/", "clip_s": 12.0}, "m37": {"title": "威尼斯运河与小桥", "file": "clips/m37.mp4", "tags": ["venice", "canal", "bridge", "city", "day"], "location": "威尼斯", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/picturesque-venice-canal-with-historic-buildings-39617920/", "clip_s": 6.57}, "m38": {"title": "威尼斯贡多拉", "file": "clips/m38.mp4", "tags": ["venice", "canal", "boat", "city", "day"], "location": "威尼斯", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/gondola-ride-through-venice-s-iconic-canals-35739115/", "clip_s": 12.0}, "m39": {"title": "巴塞罗那圣家堂", "file": "clips/m39.mp4", "tags": ["barcelona", "landmark", "city", "day"], "location": "巴塞罗那", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/sagrada-familia-under-vibrant-blue-sky-35134132/", "clip_s": 6.7}, "m40": {"title": "马特洪峰下的山地铁路", "file": "clips/m40.mp4", "tags": ["train", "mountain", "snow", "journey", "day", "matterhorn"], "location": "阿尔卑斯", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/scenic-train-ride-through-swiss-alps-33853666/", "clip_s": 11.97}, "m41": {"title": "瑞士雪山小火车", "file": "clips/m41.mp4", "tags": ["train", "mountain", "snow", "station", "day"], "location": "阿尔卑斯", "quality": 5, "issues": [], "pexels": "https://www.pexels.com/video/scenic-train-ride-through-snowy-swiss-alps-36041445/", "clip_s": 12.0}, "m42": {"title": "马特洪峰与弯道铁路", "file": "clips/m42.mp4", "tags": ["train", "mountain", "snow", "journey", "day", "matterhorn"], "location": "阿尔卑斯", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/scenic-train-journey-with-matterhorn-in-view-33841182/", "clip_s": 6.67}, "m43": {"title": "格林德瓦山谷小镇", "file": "clips/m43.mp4", "tags": ["mountain", "village", "countryside", "day", "scenery"], "location": "阿尔卑斯", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/breathtaking-alpine-scenery-in-grindelwald-switzerland-34963042/", "clip_s": 7.23}, "m44": {"title": "阿尔卑斯湖与山崖", "file": "clips/m44.mp4", "tags": ["lake", "mountain", "scenery"], "location": "阿尔卑斯", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/scenic-alpine-lake-and-mountain-view-35761474/", "clip_s": 12.0}, "m45": {"title": "国王湖（德国巴伐利亚）", "file": "clips/m45.mp4", "tags": ["lake", "mountain", "scenery", "day"], "location": "阿尔卑斯", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/scenic-aerial-view-of-konigssee-lake-37617124/", "clip_s": 11.97}, "m46": {"title": "海岸悬崖（北爱尔兰）", "file": "clips/m46.mp4", "tags": ["coast", "sea", "cliff", "scenery"], "location": "北爱尔兰", "quality": 3, "issues": [], "pexels": "https://www.pexels.com/video/majestic-coastal-cliffs-with-ocean-waves-32549520/", "clip_s": 9.17}, "m47": {"title": "悬崖边的大海（西班牙北部）", "file": "clips/m47.mp4", "tags": ["coast", "sea", "scenery"], "location": "西班牙", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/breathtaking-cliffside-view-over-the-vast-ocean-30326499/", "clip_s": 7.97}, "m48": {"title": "罗卡角海岸（葡萄牙）", "file": "clips/m48.mp4", "tags": ["coast", "sea", "cliff", "scenery", "day"], "location": "葡萄牙", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/cabo-da-roca-27968170/", "clip_s": 6.07}, "m49": {"title": "绿色田野（航拍）", "file": "clips/m49.mp4", "tags": ["countryside", "field", "aerial", "day"], "location": "未知", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/drone-footage-of-green-fields-12172344/", "clip_s": 11.97}, "m50": {"title": "田间小路（航拍）", "file": "clips/m50.mp4", "tags": ["countryside", "field", "aerial", "day"], "location": "未知", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/rural-road-among-fields-12204555/", "clip_s": 11.97}, "m51": {"title": "云下的田野", "file": "clips/m51.mp4", "tags": ["countryside", "field", "day"], "location": "未知", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/clouds-over-fields-12196080/", "clip_s": 11.97}, "m52": {"title": "手机上的新冠健康通行码（不是车票，别配车票或 App 的句子）", "file": "clips/m52.mp4", "tags": ["qr", "health-pass"], "location": "未知", "quality": 4, "issues": [], "pexels": "https://www.pexels.com/video/qr-code-on-a-smartphone-8384432/", "clip_s": 8.63}, "m53": {"title": "刷卡过闸机", "file": "clips/m53.mp4", "tags": ["ticket", "station", "gate"], "location": "墨西哥城地铁（屏幕上是西班牙语票价）", "quality": 4, "issues": ["people"], "pexels": "https://www.pexels.com/video/city-metro-turnstile-in-busy-station-39685624/", "clip_s": 7.17}}, "models": {"script": {"provider": "DeepSeek", "model": "deepseek-chat"}, "tts": {"provider": "MiniMax", "model": "speech-2.8-hd"}, "video": {"provider": "DeepSeek", "model": "deepseek-flash"}}};
+const STUDIO = /*__STUDIO__*/false;  // 本地工作台（studio.py 提供）时为 true：能输入选题现场生成、能把换过的镜头写回剪映
+const HOSTED = /*__HOSTED__*/false;  // 云端仅提供成片评测，不能生成或写入剪映草稿
+const REVIEW = {
+ "note": "模拟的发布记录：脚本是流水线真实生成过的，账号、作品编号和发布时间是编的。真实落地时由发布环节写入。",
+ "generated_at": "2026-11-11 02:07",
+ "hit_views": 1000,
+ "reports": [
+  {
+   "file": "report_2026-11-09.csv",
+   "rows": 9
+  },
+  {
+   "file": "report_2026-11-10.csv",
+   "rows": 10
+  }
+ ],
+ "latest": "2026-11-10 09:00",
+ "rows": [
+  {
+   "work_id": "W01",
+   "platform": "TikTok",
+   "account": "@uk_rail_01",
+   "script_id": "S01",
+   "title": "从伦敦坐卧铺夜车去苏格兰高地",
+   "genre": "冷知识",
+   "views": 1100,
+   "fetched_at": "2026-11-10 09:00",
+   "tags": [
+    "值得继续测"
+   ],
+   "delta": 200,
+   "new_hit": true,
+   "note": ""
+  },
+  {
+   "work_id": "W02",
+   "platform": "Instagram",
+   "account": "@ukrail.daily",
+   "script_id": "S01",
+   "title": "从伦敦坐卧铺夜车去苏格兰高地",
+   "genre": "冷知识",
+   "views": 410,
+   "fetched_at": "2026-11-10 09:00",
+   "tags": [],
+   "delta": 90,
+   "new_hit": false,
+   "note": ""
+  },
+  {
+   "work_id": "W03",
+   "platform": "TikTok",
+   "account": "@uk_rail_02",
+   "script_id": "S02",
+   "title": "坐火车穿越瑞士阿尔卑斯，窗外就是马特洪峰",
+   "genre": "冷知识",
+   "views": 170,
+   "fetched_at": "2026-11-10 09:00",
+   "tags": [],
+   "delta": 20,
+   "new_hit": false,
+   "note": ""
+  },
+  {
+   "work_id": "W04",
+   "platform": "TikTok",
+   "account": "@uk_rail_01",
+   "script_id": "S03",
+   "title": "从巴黎坐火车去阿姆斯特丹，周末两日游",
+   "genre": "路线推荐",
+   "views": 640,
+   "fetched_at": "2026-11-10 09:00",
+   "tags": [],
+   "delta": 40,
+   "new_hit": false,
+   "note": ""
+  },
+  {
+   "work_id": "W05",
+   "platform": "Instagram",
+   "account": "@ukrail.daily",
+   "script_id": "S04",
+   "title": "坐火车从罗马去威尼斯，一天看两座城",
+   "genre": "路线推荐",
+   "views": 530,
+   "fetched_at": "2026-11-10 09:00",
+   "tags": [],
+   "delta": 30,
+   "new_hit": false,
+   "note": ""
+  },
+  {
+   "work_id": "W06",
+   "platform": "TikTok",
+   "account": "@uk_rail_02",
+   "script_id": "S05",
+   "title": "伦敦出发的 3 条一日游火车路线",
+   "genre": "路线推荐",
+   "views": 0,
+   "fetched_at": "2026-11-10 09:00",
+   "tags": [
+    "零播"
+   ],
+   "delta": 0,
+   "new_hit": false,
+   "note": ""
+  },
+  {
+   "work_id": "W07",
+   "platform": "TikTok",
+   "account": "@uk_rail_03",
+   "script_id": "S06",
+   "title": "周末坐火车去湖区",
+   "genre": "路线推荐",
+   "views": 260,
+   "fetched_at": "2026-11-10 09:00",
+   "tags": [],
+   "delta": 80,
+   "new_hit": false,
+   "note": ""
+  },
+  {
+   "work_id": "W08",
+   "platform": "TikTok",
+   "account": "@uk_rail_03",
+   "script_id": "S07",
+   "title": "英国火车票分段买更便宜",
+   "genre": "优惠券",
+   "views": 240,
+   "fetched_at": "2026-11-09 09:00",
+   "tags": [
+    "待补"
+   ],
+   "delta": null,
+   "new_hit": false,
+   "note": "这次没取到，保留 2026-11-09 09:00 的读数"
+  },
+  {
+   "work_id": "W09",
+   "platform": "TikTok",
+   "account": "@uk_rail_01",
+   "script_id": "S08",
+   "title": "黑五英国火车票限时优惠",
+   "genre": "热点",
+   "views": 2300,
+   "fetched_at": "2026-11-10 09:00",
+   "tags": [
+    "值得继续测"
+   ],
+   "delta": 800,
+   "new_hit": false,
+   "note": ""
+  }
+ ],
+ "unmatched": [
+  {
+   "work_id": "X99",
+   "platform": "TikTok",
+   "views": "75",
+   "fetched_at": "2026-11-10 09:00",
+   "status": "ok",
+   "report": "report_2026-11-10.csv"
+  }
+ ],
+ "genres": {
+  "优惠券": {
+   "works": 1,
+   "hits": 0,
+   "rate": 0.273,
+   "note": "只有 1 条，样本太少，用全部作品的千播率代替"
+  },
+  "冷知识": {
+   "works": 3,
+   "hits": 1,
+   "rate": 0.4,
+   "note": ""
+  },
+  "热点": {
+   "works": 1,
+   "hits": 1,
+   "rate": 0.273,
+   "note": "只有 1 条，样本太少，用全部作品的千播率代替"
+  },
+  "路线推荐": {
+   "works": 4,
+   "hits": 0,
+   "rate": 0.167,
+   "note": ""
+  }
+ },
+ "overall_rate": 0.273,
+ "genre_hit_rate": {
+  "优惠券": 0.273,
+  "冷知识": 0.4,
+  "热点": 0.273,
+  "路线推荐": 0.167
+ },
+ "topics_before": [
+  {
+   "id": "T1",
+   "title": "伦敦到苏格兰，睡一觉就到（卧铺冷知识）",
+   "genre": [
+    "冷知识",
+    "路线推荐"
+   ],
+   "score": 0.98
+  },
+  {
+   "id": "T3",
+   "title": "伦敦出发的 3 条一日游火车路线",
+   "genre": [
+    "路线推荐"
+   ],
+   "score": 0.807
+  },
+  {
+   "id": "T4",
+   "title": "黑五英国火车票限时优惠",
+   "genre": [
+    "热点",
+    "优惠券"
+   ],
+   "score": 0.722
+  },
+  {
+   "id": "T2",
+   "title": "英国火车票分段买更便宜",
+   "genre": [
+    "优惠券"
+   ],
+   "score": 0.609
+  }
+ ],
+ "topics_after": [
+  {
+   "id": "T1",
+   "title": "伦敦到苏格兰，睡一觉就到（卧铺冷知识）",
+   "genre": [
+    "冷知识",
+    "路线推荐"
+   ],
+   "score": 0.98
+  },
+  {
+   "id": "T2",
+   "title": "英国火车票分段买更便宜",
+   "genre": [
+    "优惠券"
+   ],
+   "score": 0.781
+  },
+  {
+   "id": "T4",
+   "title": "黑五英国火车票限时优惠",
+   "genre": [
+    "热点",
+    "优惠券"
+   ],
+   "score": 0.781
+  },
+  {
+   "id": "T3",
+   "title": "伦敦出发的 3 条一日游火车路线",
+   "genre": [
+    "路线推荐"
+   ],
+   "score": 0.629
+  }
+ ],
+ "retest": {
+  "high": {
+   "work_id": "W01",
+   "title": "从伦敦坐卧铺夜车去苏格兰高地",
+   "views": 1100,
+   "platform": "TikTok"
+  },
+  "low": {
+   "work_id": "W03",
+   "title": "坐火车穿越瑞士阿尔卑斯，窗外就是马特洪峰",
+   "views": 170,
+   "platform": "TikTok"
+  },
+  "difference": "过千那条第一句用提问开场（\"Did you know...?\"），没过千那条第一句是陈述句（\"The Matterhorn is...\"）。",
+  "change": "把没过千那条的第一句改成提问式开场，例如\"Did you know you can see the Matterhorn right from your train window?\"，其余不动。",
+  "metric": "前3秒完播率",
+  "model": "DeepSeek · deepseek-chat"
+ }
+}
+;  // 数据复盘的结果（review.py 生成），没有就不显示入口
+const $=id=>document.getElementById(id);
+const S=R.segments;
+const V=R.run_id?`?v=${R.run_id}`:'';
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function infoButton(label,description){return `<button type="button" class="info-button" aria-label="${esc(label)}" data-help="${esc(description)}">i</button>`}
+let infoAnchor=null,infoTimer=0;
+function hideInfo(){clearTimeout(infoTimer);if(infoAnchor)infoAnchor.removeAttribute('aria-describedby');infoAnchor=null;$('infoTooltip').hidden=true}
+function showInfo(button){
+  hideInfo();infoAnchor=button;const tip=$('infoTooltip');tip.textContent=button.dataset.help;tip.style.width=Math.min(290,innerWidth-24)+'px';tip.hidden=false;
+  button.setAttribute('aria-describedby','infoTooltip');const r=button.getBoundingClientRect(),h=tip.offsetHeight;
+  tip.style.left=Math.max(12,Math.min(r.left,innerWidth-tip.offsetWidth-12))+'px';
+  tip.style.top=Math.max(12,r.bottom+h+20<=innerHeight?r.bottom+8:r.top-h-8)+'px';
+}
+function scheduleInfoClose(){clearTimeout(infoTimer);infoTimer=setTimeout(()=>{if(infoAnchor&&document.activeElement!==infoAnchor&&!infoAnchor.matches(':hover')&&!$('infoTooltip').matches(':hover'))hideInfo()},150)}
+document.addEventListener('pointerover',e=>{const b=e.target.closest('[data-help]');if(b)showInfo(b);else if(e.target.closest('#infoTooltip'))clearTimeout(infoTimer)});
+document.addEventListener('pointerout',e=>{if(e.target.closest('[data-help],#infoTooltip'))scheduleInfoClose()});
+document.addEventListener('focusin',e=>{const b=e.target.closest('[data-help]');if(b)showInfo(b);else hideInfo()});
+document.addEventListener('focusout',scheduleInfoClose);
+document.addEventListener('click',e=>{const b=e.target.closest('[data-help]');if(b)showInfo(b);else if(!e.target.closest('#infoTooltip'))hideInfo()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('infoTooltip').hidden){hideInfo();e.stopImmediatePropagation();e.preventDefault()}},true);
+window.addEventListener('resize',hideInfo);
+document.addEventListener('scroll',()=>{if(infoAnchor&&document.activeElement===infoAnchor)showInfo(infoAnchor);else hideInfo()},true);
+const fmt=t=>{const m=Math.floor(t/60),s=t-m*60;return String(m).padStart(2,'0')+':'+s.toFixed(1).padStart(4,'0')};
+const thumb=id=>`thumbs/${id}.jpg`;
+const state={gen:false,t:0,playing:false,seg:0,shot:0};
+S.forEach(seg=>seg.shots.forEach(sh=>{sh.orig=sh.clip;sh.orig_src_in=sh.src_in}));
+const voiceName=R.skill.voice.used||R.skill.voice.voice;
+const isInput=R.topic.chosen==='INPUT';
+
+/* ---------- static info ---------- */
+$('kv').innerHTML=`<dt>国家 / 平台</dt><dd>${esc(R.country)} · ${esc(R.platform)}</dd><dt>剪辑 Skill</dt><dd>${esc(R.skill.name)}</dd><dt>配音</dt><dd>${esc(voiceName)}</dd><dt>选题</dt><dd>${isInput?'人工输入':esc(R.topic.chosen)} · ${esc(R.title)}</dd><dt>脚本</dt><dd>${R.mode==='live'?esc(R.models?.script?.provider||'DeepSeek'):'AI'} 初稿 ${R.scripts.variants.length} 版 → 采用 ${R.scripts.chosen} 版</dd>${R.models?`<dt>模型</dt><dd id="kvModels">${['script','tts','video'].filter(k=>R.models[k]).map(k=>({script:'写脚本',tts:'配音',video:'成片评测'})[k]+' '+esc(R.models[k].provider)+' · '+esc(R.models[k].model)).join('<br>')}<br><small style="color:var(--dim)">在 .env 里改，不用动代码</small></dd>`:''}`;
+$('foot').innerHTML=`<div>素材：Pexels 免费可商用实拍，共 ${Object.keys(R.clips).length} 段（${Object.entries(R.clips).map(([id,c])=>`<a href="${c.pexels}" target="_blank" rel="noopener">${id}</a>`).join(' ')}）。</div><div>说明：素材标签为人工看画面标注；${R.mode==='live'?'脚本由 DeepSeek 现写，并给每句标出需要的画面概念和地点，':'存档脚本按关键词表找画面概念，'}召回按概念和地点匹配。真实落地时换成多模态模型自动打标和向量检索。剪映草稿由开源工具 pyJianYingDraft 生成。</div>`;
+
+/* ---------- video / audio elements ---------- */
+const vids={};
+function vid(id){ if(!vids[id]){ const v=document.createElement('video'); v.src=R.clips[id].file; v.muted=true; v.playsInline=true; v.preload='auto'; $('screen').insertBefore(v,$('huazi')); vids[id]=v; } return vids[id]; }
+const auds=HOSTED?[]:S.map(seg=>{const a=new Audio(seg.audio.replace('output/tts/','audio/')+'.m4a'+V); a.preload='auto'; return a;});
+if(!HOSTED)S.forEach(seg=>seg.shots.forEach(sh=>vid(sh.clip)));
+
+/* ---------- 检查结果与当前镜头标注 ---------- */
+function candOf(seg,id){return seg.candidates.find(c=>c.id===id)||{id,title:R.clips[id].title,coverage:0,matched:[],quality:R.clips[id].quality,issues:R.clips[id].issues,excluded:null}}
+function shotFlags(){
+  const shots=S.flatMap(seg=>seg.shots.map(sh=>candOf(seg,sh.clip)));
+  return {brand:shots.filter(c=>c.issues.includes('brand')).length,faces:shots.filter(c=>c.issues.includes('faces')).length,wrong:shots.filter(c=>c.excluded).length};
+}
+const swaps=()=>{const o={};S.forEach(seg=>seg.shots.forEach((sh,j)=>{if(sh.clip!==sh.orig){(o[seg.i]=o[seg.i]||{})[j]=sh.clip}}));return o};
+
+/* ---------- render ---------- */
+function renderSteps(done,run,log=R.log){
+  const stages=[['脚本','写脚本'],['配音','生成配音'],['素材','本地素材库召回'],['草稿','编排剪映轨道'],['检查','草稿检查']];
+  $('stageStrip').innerHTML=stages.map(([label,key])=>{const i=log.findIndex(l=>l.step===key);const status=i>=0&&i<done?'done':i>=0&&i===run?'run':'';return `<li class="${status}"><span class="stage-dot" aria-hidden="true"></span>${label}<span class="sr-only" hidden>${status}</span></li>`}).join('');
+  $('steps').innerHTML=log.map((l,i)=>`<li data-step="${esc(l.step)}" class="${i<done?'done':i===run?'run':''} ${['选题','写脚本','读取 Skill'].includes(l.step)?'link':''}"><span class="dot" aria-hidden="true"></span><span><span class="k">${esc(l.step)}</span><span class="v">${i<done?esc(l.step==='自动评分'&&!Array.isArray(R.score?.checks)?'旧版估算已停用，请重新生成后查看检查结果':l.msg):i===run?'处理中…':'等待'}</span></span><span class="ms mono">${i<done&&l.ms!=null?l.ms+' ms':''}</span></li>`).join('');
+}
+function renderScore(){
+  const result=R.score||{};
+  const changed=Object.values(swaps()).some(o=>Object.keys(o).length);
+  if(changed){
+    $('scoreBox').innerHTML=`<p class="empty">${STUDIO?'当前预览已换镜头，尚未重新检测。点击「写入剪映」后将重新检测。':'当前预览已换镜头；网页不会重新检测或修改剪映草稿。恢复原镜头可查看存档检查结果。'}</p>`;
+    return;
+  }
+  if(!Array.isArray(result.checks)){
+    $('scoreBox').innerHTML='<p class="empty">这次是旧版存档，缺少可核验的检查数据。请在本地工作台重新生成或重新写入草稿后查看。</p>';
+    return;
+  }
+  const statusLabel={pass:'通过',ok:'通过',fail:'未通过',warning:'需留意',warn:'需留意',unknown:'待确认',pending:'待确认'};
+  const checks=result.checks.map(c=>{
+    const status=String(c.status??'unknown');
+    const cls=['pass','ok'].includes(status)?'ok':['fail'].includes(status)?'bad':'mid';
+    return `<div class="dim"><div class="t"><span>${esc(c.name)}</span><span class="band ${cls}">${esc(statusLabel[status]||status)}</span></div><div class="why">${esc(c.evidence)}</div></div>`;
+  }).join('');
+  const pending=(result.pending||[]).map(item=>`<li>${esc(typeof item==='string'?item:(item.name||item.evidence||''))}</li>`).join('');
+  $('scoreBox').innerHTML=`<p class="empty">${esc(result.subject||'检查对象：本次生成的草稿')}</p><div class="dims">${checks||'<p class="empty">暂无检查结果。</p>'}</div>${pending?`<p class="empty" style="margin-top:12px">还需要人工检查：</p><ul class="review-list">${pending}</ul>`:''}`;
+}
+function renderRules(){
+  const sc=shotFlags();
+  $('rules').innerHTML=R.rules.map(r=>{let ok=r.ok,msg=r.msg;
+    if(r.id==='R2'){ok=!sc.faces;msg=ok?'所选镜头里没有可识别人脸（人工标注）':`${sc.faces} 个镜头有可识别人脸`}
+    if(r.id==='R3'){ok=!sc.brand;msg=ok?'所选镜头未标注品牌标识（人工标注）':`${sc.brand} 个镜头露出手机品牌标识`}
+    if(r.id==='R6'&&sc.wrong){ok=false;msg='有镜头地点和脚本不符'}
+    return `<li><span class="${ok?'ok-ic':'bad-ic'}">${ok?'✓':'✕'}</span><span><b>${esc(r.name)}</b> · ${esc(msg)}</span></li>`}).join('');
+}
+function renderInspect(){
+  const seg=S[state.seg]; const sh=seg.shots[state.shot]||seg.shots[0];
+  const cur=candOf(seg,sh.clip);
+  $('inspectorTitle').textContent='镜头 '+String(S.flatMap(s=>s.shots).indexOf(sh)+1).padStart(2,'0');
+  $('inspect').innerHTML=`<div class="seg-tabs" role="tablist" aria-label="脚本分句">${S.map(s=>`<button role="tab" aria-selected="${s.i===state.seg}" data-seg="${s.i}" class="${s.i===state.seg?'on':''} ${s.gap?'gapped':''}" title="${s.gap?'有素材缺口':''}">第 ${s.i+1} 句</button>`).join('')}</div>
+   <div class="seg-head"><div><div class="seg-en">${esc(seg.en)}</div><div class="seg-zh">${esc(seg.zh)}</div></div></div>
+   <div class="matching-info">${infoButton('当前分句的素材要求','画面标签：'+seg.need.join('、')+'；地点：'+(seg.places.join('、')||'不限'))}</div>
+   ${seg.gap?`<div class="gap">${esc(seg.gap)}</div>`:''}
+   ${seg.shots.length>1?`<div class="shot-tabs">${seg.shots.map((x,i)=>`<button data-shot="${i}" class="${i===state.shot?'on':''}">镜头 ${i+1}</button>`).join('')}</div>`:''}
+   <div class="cands">${seg.candidates.map(c=>{const sel=c.id===sh.clip;const flags=(c.excluded?`<span class="chip bad">${esc(c.excluded)}</span>`:'')+(c.issues.includes('brand')?'<span class="chip warn">品牌露出</span>':'')+(c.issues.includes('people')?'<span class="chip">有路人（不可辨认）</span>':'');
+     return `<div class="cand ${sel?'sel':''} ${c.excluded?'x':''}"><img src="${thumb(c.id)}" alt=""><div><div class="nm">${esc(c.title)}</div><div class="meta">${c.clip_s} 秒 ${infoButton('素材匹配依据','匹配标签：'+(c.matched.join('、')||'无')+'；清晰度：'+c.quality+'/5；匹配度：'+Math.round(c.coverage*100)+'%（基于标签匹配）')}</div>${flags?`<div class="chips">${flags}</div>`:''}</div><div class="pct"><span class="mono">${Math.round(c.coverage*100)}%</span><br>${sel?'<span class="meta">使用中</span>':`<button data-use="${c.id}">${c.excluded?'仍要替换':'替换'}</button>`}</div></div>`}).join('')}</div>`;
+  renderEdits();
+}
+function renderEdits(){
+  const sw=swaps(), n=Object.values(sw).reduce((a,o)=>a+Object.keys(o).length,0);
+  $('edits').hidden=!STUDIO||!state.gen;
+  if(!STUDIO)return;
+  $('edits').innerHTML=n?`<span>${n} 个镜头待写入</span><button class="btn" id="undoSw">撤销</button>${R.preview_only?'<span>仅预览；生成本机草稿后可写入剪映</span>':'<button class="btn primary" id="writeDraft">写入剪映</button>'}`
+    :'';
+  $('edits').hidden=!n;
+}
+function segAt(t){for(const s of S){if(t<s.start+s.dur)return s}return S[S.length-1]}
+function shotAt(seg,t){for(let j=0;j<seg.shots.length;j++){const sh=seg.shots[j];if(t<sh.start+sh.dur)return j}return seg.shots.length-1}
+function renderMonitor(){
+  const seg=segAt(state.t), j=shotAt(seg,state.t), sh=seg.shots[j];
+  Object.entries(vids).forEach(([id,v])=>{const on=id===sh.clip;v.classList.toggle('on',on);
+    if(on){const want=sh.src_in+(state.t-sh.start);if(Math.abs(v.currentTime-want)>.3)v.currentTime=want;if(state.playing&&v.paused)v.play().catch(()=>{});if(!state.playing&&!v.paused)v.pause()}else if(!v.paused)v.pause()});
+  S.forEach((s,i)=>{const a=auds[i];const inside=state.t>=s.start&&state.t<s.start+s.voice_s;
+    if(inside&&state.playing){const want=state.t-s.start;if(Math.abs(a.currentTime-want)>.25)a.currentTime=want;if(a.paused)a.play().catch(()=>{})}else if(!a.paused)a.pause()});
+  $('sub').textContent=seg.subtitle.replace('\n',' ');
+  const st=S.flatMap(s=>s.stickers).find(k=>state.t>=k.start&&state.t<k.start+k.dur);
+  $('huazi').hidden=!st; if(st)$('huazi').textContent=st.text;
+  $('tc').textContent=fmt(state.t)+' / '+fmt(R.total_s);$('scrub').value=state.t;
+  if(state.playing&&(seg.i!==state.seg||j!==state.shot)){state.seg=seg.i;state.shot=j;renderInspect();if($('materialFilter').value==='candidates')renderInlineLibrary()}
+  $('timelinePlayhead').style.left=(state.t/R.total_s*100)+'%';
+  document.querySelectorAll('.timeline-clip[data-segment]').forEach(el=>el.classList.toggle('active',+el.dataset.segment===seg.i&&+el.dataset.shot===j));
+}
+function renderAll(){renderScore();renderRules();renderInspect();renderTimeline();renderInlineLibrary();renderMonitor()}
+function showDone(t=1){renderSteps(R.log.length,-1);state.gen=true;state.t=t;const sg=segAt(t);state.seg=sg.i;state.shot=shotAt(sg,t);$('ph').hidden=true;$('sub').hidden=false;['play','draftBtn','scrub'].forEach(id=>$(id).disabled=false);$('gen').textContent=STUDIO?'回放上一次运行':'回放流水线';renderAll();}
+
+/* ---------- playback ---------- */
+let raf=0,last=0;
+function tick(ts){if(!state.playing)return;if(last)state.t+=(ts-last)/1000;last=ts;
+  if(state.t>=R.total_s){state.t=R.total_s-.01;setPlaying(false);return}
+  renderMonitor();raf=requestAnimationFrame(tick)}
+function setPlaying(p){state.playing=p;last=0;$('play').setAttribute('aria-label',p?'暂停':'播放');
+  $('playIc').innerHTML=p?'<path d="M3 2h4v12H3zM9 2h4v12H9z"/>':'<path d="M4 2l10 6-10 6z"/>';
+  if(p){if(state.t>=R.total_s-.05)state.t=0;raf=requestAnimationFrame(tick)}else cancelAnimationFrame(raf);renderMonitor()}
+function jumpTo(segI,shotI){state.seg=segI;state.shot=shotI;const sh=S[segI].shots[shotI];state.t=sh.start+.05;renderInspect();renderTimeline();renderInlineLibrary();renderMonitor()}
+
+/* ---------- interactions ---------- */
+document.addEventListener('click',async e=>{
+  if(!state.gen)return;
+  const point=e.target.closest('[data-timeline-time]');if(point){seekTimeline(Number(point.dataset.timelineTime));return}
+  const sg=e.target.closest('.seg-tabs [data-seg]');
+  if(sg){jumpTo(+sg.dataset.seg,0);return}
+  const tab=e.target.closest('[data-shot]');
+  if(tab&&tab.closest('#inspect')){jumpTo(state.seg,+tab.dataset.shot);return}
+  const use=e.target.closest('[data-use]');
+  if(use){const sh=S[state.seg].shots[state.shot];sh.clip=use.dataset.use;vid(sh.clip);sh.src_in=Math.min(R.skill.clip_skip_head_s,Math.max(0,R.clips[sh.clip].clip_s-sh.dur));state.t=sh.start+.05;renderAll();return}
+  if(e.target.id==='undoSw'){S.forEach(seg=>seg.shots.forEach(sh=>{sh.clip=sh.orig;sh.src_in=sh.orig_src_in}));renderAll();return}
+  if(e.target.id==='writeDraft'){
+    const b=e.target;b.disabled=true;b.textContent='写入中…';
+    try{const r=await fetch('/api/redraft',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({swaps:swaps()})});const j=await r.json();
+      if(!r.ok)throw new Error(j.error||r.status);location.replace('/#done-'+state.t.toFixed(1));location.reload()}
+    catch(err){b.disabled=false;b.textContent='写入剪映';$('edits').insertAdjacentHTML('beforeend',`<div class="err">写入失败：${esc(err.message)}</div>`)}
+  }
+});
+$('play').addEventListener('click',()=>setPlaying(!state.playing));
+$('gen').addEventListener('click',async()=>{
+  if(state.busy)return;state.busy=true;setPlaying(false);['gen','play','draftBtn'].forEach(id=>$(id).disabled=true);$('gen').textContent='回放中…';
+  const fast=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  for(let i=0;i<R.log.length;i++){renderSteps(i,i);await new Promise(r=>setTimeout(r,fast?0:560))}
+  state.t=0;showDone(0);state.busy=false;setPlaying(true);
+});
+$('draftBtn').addEventListener('click',()=>{
+  const shots=S.flatMap(s=>s.shots);
+  $('modalCard').innerHTML=`<h3>已生成的剪映草稿</h3><p>${R.preview_only?'这是随仓库附带的工程记录，尚未生成本机草稿。':'以下为本次生成的草稿记录。请在对应的本机路径打开工程并精修。'}</p>
+   <div><p style="margin-bottom:6px">草稿名称</p><div class="path">${esc(R.draft.name)}</div></div>
+   <div><p style="margin-bottom:6px">本机位置</p><div class="path">${esc(R.draft.path)}</div></div>
+   <table><tr><th>轨道</th><th>内容</th></tr>
+   <tr><td>画面</td><td>${shots.length} 段：${shots.map(s=>s.orig).join('、')}</td></tr>
+   <tr><td>配音</td><td>${S.length} 段（${esc(voiceName)}）</td></tr>
+   <tr><td>字幕</td><td>${S.length} 段，白字黑边，按 ${R.skill.subtitle.max_chars_per_line} 字符断行</td></tr>
+   <tr><td>花字</td><td>${S.flatMap(s=>s.stickers).map(s=>s.kind+'「'+esc(s.text.replace('\n',' '))+'」').join('；')}</td></tr></table>
+   ${STUDIO?'':`<p>草稿文件：<a href="draft/draft_info.json" target="_blank" rel="noopener">draft_info.json</a>（素材路径指向本机，换电脑需重新关联素材）。</p>`}
+   <div style="display:flex;justify-content:flex-end"><button class="btn primary" id="closeM">关闭</button></div>`;
+  $('modal').hidden=false;$('closeM').focus();
+});
+function openTopic(){
+  const T=R.topic;
+  $('modalCard').innerHTML=isInput?`<h3>选题 · 人工输入</h3><p>这次的选题是在工作台里直接输入的：<b style="color:var(--fg)">${esc(T.input)}</b></p><p>没有走选题池打分。选题池的打分方式：历史爆款率（按题材，归一化）× 0.5 + 营销节点权重 × 0.3 + 利益点可植入度 × 0.2（${esc(T.note)}）</p>
+   <div style="display:flex;justify-content:flex-end"><button class="btn primary" id="closeM">关闭</button></div>`
+  :`<h3>选题卡 · ${T.month}</h3><p>${esc(T.note)}</p><p>营销节点：${T.nodes.map(n=>n.name+'（权重 '+n.weight+'）').join('、')}</p>
+   <table><tr><th>选题</th><th>题材</th><th>历史爆款率</th><th>节点</th><th>利益点可植入</th><th>得分</th></tr>
+   ${T.pool.map(t=>`<tr style="${t.id===T.chosen?'color:var(--accent)':''}"><td>${t.id} ${esc(t.title)}${t.id===T.chosen?'（选中）':''}</td><td>${t.genre.join('、')}</td><td class="mono">${t.hit}</td><td>${t.node}</td><td class="mono">${t.benefit_fit}</td><td class="mono">${t.score}</td></tr>`).join('')}</table>
+   <p>得分 = 历史爆款率（按题材，归一化）× 0.5 + 营销节点权重 × 0.3 + 利益点可植入度 × 0.2</p>
+   <div style="display:flex;justify-content:flex-end"><button class="btn primary" id="closeM">关闭</button></div>`;
+  $('modal').hidden=false;
+}
+function openSkill(){
+  const K=R.skill,rules=K.rules||[];
+  if(!rules.length){$('modalCard').innerHTML='<h3>剪辑规则</h3><p>本次旧存档未附带规则来源表。重新生成后，可查看带来源的规则及执行情况。</p><button class="btn" id="closeM">关闭</button>';$('modal').hidden=false;return}
+  const shots=S.flatMap(s=>s.shots),subs=S.map(s=>s.subtitle||''),words=S.map(s=>s.en.trim().split(/\s+/).length);
+  const sticker=kind=>{for(const s of S){const x=(s.stickers||[]).find(t=>t.kind===kind);if(x)return {...x,seg:s}}return null};
+  const maxShot=Math.max(...shots.map(x=>x.dur)),lines=subs.flatMap(x=>x.split('\n')),maxLine=Math.max(...lines.map(l=>l.length)),maxLines=Math.max(...subs.map(x=>x.split('\n').length));
+  const open=sticker('开头花字'),ben=sticker('利益点贴纸'),cta=sticker('结尾钩子'),r1=(R.rules.find(r=>r.id==='R1')||{}).ok!==false;
+  const per=S.map(s=>s.shots.length);
+  // 每条规则在这条粗剪上实际做到了什么：[是否符合, 说明]
+  const got={
+    S1:[S.length===5&&Math.max(...words)<=14,`${S.length} 句，最长一句 ${Math.max(...words)} 个词`],
+    S2:[r1,r1?'第 1 句没有价格或优惠':'第 1 句出现了价格或优惠'],
+    S3:[maxShot<=K.max_shot_s+0.05,`最长的镜头 ${maxShot.toFixed(2)} 秒`],
+    S4:[Math.max(...per)<=3,`${shots.length} 个镜头，每句 ${Math.min(...per)===Math.max(...per)?per[0]:Math.min(...per)+'–'+Math.max(...per)} 个`],
+    S5:[shots.every(x=>x.src_in==null||x.src_in>=K.clip_skip_head_s-0.01),`都从素材第 ${K.clip_skip_head_s} 秒之后取`],
+    S6:[maxLine<=K.subtitle.max_chars_per_line&&maxLines<=2,`最长一行 ${maxLine} 个字符，最多 ${maxLines} 行`],
+    S8:[!open||open.dur<=K.opening_huazi_max_s+0.01,open?`「${open.text}」停 ${open.dur} 秒`:'这条没有开头花字'],
+    S9:[!!ben,ben?`「${ben.text}」在第 ${ben.seg.i+1} 句开始后 ${(ben.start-ben.seg.start).toFixed(1)} 秒出现，停 ${ben.dur} 秒`:'这条没有利益点贴纸'],
+    S10:[!!cta&&cta.dur>=K.cta_min_s,cta?`「${cta.text}」停 ${cta.dur} 秒`:'这条没有结尾引导'],
+    S11:[true,voiceName],
+  };
+  const tone=s=>s.startsWith('访谈')?'ok':s==='行业规范'?'mid':'';
+  let group='';
+  const rows=rules.map(r=>{const g=got[r.id],head=r.group!==group?(group=r.group,`<tr class="grp"><td colspan="3">${esc(r.group)}</td></tr>`):'';
+    return head+`<tr><td>${esc(r.rule)}<br><small>${esc(r.why||'')}</small></td><td><span class="band ${tone(r.source)}">${esc(r.source)}</span></td><td>${g?`<span class="${g[0]?'ok-ic':'bad-ic'}">${g[0]?'✓':'✕'}</span> ${esc(g[1])}`:'<small>看成片判断</small>'}</td></tr>`}).join('');
+  const M=K.measured;
+  const measured=M?`<h4>从成片量出来的值</h4><p>来源：${esc(M.source)}。共 ${M.videos} 条、${M.shots} 个镜头。</p>
+    <table><tr><th>项目</th><th>Skill 里的设定</th><th>成片实测</th><th>判断</th></tr>${(M.compare||[]).map(c=>`<tr><td>${esc(c.item)}</td><td>${esc(c.setting)}</td><td>${esc(c.measured)}</td><td>${esc(c.verdict)}</td></tr>`).join('')}</table>
+    <p>量得了的：镜头时长、语速、每句词数、开头是否提价格、结尾是否有引导。字幕样式、花字设计和选什么画面，量不了，要人看。</p>`:'';
+  $('modalCard').innerHTML=`<h3>剪辑 Skill · ${esc(K.name)}</h3><p>${esc(K.from)}。</p>
+   <table class="skill"><tr><th>规则和原因</th><th>来源</th><th>这条粗剪做到了吗</th></tr>${rows}</table>
+   <p>来源说明：<span class="band ok">访谈</span> 业务方在访谈里说的做法；<span class="band mid">行业规范</span> 公开的通行标准；<span class="band">示例值</span> 先填的占位数字，等真实爆款成片蒸馏后替换。</p>
+   ${measured}
+   <div style="display:flex;justify-content:flex-end"><button class="btn primary" id="closeM">关闭</button></div>`;
+  $('modal').hidden=false;
+}
+const analyticsState={platform:'全部平台',status:'all',layout:'list'};
+function renderAnalytics(){
+  const V=REVIEW,root=$('analyticsContent');
+  if(!V){root.innerHTML='<div class="empty-page"><h2>还没有复盘数据</h2><p class="empty">完成取数表对账后，作品日报和题材表现会显示在这里。</p></div>';return}
+  const num=n=>n==null?'—':Number(n).toLocaleString('en-US');
+  const pending=V.rows.filter(r=>r.tags.includes('待补')),hits=V.rows.filter(r=>r.tags.includes('值得继续测'));
+  const T=V.retest,before=Object.fromEntries(V.topics_before.map(t=>[t.id,t.score]));
+  root.innerHTML=`<div class="analytics-top"><div><span class="stat-value mono">${V.rows.length}</span><span class="stat-label">条作品</span></div><div><span class="stat-value mono">${hits.length}</span><span class="stat-label">条值得继续测</span></div><div><span class="stat-value mono">${pending.length}</span><span class="stat-label">条数据待补</span></div><div style="margin-left:auto;align-self:center"><span class="band mid">模拟发布数据</span></div></div>
+  <section class="works-section" aria-label="作品表现">
+    <div class="works-toolbar"><div class="platform-tabs" role="group" aria-label="按平台筛选">${['全部平台',...new Set(V.rows.map(r=>r.platform))].map(x=>`<button class="platform-tab" data-platform="${esc(x)}" aria-pressed="${analyticsState.platform===x}">${esc(x)}</button>`).join('')}</div>
+    <div class="works-controls"><select id="workStatus" aria-label="按作品状态筛选"><option value="all">全部状态</option><option value="值得继续测">值得继续测</option><option value="待补">数据待补</option><option value="零播">零播放</option></select><div class="view-switch" role="group" aria-label="作品展示方式"><button data-layout="list" aria-pressed="${analyticsState.layout==='list'}">列表</button><button data-layout="gallery" aria-pressed="${analyticsState.layout==='gallery'}">作品墙</button></div></div></div>
+    <div class="works-caption"><span id="workCount" role="status"></span></div><div id="worksResults"></div>
+  </section>
+  <details class="analysis-fold"><summary>题材与选题分析</summary><div class="analytics-grid">
+  <aside><h2>复测建议</h2>${T&&T.change?`<p class="retest-change">${esc(T.change)}</p><h3>观察指标</h3><p>${esc(T.metric)}</p><details><summary>查看对照依据</summary><p>${esc(T.high.title)}：${num(T.high.views)} 播<br>${esc(T.low.title)}：${num(T.low.views)} 播</p><p>${esc(T.difference)}</p><p>由 ${esc(T.model)} 对照脚本文本整理。差异不代表因果，复测安排由运营复核。</p></details>`:`<p>${esc(T?.error||'本次没有可供对照的复测建议。')}</p>`}
+  <h3>需要补齐</h3><p>${pending.length} 条取数待补；${V.unmatched.length} 行无法匹配发布记录。</p>${V.unmatched.length?`<details><summary>查看未匹配记录</summary><p>${V.unmatched.map(x=>esc(x.work_id)+' · '+esc(x.platform)).join('<br>')}</p></details>`:''}</aside></div>
+  <div class="analytics-bottom"><section><h2>题材表现 ${infoButton('平滑千播率口径','平滑千播率 =（千播数 + 1）÷（作品数 + 2）。小样本题材使用整体值，不代表爆款预测。')}</h2><div class="table-wrap"><table><thead><tr><th>题材</th><th>作品</th><th>千播</th><th>平滑千播率</th></tr></thead><tbody>${Object.entries(V.genres).map(([g,x])=>`<tr><td>${esc(g)}</td><td>${x.works}</td><td>${x.hits}</td><td>${(x.rate*100).toFixed(0)}%${x.note?`<br><small>${esc(x.note)}</small>`:''}</td></tr>`).join('')}</tbody></table></div></section>
+  <section><h2>选题评分变化</h2><div class="table-wrap"><table><thead><tr><th>选题</th><th>原得分</th><th>复盘后</th><th>变化</th></tr></thead><tbody>${V.topics_after.map(t=>{const d=t.score-before[t.id];return `<tr><td>${esc(t.title)}</td><td class="mono">${before[t.id].toFixed(2)}</td><td class="mono">${t.score.toFixed(2)}</td><td class="mono">${Math.abs(d)<.005?'—':(d>0?'+':'')+d.toFixed(2)}</td></tr>`}).join('')}</tbody></table></div><details><summary>数据来源与计算方式</summary><p class="empty">${esc(V.note)}</p><p class="empty">导入 ${V.reports.length} 张取数表。对账、去重、标记与选题打分由程序计算；下一次选题使用复盘所得的题材值。</p></details></section></div></details>`;
+  $('workStatus').value=analyticsState.status;
+  root.querySelectorAll('[data-platform]').forEach(b=>b.onclick=()=>{analyticsState.platform=b.dataset.platform;root.querySelectorAll('[data-platform]').forEach(x=>x.setAttribute('aria-pressed',x===b));renderWorks()});
+  root.querySelectorAll('[data-layout]').forEach(b=>b.onclick=()=>{analyticsState.layout=b.dataset.layout;root.querySelectorAll('[data-layout]').forEach(x=>x.setAttribute('aria-pressed',x===b));renderWorks()});
+  $('workStatus').onchange=e=>{analyticsState.status=e.target.value;renderWorks()};
+  renderWorks();
+}
+const formatMetric=n=>n==null?'—':Number(n).toLocaleString('en-US');
+function renderWorks(){
+  const rows=REVIEW.rows.filter(r=>(analyticsState.platform==='全部平台'||r.platform===analyticsState.platform)&&(analyticsState.status==='all'||r.tags.includes(analyticsState.status)));
+  $('workCount').textContent=`${rows.length} 条作品 · 截至 ${REVIEW.latest}`;
+  const root=$('worksResults');root.className=analyticsState.layout==='gallery'?'work-gallery':'work-list';
+  root.innerHTML=rows.map(r=>`<button type="button" class="work-entry" data-work="${esc(r.work_id)}" aria-label="查看作品：${esc(r.title)}，${esc(r.platform)}，${esc(r.work_id)}"><span class="work-mark">${esc(r.work_id)}</span><span class="work-copy"><span class="work-title">${esc(r.title)}</span><span class="work-meta">${esc(r.platform)} · ${esc(r.account)} · ${esc(r.genre)}</span></span><span class="work-status ${r.tags.includes('待补')?'pending':r.tags.includes('值得继续测')?'hit':''}">${esc(r.tags.join(' · ')||'继续观察')}</span><span class="work-value">${formatMetric(r.views)}<small>${r.tags.includes('待补')?'上次播放读数':'累计播放'}</small></span><span class="work-arrow" aria-hidden="true">↗</span></button>`).join('')||'<div class="works-empty">这个筛选下还没有作品。试试其他平台或状态。</div>';
+  root.querySelectorAll('[data-work]').forEach(b=>b.onclick=()=>openWork(b.dataset.work));
+}
+function openWork(id){
+  const r=REVIEW.rows.find(x=>x.work_id===id);if(!r)return;
+  const pending=r.tags.includes('待补'),threshold=Number(REVIEW.hit_views),delta=r.delta==null?'—':(r.delta>=0?'+':'')+formatMetric(r.delta);
+  $('modalCard').innerHTML=`<div class="work-detail-head"><span class="eyebrow">WORK / ${esc(r.work_id)} · 模拟发布数据</span><button class="btn small" id="closeM">关闭</button></div><h3 class="work-detail-title" id="workDetailTitle">${esc(r.title)}</h3><p>${esc(r.platform)} · ${esc(r.account)} · ${esc(r.genre)}</p>
+  <dl class="work-metrics"><div class="work-metric"><dt>${pending?'上次有效播放量':'累计播放量'}</dt><dd>${formatMetric(r.views)}</dd><small>次播放</small></div><div class="work-metric"><dt>较上次取数 ${infoButton('播放增量口径','本次有效累计播放量减去上次有效累计播放量；取数失败时不计算增量。')}</dt><dd>${delta}</dd><small>${r.delta==null?'本次无法计算增量':'次播放变化'}</small></div><div class="work-metric"><dt>${formatMetric(threshold)} 播观察线</dt><dd>${r.views==null?'—':r.views>=threshold?'已达到':'未达到'}</dd><small>${pending?'依据上次读数':'依据当前读数'}</small></div></dl>
+  ${pending?`<p class="metric-explainer">本次取数失败，保留 ${esc(r.fetched_at)} 的有效读数。</p>`:r.views===0?'<p class="metric-explainer">取数成功，播放量为 0。</p>':''}
+  <div class="work-media-empty"><strong>成片预览 · 未关联</strong></div>
+  <h4>记录与数据来源</h4><dl class="work-record"><dt>作品状态</dt><dd>${esc(r.tags.join(' · ')||'继续观察')}</dd><dt>有效读数时间</dt><dd>${esc(r.fetched_at||'未记录')}</dd><dt>脚本编号</dt><dd>${esc(r.script_id)}</dd><dt>数据方式</dt><dd>导入取数表，对账后按作品编号与平台匹配</dd></dl>
+  <details><summary>指标口径与数据范围</summary><p>观察线用于筛选值得继续测试的作品，不代表爆款预测或业务验收。</p><p>当前未接入点赞、评论、分享、完播率、点击率和转化数据，这些指标暂不展示。</p><p>${esc(REVIEW.note)}</p><p>本批次取数表：${REVIEW.reports.map(x=>esc(x.file)).join('、')}。</p></details>`;
+  $('modal').hidden=false;
+}
+function openReview(){setView('analytics')}
+function openScript(){
+  const X=R.scripts;
+  $('modalCard').innerHTML=`<h3>脚本初稿与审核</h3><p>生成：${esc(X.generated_by)}。三版都按"冷知识开头 → 路线 → 画面 → 利益点 → 搜码钩子"的结构写，再按规则和事实库逐条审核。</p>
+   <div class="vt">${X.variants.map(v=>`<div class="var ${v.id===X.chosen?'ok':''}"><h4>${v.id} 版 <span class="band ${v.id===X.chosen?'ok':v.ok?'mid':'bad'}">${v.id===X.chosen?'采用':v.ok?'备选':'拦下'}</span></h4>${v.idea?`<p style="margin-bottom:6px">思路：${esc(v.idea)}</p>`:''}
+     <ol>${v.lines.map(l=>`<li>${esc(l.en)}<br><small>${esc(l.zh)}</small></li>`).join('')}</ol>
+     <ul class="ck">${v.checks.map(c=>`<li><span class="${c.ok?'ok-ic':'bad-ic'}">${c.ok?'✓':'✕'}</span> ${esc(c.name)}：${esc(c.msg)}</li>`).join('')}</ul></div>`).join('')}</div>
+   <p>事实库：${X.facts.map(f=>f.id+' '+esc(f.text)).join('；')}</p>
+   <div style="display:flex;justify-content:flex-end"><button class="btn primary" id="closeM">关闭</button></div>`;
+  $('modal').hidden=false;
+}
+$('steps').addEventListener('click',e=>{const li=e.target.closest('li.link.done');if(!li||state.running)return;({'选题':openTopic,'写脚本':openScript,'读取 Skill':openSkill})[li.dataset.step]()});
+$('modal').addEventListener('click',e=>{if(e.target.id==='modal'||e.target.id==='closeM')$('modal').hidden=true});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')$('modal').hidden=true});
+
+/* ---------- 本地工作台：输入选题现场生成 ---------- */
+if(STUDIO){
+  if(!HOSTED){$('askPanel').hidden=false;$('gen').textContent='回放上一次运行';}
+  if(HOSTED){
+    document.body.classList.add('hosted');
+    $('modeLabel').textContent='在线评测';
+    $('createView').hidden=true;
+    $('reviewPrivacy').textContent='点击评测后，视频会上传到本服务，在服务端提取音频并转写；每秒 2 帧的画面和转写文字会发送给 DeepSeek。调用会产生 API 费用。';
+    $('reviewModel').textContent='服务端使用轻量英语语音识别模型，转写可能出错，请人工核对。视频较长时评测可能需要较长时间。';
+  }
+  /* ---------- 成片评测结果：总分 + 结论，合规命中可以点时间跳过去看，人只在需要时处理 ---------- */
+  const SRC={draft:'草稿计算',measure:'测量',ai:'AI 判断'};
+  const RISK_OPTS={
+    face:[['fix','确认露脸，退回修改'],['none','看不清脸或误报，可保留']],
+    flag:[['fix','退回修改'],['keep','保留并说明'],['none','误报，没有国旗']],
+    logo:[['fix','是竞品标识，退回修改'],['none','不是竞品，可保留']],
+  };
+  let reviewUrl=null;
+  function renderReview(v,file){
+    const box=$('videoReviewResult'),sec=n=>Number(n).toFixed(1);
+    if(reviewUrl)URL.revokeObjectURL(reviewUrl);
+    reviewUrl=URL.createObjectURL(file);
+    const seek=(a,b)=>`<button type="button" class="seek" data-seek="${esc(a)}">${sec(a)}–${sec(b)} 秒</button>`;
+    const risks=v.risks.map(r=>{
+      const hit=r.status==='hit';
+      const opts=hit?(RISK_OPTS[r.id]||[['fix','退回修改'],['none','误报']]):[['fix','人工发现，退回修改']];
+      return `<div class="dim"><div class="t"><span>${esc(r.name)}</span><span class="band ${hit?'bad':r.status==='clear'?'ok':'mid'}">${hit?`发现 ${r.spans.length} 处`:r.status==='clear'?'未发现':'没查完'}</span></div>`
+        +r.spans.map(sp=>`<div class="why">${seek(sp.start,sp.end)} ${esc(sp.what)}</div>`).join('')
+        +`<div class="why"><label>人工处理：<select data-risk="${esc(r.id)}"><option value="ai">${hit?'待处理':'按 AI 结果'}</option>${opts.map(([k,t])=>`<option value="${k}">${t}</option>`).join('')}</select></label> <input type="text" data-risk-note="${esc(r.id)}" placeholder="写明保留理由" hidden></div></div>`;
+    }).join('');
+    const unchecked=(v.compliance.unchecked||[]).map(([a,b])=>seek(a,b)).join(' ');
+    const needLook=unchecked||v.risks.some(r=>r.spans.length);
+    const dims=v.dimensions.map((d,di)=>`<div class="dim"><div class="t"><span>${esc(d.name)}</span><span class="mono" data-dim-score="${di}"></span></div>`
+      +d.criteria.map((c,ci)=>`<div class="why"><span data-crit="${di}:${ci}"></span>${esc(c.reason)}${c.suggestion?` <span class="tip">建议：${esc(c.suggestion)}</span>`:''}</div>`).join('')+'</div>').join('');
+    const manual=v.dimensions.map((d,di)=>d.criteria.map((c,ci)=>`<div class="why"><label>${esc(c.name)}：<select data-review-score="${di}:${ci}"><option value="">${c.score==null?'未评':`按自动结果（${esc(c.score)} 分）`}</option>${[[0,'不满足'],[c.partial,'部分满足'],[c.max,'满足']].map(([n,t])=>`<option value="${esc(n)}">${esc(n)} 分（${t}）</option>`).join('')}</select></label></div>`).join('')).join('');
+    const u=v.usage||{};
+    box.innerHTML=`<div class="score-head"><span class="score-num mono" id="reviewTotal"></span><span> / 100 分</span><span class="band" id="reviewVerdict"></span></div>
+      <p class="empty" id="reviewVerdictNote"></p><ul class="review-list" id="reviewReasons"></ul>
+      ${v.summary?`<p class="empty">${esc(v.summary)}</p>`:''}
+      <div class="review-result-grid"><section><h3>成片预览</h3><video id="reviewPlayer" src="${reviewUrl}" controls playsinline preload="metadata"></video></section><section><h3>需要核对的画面</h3>
+      <p class="empty">已按每秒 ${esc(v.compliance.fps)} 帧检查 ${esc(v.compliance.checked)} / ${esc(v.compliance.frames)} 帧。${unchecked?`没查成的片段：${unchecked}。`:''}</p>
+      <div class="dims">${risks}</div></section></div>
+      <details><summary>七维评分与依据</summary>
+      ${v.draft.matched?'':'<p class="empty">导出视频和当前草稿对不上，本该由草稿计算的项目改由 AI 判断。</p>'}
+      <div class="dims">${dims}</div></details>
+      <details><summary>人工改分（可选）</summary><p class="empty">不改就按自动结果；改过的项目按人工分数算。</p>${manual}</details>
+      ${v.transcript?`<details><summary>查看语音转写</summary><p class="empty">${esc(v.transcript)}</p></details>`:''}
+      <p class="empty">视频 ${esc(v.duration_seconds)} 秒，${esc(u.requests)} 次请求，共 ${esc((u.prompt_tokens||0)+(u.completion_tokens||0))} token，约 ¥${esc(u.cost_cny)}。${esc((v.limitations||[])[0]||'')}</p>`;
+    // 结论规则和 video_review.py 的 conclude() 一致，只是把人工处理的结果也算进去。
+    const refresh=()=>{
+      let total=0,factHuman=false;const missing=[],low=[];
+      v.dimensions.forEach((d,di)=>{
+        let pts=0,un=0;
+        d.criteria.forEach((c,ci)=>{
+          const sel=box.querySelector(`[data-review-score="${di}:${ci}"]`),human=sel.value!=='';
+          const score=human?Number(sel.value):c.score,lowc=!human&&score!=null&&c.confidence==='low';
+          box.querySelector(`[data-crit="${di}:${ci}"]`).innerHTML=`${esc(c.name)} <b>${score==null?'未评':esc(score)}</b> / ${esc(c.max)}<span class="src${lowc?' low':''}">${human?'人工':(SRC[c.source]||'AI 判断')+(lowc?'（低置信）':'')}</span>`;
+          if(score==null){missing.push(c.name);un++}else{pts+=score;if(lowc)low.push(c.name)}
+          if(c.id==='content_fact'&&human)factHuman=true;
+        });
+        total+=pts;
+        box.querySelector(`[data-dim-score="${di}"]`).textContent=`${Number(pts.toFixed(1))} / ${d.max}`+(un?`（${un} 项未评）`:'');
+      });
+      const fail=[],reasons=[];
+      v.risks.forEach(r=>{
+        const sel=box.querySelector(`[data-risk="${r.id}"]`).value,note=box.querySelector(`[data-risk-note="${r.id}"]`);
+        note.hidden=sel!=='keep';
+        if(sel==='fix')fail.push(`${r.name}：人工确认要退回修改`);
+        else if(sel==='keep'&&!note.value.trim())reasons.push(`${r.name}：选了保留，请写明理由`);
+        else if(sel==='ai')r.spans.forEach(sp=>reasons.push(`${r.name}：${sec(sp.start)}–${sec(sp.end)} 秒，${sp.what}`));
+      });
+      if(!v.compliance.complete)reasons.push(`有 ${v.compliance.frames-v.compliance.checked} 帧画面没检查成功，需要人看这几段`);
+      if(missing.length)reasons.push('无法自动评分：'+missing.join('、'));
+      if(low.length>v.max_low)reasons.push(`${low.length} 项 AI 把握不足：${low.join('、')}`+(v.draft.matched?'':'（导出视频和当前草稿对不上，这些项改由 AI 判断）'));
+      const sum=Number(total.toFixed(1));
+      if(!missing.length&&sum<v.pass_score)reasons.push(`总分 ${sum} 低于 ${v.pass_score} 分`);
+      if((v.draft.claims||[]).length&&!factHuman)reasons.push('脚本里有待核对的说法：'+v.draft.claims.join('；'));
+      const res=fail.length?'不合格':reasons.length?'转人工':'通过';
+      $('reviewTotal').textContent=String(sum);
+      const badge=$('reviewVerdict');badge.textContent=res;badge.className='band '+(res==='通过'?'ok':res==='转人工'?'mid':'bad');
+      $('reviewVerdictNote').textContent=res==='通过'?'AI 评测通过，可进入发布审核。':res==='转人工'?'待人工核对':'退回修改，原因：';
+      $('reviewReasons').innerHTML=(fail.length?fail:reasons).map(x=>`<li>${esc(x)}</li>`).join('');
+    };
+    box.onchange=refresh;box.oninput=refresh;
+    box.onclick=e=>{const b=e.target.closest('[data-seek]');if(!b)return;const pl=$('reviewPlayer');pl.hidden=false;pl.currentTime=Number(b.dataset.seek);pl.play().catch(()=>{})};
+    refresh();
+  }
+  $('videoReviewPanel').hidden=false;
+  $('reviewFile').addEventListener('change',()=>{
+    $('reviewStatus').textContent='';
+    $('videoReviewResult').innerHTML='';
+  });
+  $('reviewGo').addEventListener('click',async()=>{
+    const file=$('reviewFile').files[0];
+    const ext=file?.name.toLowerCase().split('.').pop();
+    if(!file||!['mp4','mov','m4v'].includes(ext)){$('reviewStatus').textContent='请选择 MP4、MOV 或 M4V 视频。';return}
+    if(file.size>100*1024*1024){$('reviewStatus').textContent='视频超过 100 MB，请先压缩或选择较小的文件。';return}
+    if(file.size===0){$('reviewStatus').textContent='视频文件为空，请重新选择。';return}
+    $('reviewGo').disabled=true;$('reviewFile').disabled=true;
+    $('reviewStatus').textContent=HOSTED?'正在上传视频、按每秒 2 帧检查画面并在服务端转写声音，再请所配置模型评测；请不要关闭页面。':'正在按每秒 2 帧检查画面、在本地转写声音，并请所配置模型评测。24 秒的视频大约 15 秒；首次使用要先下载语音模型，会久一些。';
+    $('videoReviewResult').innerHTML='';
+    try{
+      const response=await fetch('/api/video-review',{method:'POST',headers:{'Content-Type':'application/octet-stream'},body:file});
+      const data=await response.json();
+      if(!response.ok||data.error)throw new Error(data.error||'请求失败，请稍后再试。');
+      const v=data.review;
+      if(!v||!Array.isArray(v.dimensions)||!Array.isArray(v.risks)||!v.compliance||!v.draft)throw new Error('评测结果格式不完整，请重试。');
+      if(v.dimensions.some(d=>!Array.isArray(d.criteria)))throw new Error('评测标准格式不完整，请重试。');
+      $('reviewStatus').textContent='评测完成：'+file.name;
+      renderReview(v,file);
+    }catch(err){$('reviewStatus').textContent='评测失败：'+err.message}
+    finally{$('reviewGo').disabled=false;$('reviewFile').disabled=false}
+  });
+  if(isInput)$('askTopic').value=R.title;
+  if(!HOSTED) fetch('/api/keys').then(r=>r.json()).then(k=>{
+    const miss=[!k.deepseek&&'脚本模型',!k.minimax&&'配音服务'].filter(Boolean);
+    if(miss.length)$('askHint').innerHTML+=` <b>${!k.deepseek?'脚本服务尚未配置，当前可查看已有结果。':'配音服务未配置，将使用系统语音。'}</b>`;
+    if(!k.deepseek)$('askGo').disabled=true;
+    if(k.models){const labels={script:'脚本',video:'评测',tts:'配音'};$('kv').insertAdjacentHTML('beforeend',`<dt>本机配置</dt><dd>${Object.entries(k.models).map(([key,v])=>esc(labels[key]||key)+' · '+esc(v.provider)+' / '+esc(v.model)).join('<br>')}<br><small>配置状态不代表本次已调用。</small></dd>`)}
+  }).catch(()=>{$('askGo').disabled=true;$('askHint').textContent='暂时无法连接本地服务，请刷新后重试。'});
+  $('askForm').addEventListener('submit',async e=>{
+    e.preventDefault();if(state.running)return;state.running=true;setPlaying(false);
+    $('askGo').disabled=true;$('askGo').textContent='生成中…';['gen','play','draftBtn'].forEach(id=>$(id).disabled=true);
+    $('ph').hidden=false;$('ph').innerHTML='<div><b>正在生成</b></div>';
+    Object.values(vids).forEach(v=>v.classList.remove('on'));$('sub').hidden=true;$('huazi').hidden=true;
+    const body={topic:$('askTopic').value.trim(),market:$('askMarket').value,platform:$('askPlatform').value};
+    try{
+      const r=await fetch('/api/run',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+      if(!r.ok)throw new Error((await r.json()).error||r.status);
+      for(;;){
+        await new Promise(r=>setTimeout(r,700));
+        const s=await (await fetch('/api/status')).json();
+        renderSteps(s.log.length,s.running?s.log.length:-1,[...s.log,...(s.running?[{step:'下一步',msg:''}]:[])]);
+        if(!s.running){if(s.error)throw new Error(s.error);location.replace('/#done-1');location.reload();return}
+      }
+    }catch(err){state.running=false;$('gen').disabled=false;$('play').disabled=!state.gen;$('draftBtn').disabled=!state.gen;$('askGo').disabled=false;$('askGo').textContent='生成粗剪';$('ph').innerHTML=`<div><b>生成失败</b><span class="err">${esc(err.message)}</span></div>`}
+  });
+}
+
+const viewInfo={create:['素材与粗剪',R.title],evaluate:['成片评测',''],analytics:['数据复盘','']};
+function setView(view,updateHash=true){
+  if(!viewInfo[view])view='create';if(HOSTED)view='evaluate';
+  if(state.playing)setPlaying(false);
+  const player=$('reviewPlayer');if(player)player.pause();
+  ['create','evaluate','analytics'].forEach(v=>$(v+'View').hidden=v!==view);
+  document.querySelectorAll('[data-view]').forEach(b=>{if(b.dataset.view===view)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
+  const [title,desc]=viewInfo[view];$('viewTitle').textContent=title;$('breadcrumbTitle').textContent=title;$('viewDescription').textContent=desc;$('viewDescription').hidden=!desc;
+  $('createActions').hidden=view!=='create';$('footWrap').hidden=view!=='create';
+  if(view==='analytics')renderAnalytics();
+  if(updateHash)history.pushState(null,'','#'+view);
+}
+document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.view)));
+window.addEventListener('popstate',()=>setView(location.hash.slice(1)==='review'?'analytics':location.hash.slice(1),false));
+function updateThemeControl(){
+  const dark=document.documentElement.dataset.theme==='dark',label=dark?'白天模式':'暗黑模式';
+  $('themeText').textContent=label;$('themeIcon').textContent=dark?'☀':'◐';
+  $('themeToggle').setAttribute('aria-label','切换到'+label);
+  $('themeToggle').title='当前：'+(dark?'暗黑模式':'白天模式');
+}
+$('themeToggle').onclick=()=>{const theme=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=theme;try{localStorage.setItem('rail-theme',theme)}catch(_){}updateThemeControl()};
+updateThemeControl();
+$('modeLabel').textContent=HOSTED?'在线评测':STUDIO?'本地工作台':'运行回放';
+$('durationLabel').textContent=R.total_s.toFixed(1)+'s';$('scrub').max=Math.max(.01,R.total_s-.01);
+$('scrub').addEventListener('input',()=>{if(!state.gen)return;state.t=Number($('scrub').value);const seg=segAt(state.t);state.seg=seg.i;state.shot=shotAt(seg,state.t);renderAll()});
+$('inspect').addEventListener('keydown',e=>{if(!e.target.matches('[data-seg]')||!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();const n=S.length,i=+e.target.dataset.seg,next=e.key==='Home'?0:e.key==='End'?n-1:(i+(e.key==='ArrowRight'?1:-1)+n)%n;jumpTo(next,0);$('inspect').querySelector(`[data-seg="${next}"]`).focus()});
+$('scriptBtn').addEventListener('click',openScript);$('skillBtn').addEventListener('click',openSkill);
+function renderInlineLibrary(){
+  const query=$('materialSearch').value.trim().toLowerCase(),filter=$('materialFilter').value;
+  const used=new Set(S.flatMap(s=>s.shots.map(sh=>sh.clip))),candidates=new Set(S[state.seg].candidates.map(c=>c.id));
+  const clips=Object.entries(R.clips).sort(([a],[b])=>(Number(candidates.has(b))*2+Number(used.has(b)))-(Number(candidates.has(a))*2+Number(used.has(a)))).filter(([id,c])=>(filter==='all'||(filter==='used'?used:candidates).has(id))&&[id,c.title,c.location,...(c.places||[]),...(c.tags||[])].join(' ').toLowerCase().includes(query));
+  $('materialCount').textContent=clips.length+' 段';
+  $('materialGrid').innerHTML=clips.map(([id,c])=>`<button class="material-item" data-preview-clip="${esc(id)}" aria-label="预览素材：${esc(c.title)}"><span class="material-image"><img src="${thumb(id)}" alt="" loading="lazy"><span class="material-duration">${Number(c.clip_s).toFixed(1)}s</span>${used.has(id)?'<span class="material-used">已使用</span>':''}</span><span class="material-title">${esc(c.title)}</span></button>`).join('')||'<p class="empty">没有匹配的素材，试试其他关键词或范围。</p>';
+}
+function previewMaterial(id){
+  const c=R.clips[id];if(!c)return;if(state.playing)setPlaying(false);
+  $('modalCard').innerHTML=`<div class="work-detail-head"><span class="eyebrow">素材原片 / ${esc(id)}</span><button class="btn small" id="closeM">关闭</button></div><h3>${esc(c.title)}</h3><video class="material-player" src="${esc(c.file)}" poster="${thumb(id)}" controls playsinline preload="metadata"></video><p>${Number(c.clip_s).toFixed(1)} 秒 · ${(c.tags||[]).map(esc).join(' / ')}</p><p><a href="${esc(c.pexels)}" target="_blank" rel="noopener">查看 Pexels 来源 ↗</a></p>`;
+  $('modal').hidden=false;
+}
+function seekTimeline(time){
+  if(!state.gen)return;state.t=Math.max(0,Math.min(R.total_s-.01,time));const seg=segAt(state.t);state.seg=seg.i;state.shot=shotAt(seg,state.t);renderInspect();renderInlineLibrary();renderMonitor();
+}
+function renderTimeline(){
+  const total=R.total_s,position=(start,dur)=>`left:${start/total*100}%;width:${dur/total*100}%`,shots=S.flatMap(s=>s.shots);
+  let ticks='';for(let t=0;t<total;t+=5)ticks+=`<button class="time-tick" style="left:${t/total*100}%" data-timeline-time="${t}" aria-label="定位到 ${t} 秒">${t}s</button>`;
+  ticks+=`<span class="time-end">${total.toFixed(1)}s</span>`;
+  const video=S.flatMap(s=>s.shots.map((sh,j)=>`<button class="timeline-clip video-clip" style="${position(sh.start,sh.dur)}" data-timeline-time="${sh.start+.01}" data-segment="${s.i}" data-shot="${j}" aria-label="定位镜头 ${shots.indexOf(sh)+1}：${esc(R.clips[sh.clip].title)}"><img src="${thumb(sh.clip)}" alt=""><span>镜头 ${String(shots.indexOf(sh)+1).padStart(2,'0')}<small>${sh.start.toFixed(1)}–${(sh.start+sh.dur).toFixed(1)}s</small></span></button>`)).join('');
+  const audio=S.map(s=>`<button class="timeline-clip audio-clip" style="${position(s.start,s.voice_s)}" data-timeline-time="${s.start}" aria-label="定位第 ${s.i+1} 句配音">配音 ${s.i+1} · ${s.voice_s.toFixed(1)}s</button>`).join('');
+  const subtitles=S.map(s=>`<button class="timeline-clip subtitle-clip" style="${position(s.start,s.dur)}" data-timeline-time="${s.start}" title="${esc(s.subtitle)}" aria-label="定位第 ${s.i+1} 句字幕">${esc(s.subtitle.replace('\n',' '))}</button>`).join('');
+  const stickers=S.flatMap(s=>s.stickers).map(k=>`<button class="timeline-clip sticker-clip" style="${position(k.start,k.dur)}" data-timeline-time="${k.start}" title="${esc(k.text)}">${esc(k.text.replace('\n',' '))}</button>`).join('');
+  const row=(label,content,cls='')=>`<div class="timeline-row ${cls}"><span class="track-label">${label}</span><div class="track-lane">${content}</div></div>`;
+  $('timelineTracks').innerHTML=row('',ticks,'ruler-row')+row('视频',video,'video-row')+row('配音',audio)+row('字幕',subtitles)+row('花字',stickers);
+  const count=Object.values(swaps()).reduce((n,x)=>n+Object.keys(x).length,0);
+  $('timelineStatus').textContent=count?`${count} 个镜头已替换 · ${STUDIO?'尚未写入剪映':'仅网页预览'}`:`${shots.length} 个镜头 · ${total.toFixed(1)} 秒`;
+}
+$('materialSearch').addEventListener('input',renderInlineLibrary);
+$('materialFilter').addEventListener('change',renderInlineLibrary);
+$('materialGrid').addEventListener('click',e=>{const b=e.target.closest('[data-preview-clip]');if(b)previewMaterial(b.dataset.previewClip)});
+$('timelineZoom').addEventListener('input',e=>{$('timelineCanvas').style.width=(Number(e.target.value)*100)+'%'});
+// Dialog focus follows every opening, stays inside, then returns to its trigger.
+let modalTrigger=null;
+document.addEventListener('focusin',e=>{if(!$('modal').contains(e.target))modalTrigger=e.target});
+new MutationObserver(()=>{if(!$('modal').hidden){requestAnimationFrame(()=>{if(!$('modal').contains(document.activeElement))$('modalCard').focus();$('modalCard').querySelectorAll('table').forEach(t=>{if(!t.parentElement.classList.contains('table-wrap')){const w=document.createElement('div');w.className='table-wrap';t.before(w);w.append(t)}})})}else{$('modalCard').querySelectorAll('video,audio').forEach(v=>v.pause());if(modalTrigger?.isConnected&&!$('modal').contains(modalTrigger))modalTrigger.focus()}}).observe($('modal'),{attributes:true,attributeFilter:['hidden']});
+document.addEventListener('keydown',e=>{if(e.key!=='Tab'||$('modal').hidden)return;const nodes=[...$('modalCard').querySelectorAll('button,a,input,select,summary,[tabindex="0"]')].filter(n=>!n.disabled&&n.getClientRects().length);const first=nodes[0],last=nodes[nodes.length-1];if(!first){e.preventDefault();return}if(e.shiftKey&&(document.activeElement===first||document.activeElement===$('modalCard'))){e.preventDefault();last.focus()}else if(!e.shiftKey&&(document.activeElement===last||document.activeElement===$('modalCard'))){e.preventDefault();first.focus()}});
+if(!STUDIO){$('reviewGo').disabled=true;$('reviewFile').disabled=true;$('reviewStatus').textContent='当前是静态回放。请在本地工作台上传成片并运行评测。'}
+renderSteps(0,-1);
+if(!HOSTED)showDone(1);
+setView(HOSTED?'evaluate':location.hash==='#review'?'analytics':location.hash.slice(1),false);
+const hm=location.hash.match(/^#done(?:-([\d.]+))?/);
+if(!HOSTED&&hm)showDone(parseFloat(hm[1]||'1'));
+if(!HOSTED&&['#topic','#script','#skill'].includes(location.hash))({'#topic':openTopic,'#script':openScript,'#skill':openSkill})[location.hash]();
+</script>
+</body>
+</html>

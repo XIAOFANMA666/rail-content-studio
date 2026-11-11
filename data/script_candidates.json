@@ -1,0 +1,24 @@
+{
+  "generated_by": "Claude Opus 5.5（按 data/script_prompt.md 生成，2026-11-09 存档）",
+  "topic": "T1",
+  "variants": [
+    {"id": "A", "lines": [
+      {"en": "Most people don't know you can sleep your way from London to Scotland.", "zh": "很多人不知道，从伦敦睡一觉就能到苏格兰。", "role": "开头 · 冷知识", "on_screen": "LONDON → SCOTLAND\nWHILE YOU SLEEP"},
+      {"en": "The Highlander sleeper leaves London Euston every evening.", "zh": "Highlander 卧铺列车每天晚上从伦敦尤斯顿站出发。", "role": "铺垫 · 路线"},
+      {"en": "You fall asleep in the city and wake up to Highland lochs.", "zh": "在城市睡着，醒来窗外是高地湖泊。", "role": "画面 · 情绪"},
+      {"en": "Book the two legs separately and you can save up to 30%.", "zh": "分两段买票，最多能省 30%。", "role": "利益点 · 省钱", "on_screen": "SAVE UP TO 30%"},
+      {"en": "Open the app, search code UK20, and get an extra 20% off.", "zh": "打开 App 搜 UK20，再减 20%。", "role": "结尾 · 搜码钩子", "on_screen": "SEARCH: UK20"}]},
+    {"id": "B", "lines": [
+      {"en": "Here's a train secret most tourists never hear about.", "zh": "这是大多数游客都不知道的火车冷知识。", "role": "开头 · 冷知识", "on_screen": "UK TRAIN SECRET"},
+      {"en": "The sleeper train leaves London Euston just before midnight.", "zh": "卧铺列车午夜前从伦敦尤斯顿站出发。", "role": "铺垫 · 路线"},
+      {"en": "By breakfast, you're looking out at Highland mountains.", "zh": "到早餐时间，窗外已经是高地山景。", "role": "画面 · 情绪"},
+      {"en": "Split your ticket in two and save up to 30%.", "zh": "把票分成两段买，最多省 30%。", "role": "利益点 · 省钱", "on_screen": "SAVE UP TO 30%"},
+      {"en": "Search UK20 in the app for an extra 20% off.", "zh": "在 App 搜 UK20，再减 20%。", "role": "结尾 · 搜码钩子", "on_screen": "SEARCH: UK20"}]},
+    {"id": "C", "lines": [
+      {"en": "Get 20% off the London to Scotland sleeper with code UK20.", "zh": "用优惠码 UK20，伦敦到苏格兰卧铺立减 20%。", "role": "开头 · 冷知识", "on_screen": "20% OFF"},
+      {"en": "It leaves London Euston every evening and runs overnight.", "zh": "它每天晚上从伦敦尤斯顿站出发，连夜行驶。", "role": "铺垫 · 路线"},
+      {"en": "Wake up to lochs and mountains outside your window.", "zh": "醒来时窗外是湖泊和山。", "role": "画面 · 情绪"},
+      {"en": "Splitting the journey can save you up to 30%.", "zh": "分段出行最多能省 30%。", "role": "利益点 · 省钱", "on_screen": "SAVE UP TO 30%"},
+      {"en": "Open the app and search UK20 before it's gone.", "zh": "趁还有，打开 App 搜 UK20。", "role": "结尾 · 搜码钩子", "on_screen": "SEARCH: UK20"}]}
+  ]
+}
