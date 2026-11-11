@@ -61,6 +61,9 @@
 .script-library{display:flex;align-items:end;gap:14px;flex-wrap:wrap;margin:24px 0 12px;padding:20px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .script-library label{display:grid;gap:7px;font-size:12px;color:var(--muted);min-width:160px;flex:1}.script-library input,.script-library select,.script-editor input,.script-editor textarea,.script-editor select{width:100%;font:inherit;background:var(--panel,var(--bg));color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:10px;box-sizing:border-box}.script-library select{max-width:100%}.script-tools{display:flex;gap:6px;flex-wrap:wrap}.script-version-head{flex-wrap:wrap}.script-editor{width:min(960px,calc(100vw - 36px));max-height:88vh;box-sizing:border-box;overflow:auto;border:1px solid var(--line);border-radius:12px;padding:28px;background:var(--bg);color:var(--fg)}.script-editor::backdrop{background:#0008}.script-editor h2{font-size:24px;margin:0}.script-editor header,.script-editor footer{display:flex;gap:12px;align-items:center;justify-content:space-between}.script-editor label{display:grid;gap:8px;font-size:12px;color:var(--muted)}.script-editor textarea{resize:vertical;min-height:74px;line-height:1.6}.script-editor fieldset{border:0;border-top:1px solid var(--line);padding:18px 0;margin:20px 0}.script-editor legend{font-size:14px;padding-right:12px}.script-editor-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.script-editor-grid .wide{grid-column:1/-1}.script-editor details{margin-top:12px}.script-editor summary{cursor:pointer;font-size:12px;color:var(--muted)}.script-editor footer{position:sticky;bottom:-28px;padding:16px 0;background:var(--bg);border-top:1px solid var(--line)}.script-editor-status{font-size:13px;line-height:1.7;color:var(--muted);white-space:pre-line}.script-compare{width:100%;border-collapse:collapse;font-size:13px;margin:16px 0}.script-compare th,.script-compare td{text-align:left;vertical-align:top;padding:12px;border-bottom:1px solid var(--line);width:50%;white-space:pre-wrap;overflow-wrap:anywhere}.script-editor .rewrite-bar{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end;margin:20px 0}.script-editor select[multiple]{min-height:110px}.script-editor .editor-meta{margin:24px 0 16px}.script-library-status{font-size:12px;color:var(--muted)}
 @media(max-width:640px){.script-editor{padding:18px}.script-editor-grid{grid-template-columns:1fr}.script-editor .rewrite-bar{grid-template-columns:1fr}.script-editor footer{bottom:-18px}.script-library label{min-width:100%;}.script-compare th,.script-compare td{padding:8px}}
+
+.topic-pool{margin:24px 0 36px}.topic-pool-heading{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:12px}.topic-pool-heading h2{font-size:20px;margin:0}.topic-pool-heading span{font-size:13px;color:var(--muted)}.topic-pool-list{list-style:none;padding:0;margin:0;border-top:1px solid var(--line)}.topic-pool-row{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:15px 0;border-bottom:1px solid var(--line)}.topic-pool-row strong{display:block;font-size:16px;font-weight:600}.topic-pool-row small{display:block;margin-top:5px;color:var(--muted);font-size:12px}.topic-pool-row .btn{flex-shrink:0;min-height:42px}.topic-pool-row[data-selected="true"] strong{color:var(--accent)}
+@media(max-width:600px){.topic-pool-row{gap:12px}.topic-pool-row strong{font-size:14px}.topic-pool-row .btn{padding:10px;font-size:12px}.topic-pool-heading{gap:8px}}
 </style>
 </head>
 <body>
@@ -99,6 +102,11 @@
           <button class="btn primary" id="askGo" type="submit">生成脚本 →</button>
         </form>
         <p class="ask-hint" id="askHint" role="status"></p>
+      </section>
+
+      <section class="topic-pool" aria-labelledby="topicPoolHeading">
+        <div class="topic-pool-heading"><h2 id="topicPoolHeading">选题池</h2><span id="topicPoolSource">预置示例 · 非每日热点</span></div>
+        <ul id="topicPoolList" class="topic-pool-list"></ul>
       </section>
 
       <section class="script-workspace" aria-labelledby="scriptsHeading">
@@ -200,7 +208,7 @@ const HOSTED = /*__HOSTED__*/false;  // 云端仅提供成片评测，不能生�
 let scriptSession = /*__SCRIPT_SESSION__*/null;
 let connectionConfig = null;
 let selectedVariant = scriptSession?.scripts.chosen || (scriptSession && R.scripts.session_id===scriptSession.id ? R.scripts.chosen : null);
-let scriptLibrary=[], scriptVocabulary={tags:[],places:[]}, editorBase=null, editorInitial='', editorAction='edit', editorBusy=false, libraryBusy=false;
+let scriptLibrary=[], scriptVocabulary={tags:[],places:[]}, editorBase=null, editorDraft=null, editorInitial='', editorAction='edit', editorBusy=false, libraryBusy=false;
 function isProducedScript(){return scriptSession && R.scripts.session_id===scriptSession.id}
 const REVIEW = /*__REVIEW__*/null;  // 数据复盘的结果（review.py 生成），没有就不显示入口
 const $=id=>document.getElementById(id);
@@ -385,6 +393,21 @@ $('draftBtn').addEventListener('click',()=>{
   $('modal').hidden=false;$('modalCard').focus();
 });
 
+function renderTopicPool(){
+  const pool=R.topic?.pool||[];
+  $('topicPoolSource').textContent=`${pool.length} 个预置选题 · 非每日热点`;
+  $('topicPoolList').innerHTML=pool.length?pool.map((t,i)=>`<li class="topic-pool-row" data-selected="${$('askTopic').value.trim()===t.title}"><div><strong>${esc(t.title)}</strong><small>${esc((t.genre||[]).join(' / '))}${t.node?' · '+esc(t.node):''}</small></div><button class="btn" type="button" data-use-topic="${i}" aria-label="使用此选题：${esc(t.title)}" ${!STUDIO||HOSTED||state.running?'disabled':''}>使用此选题 →</button></li>`).join(''):'<li class="topic-pool-row">暂无预置选题，可在上方直接输入。</li>';
+}
+$('topicPoolList').addEventListener('click',e=>{
+  const button=e.target.closest('[data-use-topic]');
+  if(!button||!STUDIO||HOSTED||state.running||$('askTopic').disabled)return;
+  const topic=R.topic?.pool?.[Number(button.dataset.useTopic)];if(!topic)return;
+  $('askTopic').value=topic.title;
+  $('askTopic').focus();
+  $('askHint').textContent='已填入选题，点击「生成脚本」开始。';
+  renderTopicPool();
+});
+$('askTopic').addEventListener('input',renderTopicPool);
 function openTopic(){
   const T=R.topic;
   $('modalCard').innerHTML=isInput?`<h3>选题 · 人工输入</h3><p>这次的选题是在工作台里直接输入的：<b style="color:var(--fg)">${esc(T.input)}</b></p><p>没有走选题池打分。选题池的打分方式：历史爆款率（按题材，归一化）× 0.5 + 营销节点权重 × 0.3 + 利益点可植入度 × 0.2（${esc(T.note)}）</p>
@@ -532,14 +555,16 @@ $('scriptVersions').addEventListener('click',e=>{
   const b=e.target.closest('[data-script-choice]');if(b)openSavedScript(scriptSession.id,b.dataset.scriptChoice);
 });
 function editorContent(){
-  const original=editorBase.scripts.variants.find(v=>v.id===$('scriptEditor').dataset.variant);
+  const original=editorDraft;
+  const ordered=(before,selected)=>[...(before||[]).filter(x=>selected.includes(x)),...selected.filter(x=>!(before||[]).includes(x))];
   return {...original,idea:$('editIdea').value,claims:$('editClaims').value.split('\n').map(s=>s.trim()).filter(Boolean),
     lines:[...$('scriptEditLines').querySelectorAll('fieldset')].map((row,i)=>({...original.lines[i],
       en:row.querySelector('[data-field="en"]').value,zh:row.querySelector('[data-field="zh"]').value,on_screen:row.querySelector('[data-field="on_screen"]').value,
-      tags:[...row.querySelector('[data-field="tags"]').selectedOptions].map(o=>o.value),places:[...row.querySelector('[data-field="places"]').selectedOptions].map(o=>o.value)}))};
+      tags:ordered(original.lines[i].tags,[...row.querySelector('[data-field="tags"]').selectedOptions].map(o=>o.value)),places:[...row.querySelector('[data-field="places"]').selectedOptions].map(o=>o.value)}))};
 }
 function editorSnapshot(){return JSON.stringify({title:$('editTitle').value,content:editorContent()})}
 function fillEditor(variant){
+  editorDraft=JSON.parse(JSON.stringify(variant));
   $('editIdea').value=variant.idea||'';$('editClaims').value=(variant.claims||[]).join('\n');
   $('scriptEditLines').innerHTML=variant.lines.map((l,i)=>`<fieldset><legend>第 ${i+1} 句 · ${esc(l.role||'口播')}</legend><div class="script-editor-grid">
     <label>英文口播<textarea data-field="en" required maxlength="1000">${esc(l.en)}</textarea></label><label>中文对照<textarea data-field="zh" required maxlength="1000">${esc(l.zh)}</textarea></label>
@@ -709,7 +734,7 @@ if(STUDIO){
     if(k.models){const labels={script:'脚本',video:'评测',tts:'配音'};$('kv').insertAdjacentHTML('beforeend',`<dt>本机配置</dt><dd>${Object.entries(k.models).map(([key,v])=>esc(labels[key]||key)+' · '+esc(v.provider)+' / '+esc(v.model)).join('<br>')}<br><small>配置状态不代表本次已调用。</small></dd>`)}
   }).catch(()=>{connectionConfig={unavailable:true};renderConnections();$('askGo').disabled=true;$('askHint').textContent='暂时无法连接本地服务，请刷新后重试。'});
   function generationBusy(busy){
-    state.running=busy;
+    state.running=busy;renderTopicPool();
     ['askGo','produceGo','askTopic','askMarket','askPlatform','scriptProject','scriptRevision','importScript'].forEach(id=>$(id).disabled=busy);
     document.querySelectorAll('[data-script-choice],[data-script-edit]').forEach(b=>b.disabled=busy);
     if(!busy)$('produceGo').disabled=!scriptSession||!selectedVariant;
@@ -838,7 +863,8 @@ $('editorTitle').textContent=R.title;$('editorMeta').textContent=R.country+' / '
 const hm=location.hash.match(/^#done(?:-([\d.]+))?/);
 if(!HOSTED&&hm){setView('create',false);showDone(parseFloat(hm[1]||'1'));}
 if(!HOSTED&&location.hash==='#produced'){setView('create',false);$('productionStatus').textContent='粗剪已生成 · '+R.title;}
-if(!HOSTED&&['#topic','#script','#skill'].includes(location.hash))({'#topic':openTopic,'#script':openScript,'#skill':openSkill})[location.hash]();
+if(!HOSTED&&['#script','#skill'].includes(location.hash))({'#script':openScript,'#skill':openSkill})[location.hash]();
+renderTopicPool();
 </script>
 </body>
 </html>

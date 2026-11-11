@@ -439,7 +439,10 @@ def main():
     script["lines"] = [dict(l) for l in chosen["lines"]]
     who = usage_info["deepseek"]["provider"] if args.topic else "脚本 Agent"
     models = llm.models_in_use() if args.topic else {}   # 存档示例不调模型
-    log("写脚本", f"{who} 出 {len(variants)} 版初稿，审核拦下 {len(rejected)} 版，采用 {chosen['id']} 版" + ("" if passed else "（3 版都没全过，选问题最少的一版，需人工改）"), t0)
+    if prepared:
+        log("写脚本", f"复用已保存脚本 v{prepared.get('revision', 1)} · {chosen['id']} 版，不再次调用脚本模型" + ("" if chosen["ok"] else "（仍有规则问题，需人工核对）"), t0)
+    else:
+        log("写脚本", f"{who} 出 {len(variants)} 版初稿，审核拦下 {len(rejected)} 版，采用 {chosen['id']} 版" + ("" if passed else "（所有版本均有问题，需人工修改）"), t0)
     log("读取 Skill", f"{skill['name']}：{len(skill.get('rules', []))} 条规则，单镜头 ≤ {skill['max_shot_s']} 秒、字幕/花字样式、利益点和结尾钩子", t0)
 
     durations = {c["id"]: jy.VideoMaterial(os.path.join(ROOT, c["file"])).duration / US for c in clips}

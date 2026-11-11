@@ -88,6 +88,7 @@ def revise(out, base, variant, title, expected_head, action):
                    created_at=datetime.now(timezone.utc).isoformat())
     session["scripts"]["variants"] = [variant if v["id"] == variant["id"] else v for v in session["scripts"]["variants"]]
     session["scripts"]["chosen"] = None
+    session["scripts"]["generated_by"] = f"{action} · v{session['revision']}"
     library["sessions"].append(session)
     library["current"] = session["id"]
     commit(out, library)
