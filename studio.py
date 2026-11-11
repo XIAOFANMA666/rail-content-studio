@@ -15,6 +15,8 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import unquote, urlparse
 
 import llm
+import script_store
+import script_edit
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(ROOT, "output")
@@ -39,11 +41,7 @@ def read_result():
 
 
 def read_script_session():
-    path = os.path.join(OUT, "script-session.json")
-    if os.path.isfile(path):
-        with open(path, encoding="utf-8") as f:
-            return json.load(f)
-    return None
+    return script_store.current(OUT)
 
 
 def page():
@@ -53,7 +51,7 @@ def page():
     review = open(review_path, encoding="utf-8").read() if os.path.exists(review_path) else "null"
     return (tpl.replace("/*__RESULT__*/null", result).replace("/*__REVIEW__*/null", review)
                .replace("/*__STUDIO__*/false", "true")
-               .replace("/*__SCRIPT_SESSION__*/null", json.dumps(read_script_session(), ensure_ascii=False)))
+               .replace("/*__SCRIPT_SESSION__*/null", json.dumps(read_script_session(), ensure_ascii=False).replace("<", "\\u003c")))
 
 
 def run_pipeline(args):
@@ -95,11 +93,13 @@ class H(BaseHTTPRequestHandler):
         path = unquote(urlparse(self.path).path)
         if path in ("/", "/index.html"):
             return self._send(200, page(), "text/html; charset=utf-8")
+        if path == "/api/script-library":
+            return self._send(200, {"sessions": script_store.summaries(OUT), "vocabulary": script_edit.vocabulary()})
         if path == "/api/status":
             with lock:
                 return self._send(200, dict(job))
         if path == "/api/keys":
-            return self._send(200, {"deepseek": bool(llm.model_config("script")["api_key"]), "minimax": llm.has("MINIMAX_API_KEY"),
+            return self._send(200, {"deepseek": bool(llm.model_config("script")["api_key"]), "minimax": llm.has("MINIMAX_API_KEY"), "video": bool(llm.model_config("video")["api_key"]),
                                     "models": llm.models_in_use()})
         # 静态文件：clips/、thumbs/；audio/ 直接读 output/tts/（每次生成都是新的）
         if path.startswith("/audio/"):
@@ -174,10 +174,17 @@ class H(BaseHTTPRequestHandler):
                 return self._send(400, {"error": str(e)})
             except Exception:
                 return self._send(500, {"error": "评测失败，请检查依赖和服务配置后重试。"})
-        if path in ("/api/scripts", "/api/produce"):
+        if path in ("/api/scripts", "/api/produce", "/api/scripts/open", "/api/scripts/save", "/api/scripts/rewrite", "/api/scripts/import"):
             if self.headers.get("Origin") not in (f"http://localhost:{PORT}", f"http://127.0.0.1:{PORT}"):
                 return self._send(403, {"error": "请从本地工作台操作。"})
-            body = self._json()
+            try:
+                if not 0 < int(self.headers.get("Content-Length", 0)) <= 131072:
+                    raise ValueError("脚本请求过大或为空。")
+                body = self._json()
+                if not isinstance(body, dict):
+                    raise ValueError("脚本请求格式不正确。")
+            except (ValueError, TypeError):
+                return self._send(400, {"error": "脚本请求格式不正确或超过 128 KB。"})
             with lock:
                 if job["running"]:
                     return self._send(409, {"error": "已有生成任务正在进行。"})
@@ -191,11 +198,24 @@ class H(BaseHTTPRequestHandler):
                         raise ValueError("请先配置脚本模型密钥。")
                     from pipeline import generate_script_session
                     session = generate_script_session(topic, body.get("market") or "英国", body.get("platform") or "TikTok")
-                    os.makedirs(OUT, exist_ok=True)
-                    path_tmp = os.path.join(OUT, "script-session.tmp")
-                    with open(path_tmp, "w", encoding="utf-8") as f:
-                        json.dump(session, f, ensure_ascii=False)
-                    os.replace(path_tmp, os.path.join(OUT, "script-session.json"))
+                    session = script_store.add(OUT, session)
+                    with lock:
+                        job["running"] = False
+                    return self._send(200, session)
+                if path == "/api/scripts/import":
+                    import copy
+                    import uuid
+                    result = read_result()
+                    session = {"id": uuid.uuid4().hex, "title": result["title"], "country": result["country"],
+                               "platform": result["platform"], "usage": {"provider": "存档", "model": "存档"},
+                               "scripts": copy.deepcopy(result["scripts"])}
+                    session["scripts"]["chosen"] = None
+                    session = script_store.add(OUT, session)
+                    with lock:
+                        job["running"] = False
+                    return self._send(200, session)
+                if path == "/api/scripts/open":
+                    session = script_store.open_session(OUT, body.get("session_id"), body.get("variant"))
                     with lock:
                         job["running"] = False
                     return self._send(200, session)
@@ -204,13 +224,32 @@ class H(BaseHTTPRequestHandler):
                     raise ValueError("脚本已更新，请刷新后重新选择。")
                 if body.get("variant") not in [v["id"] for v in session["scripts"]["variants"]]:
                     raise ValueError("请先选择一个脚本版本。")
-                args = ["--script-file", os.path.join(OUT, "script-session.json"), "--variant", body["variant"]]
+                if path == "/api/scripts/rewrite":
+                    if not llm.model_config("script")["api_key"]:
+                        raise ValueError("请先配置脚本模型密钥；手动编辑和保存无需密钥。")
+                    response = script_edit.rewrite(session, body["variant"], body.get("instruction"))
+                    with lock:
+                        job["running"] = False
+                    return self._send(200, response)
+                if path == "/api/scripts/save":
+                    variant = script_edit.validate(body.get("content"), body["variant"])
+                    title = script_edit.text(body.get("title"), "选题名称", 80)
+                    session = script_store.revise(OUT, session, variant, title, body.get("expected_head"),
+                                                  "AI 改写" if body.get("action") == "rewrite" else "手动编辑")
+                    with lock:
+                        job["running"] = False
+                    return self._send(200, session)
+                # Pin the exact saved revision for this run; later library changes cannot alter it.
+                session = script_store.open_session(OUT, session["id"], body["variant"])
+                production_file = os.path.join(OUT, "production-script.json")
+                script_store.atomic_json(production_file, session)
+                args = ["--script-file", production_file, "--variant", body["variant"]]
                 threading.Thread(target=run_pipeline, args=(args,), daemon=True).start()
                 return self._send(200, {"ok": True})
             except Exception as e:
                 with lock:
                     job["running"] = False
-                message = str(e) if isinstance(e, ValueError) else "脚本生成失败，请检查模型配置或额度后重试。"
+                message = str(e) if isinstance(e, ValueError) else "脚本操作失败，原稿仍保留。请检查模型配置或本地存储后重试。"
                 if re.search(r"返回 402[：:]", str(e)):
                     message = "模型账户余额不足，请充值后重试。已有脚本仍可选用并制作粗剪。"
                 return self._send(400, {"error": message})

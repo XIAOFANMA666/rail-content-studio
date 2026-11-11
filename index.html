@@ -54,6 +54,9 @@
 @media(max-width:640px){.wrap{padding-inline:14px}.page-head{display:block;padding:24px 0 20px;min-height:0}.page-head h1{font-size:26px}.head-actions{justify-content:flex-start;margin-top:16px;gap:8px}.head-actions .btn{font-size:12px;min-height:40px}.top{min-height:56px;padding:0;gap:8px;flex-wrap:nowrap}.breadcrumb{font-size:11px}.top-tools{gap:0}.theme-toggle{font-size:11px}.theme-toggle #themeText{display:none}.ask{grid-template-columns:1fr 1fr;gap:12px}.ask .topic-field,.ask #askGo{grid-column:1/-1}.ask label{font-size:11px;gap:7px}.ask input,.ask select{font-size:13px}.script-result-heading{display:flex;align-items:flex-start;gap:8px}.script-result-heading h2{font-size:18px}.production-actions{display:flex;flex-direction:column;align-items:stretch;gap:12px}.script-lines{display:block}.script-version-head h3{font-size:21px}.script-lines li{font-size:14px}.editor-bar{display:block}.editor-task strong{max-width:100%;font-size:13px}.editor-tools{margin-top:12px}.studio-grid{grid-template-columns:1fr}.studio-grid>.preview-column{grid-row:1;height:auto;min-height:430px}.preview-column .screen{height:340px;max-height:340px}.studio-grid>.material-column{height:400px}.studio-grid>.inspector{grid-column:auto}.inspector .cands{display:block}.timeline-heading{flex-wrap:wrap;gap:10px}.timeline-heading label{margin-left:0}.timeline-heading input{width:80px}.timeline-heading h2{font-size:16px}.script-result-heading>span{font-size:11px}.upload-area{padding-top:20px}.upload-intro h2{font-size:22px}.upload-control input[type=file]{font-size:12px}.works-toolbar{gap:16px}.platform-tabs{gap:14px}.platform-tabs button{font-size:12px}.view-controls{flex-wrap:wrap}}
 
 .export-instructions{padding-left:22px;margin:24px 0}.export-instructions li{padding:8px 0 12px}.export-instructions li strong{font-size:16px}.export-instructions li p{margin:6px 0 0;line-height:1.7}.modal-card .path{overflow-wrap:anywhere}
+
+.connection-entry{margin-top:auto;display:flex;align-items:center;gap:12px;background:transparent;border:0;border-top:1px solid var(--line);padding:20px 12px 0;text-align:left;color:var(--muted);font-size:13px}.connection-entry svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.5;flex-shrink:0}.connection-entry:hover,.connection-entry[aria-current=page]{color:var(--accent)}#connectionsView{max-width:1450px}.connection-intro{display:flex;align-items:center;justify-content:space-between;gap:24px;margin:8px 0 24px}.connection-intro h2,.connection-section h2{font-size:21px;line-height:1.4;margin:0;font-weight:650}.connection-intro>span{font-size:12px;color:var(--muted)}.workflow-map{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));list-style:none;padding:0;margin:0;border-block:1px solid var(--line)}.workflow-map li{position:relative;display:flex;align-items:flex-start;flex-direction:column;padding:24px 24px 24px 0;min-width:0}.workflow-map li+li{padding-left:24px;border-left:1px solid var(--line)}.workflow-number{color:var(--accent);font-size:14px;font-variant-numeric:tabular-nums;margin-bottom:12px}.workflow-map h3{font-size:17px;line-height:1.5;margin:0 0 8px}.workflow-map p{font-size:13px;color:var(--muted);line-height:1.8;margin:0 0 20px}.workflow-map button{margin-top:auto;font-size:12px;text-align:left}.workflow-after{display:grid;grid-template-columns:1fr auto 2fr;gap:24px;padding:24px 0;border-bottom:1px dashed var(--line)}.workflow-after strong{font-size:14px}.workflow-after p{font-size:13px;color:var(--muted);line-height:1.75;margin:8px 0 0}.workflow-after button{padding-left:0;margin-top:8px}.workflow-arrow{align-self:center;color:var(--dim)}.connection-section{margin-top:40px}.connection-table-wrap{overflow:auto;margin-top:20px}.connection-table{border-collapse:collapse;width:100%;text-align:left;font-size:13px;line-height:1.75}.connection-table th,.connection-table td{padding:16px;border-bottom:1px solid var(--line);vertical-align:top}.connection-table th:first-child{padding-left:0;width:130px}.connection-table thead th{color:var(--muted);font-size:12px;font-weight:500}.connection-table tbody th{font-weight:600;white-space:nowrap}.connection-table td:last-child{width:240px;color:var(--muted)}.handoff-list{margin-top:18px}.handoff-list>div{display:grid;grid-template-columns:210px 1fr;gap:24px;padding:16px 0;border-bottom:1px solid var(--line);font-size:13px;line-height:1.8}.handoff-list dt{font-weight:600}.handoff-list dd{margin:0;color:var(--muted)}@media(max-width:1100px){.workflow-map{grid-template-columns:repeat(2,minmax(0,1fr))}.workflow-map li:nth-child(3){padding-left:0;border-left:0}.workflow-map li:nth-child(n+3){border-top:1px solid var(--line)}}@media(max-width:980px){.connection-entry{flex-direction:column;gap:8px;padding:20px 0 0;font-size:10px;text-align:center}.connection-intro{align-items:flex-start;flex-direction:column;gap:12px}.connection-table{min-width:640px}}@media(max-width:640px){.workflow-map{grid-template-columns:1fr}.workflow-map li,.workflow-map li+li{padding:20px 0;border-left:0}.workflow-map li+li{border-top:1px solid var(--line)}.workflow-after{grid-template-columns:1fr;gap:16px}.workflow-arrow{display:none}.handoff-list>div{grid-template-columns:1fr;gap:4px}.connection-section h2,.connection-intro h2{font-size:19px}}
+
 </style>
 </head>
 <body>
@@ -66,6 +69,7 @@
       <button type="button" data-view="evaluate" aria-label="成片评测"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 4-5 8-8 9-3-1-8-5-8-9V6zM8 12l3 3 5-6"/></svg><span>成片评测</span></button>
       <button type="button" data-view="analytics" id="reviewBtn" aria-label="数据复盘" class="compose-only"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10h4v10m2 0V4h4v16m2 0V7h4v13"/></svg><span>数据复盘</span></button>
     </nav>
+    <button class="connection-entry compose-only" type="button" data-view="connections" aria-label="流程与连接"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="15" y="15" width="6" height="6" rx="1"/><path d="M6 9v9h9M9 6h9v9"/></svg><span>流程与连接</span></button>
   </aside>
   <header class="top"><div class="breadcrumb"><span>内容工作台</span><span aria-hidden="true">／</span><strong id="breadcrumbTitle">素材与粗剪</strong></div>
     <div class="top-tools"><span class="mode" id="modeLabel">运行回放</span><button class="theme-toggle" id="themeToggle" type="button" aria-label="切换到暗黑模式"><span id="themeIcon" aria-hidden="true">◐</span><span id="themeText">暗黑模式</span></button></div>
@@ -146,6 +150,23 @@
       </div>
     </section>
     <section id="analyticsView" class="workspace" hidden aria-label="数据复盘"><div id="analyticsContent"></div></section>
+    <section id="connectionsView" class="workspace" hidden aria-label="流程与连接">
+      <div class="connection-intro"><h2>一条作品怎么完成</h2><span id="connectionMode"></span></div>
+      <ol class="workflow-map">
+        <li><span class="workflow-number">1</span><h3>生成并选用脚本</h3><p>输入选题 → 模型生成三版 → 人工选定一版。</p><button class="btn" type="button" data-view="scripts">去生成脚本 →</button></li>
+        <li><span class="workflow-number">2</span><h3>制作粗剪工程</h3><p>选定脚本 → 配音、字幕和素材匹配 → 检查镜头、保存修改。</p><button class="btn" type="button" data-view="create">打开剪辑台 →</button></li>
+        <li><span class="workflow-number">3</span><h3>在剪映精修</h3><p>打开本机工程 → 人工精修 → 在剪映导出 MP4。</p><button class="btn" type="button" id="connectionDraftGuide">查看剪映打开方法 →</button></li>
+        <li><span class="workflow-number">4</span><h3>上传成片评测</h3><p>手动选择 MP4 → 本机转写、抽帧 → 模型评测。需修改时回剪映。</p><button class="btn" type="button" data-view="evaluate">去上传评测 →</button></li>
+      </ol>
+      <div class="workflow-after"><div><strong>人工发布</strong><p>终审通过后，由运营去平台发布。本工作台不自动发布。</p></div><span class="workflow-arrow" aria-hidden="true">→</span><div><strong>数据复盘 · 真实平台数据未接通</strong><p>当前使用演示发布记录和 CSV 数据；尚未自动获取平台指标，也不会自动改写下一条脚本。</p><button class="btn text" type="button" data-view="analytics">查看数据复盘 →</button></div></div>
+      <section class="connection-section"><h2>每一环接到哪里</h2><div class="connection-table-wrap"><table class="connection-table"><thead><tr><th>环节</th><th>实际连接方式</th><th>当前配置</th></tr></thead><tbody id="connectionRows"></tbody></table></div></section>
+      <section class="connection-section"><h2>页面之间传什么</h2><dl class="handoff-list">
+        <div><dt>脚本页 → 剪辑台</dt><dd>传入你选定的那版脚本；生成配音、字幕和镜头计划，不再次改写脚本。</dd></div>
+        <div><dt>剪辑台 → 剪映</dt><dd>通过本机工程文件夹交接，包含工程文件和 materials 素材。替换镜头后须点击「写入剪映工程」。</dd></div>
+        <div><dt>剪映 → 成片评测</dt><dd>手动导出 MP4 再上传。剪映里的修改不会自动回传工作台。</dd></div>
+        <div><dt>平台 → 数据复盘</dt><dd>当前没有平台账号授权或自动取数；本地复盘脚本可读取约定格式的 CSV，页面展示处理结果。</dd></div>
+      </dl></section>
+    </section>
   </main>
   <details class="foot-wrap compose-only" id="footWrap"><summary>素材来源与能力说明</summary><div class="foot" id="foot"></div></details>
 </div>
@@ -156,6 +177,7 @@ const R = {"mode": "live", "run_id": "20261111005639", "topic": {"note": "示例
 const STUDIO = /*__STUDIO__*/false;  // 本地工作台（studio.py 提供）时为 true：能输入选题现场生成、能把换过的镜头写回剪映
 const HOSTED = /*__HOSTED__*/false;  // 云端仅提供成片评测，不能生成或写入剪映草稿
 let scriptSession = /*__SCRIPT_SESSION__*/null;
+let connectionConfig = null;
 let selectedVariant = scriptSession && R.scripts.generated_by===scriptSession.scripts.generated_by ? R.scripts.chosen : null;
 const REVIEW = {
  "note": "模拟的发布记录：脚本是流水线真实生成过的，账号、作品编号和发布时间是编的。真实落地时由发布环节写入。",
@@ -851,11 +873,12 @@ if(STUDIO){
   });
   if(isInput)$('askTopic').value=R.title;
   if(!HOSTED) fetch('/api/keys').then(r=>r.json()).then(k=>{
+    connectionConfig=k;renderConnections();
     if(!k.deepseek)$('askHint').textContent='脚本服务尚未配置，当前可查看已有结果。';
     $('produceGo').title=k.minimax?'使用已选脚本生成配音、字幕和剪映工程':'使用系统语音生成配音，并生成字幕和剪映工程';
     if(!k.deepseek)$('askGo').disabled=true;
     if(k.models){const labels={script:'脚本',video:'评测',tts:'配音'};$('kv').insertAdjacentHTML('beforeend',`<dt>本机配置</dt><dd>${Object.entries(k.models).map(([key,v])=>esc(labels[key]||key)+' · '+esc(v.provider)+' / '+esc(v.model)).join('<br>')}<br><small>配置状态不代表本次已调用。</small></dd>`)}
-  }).catch(()=>{$('askGo').disabled=true;$('askHint').textContent='暂时无法连接本地服务，请刷新后重试。'});
+  }).catch(()=>{connectionConfig={unavailable:true};renderConnections();$('askGo').disabled=true;$('askHint').textContent='暂时无法连接本地服务，请刷新后重试。'});
   function generationBusy(busy){
     state.running=busy;
     ['askGo','produceGo','askTopic','askMarket','askPlatform'].forEach(id=>$(id).disabled=busy);
@@ -892,16 +915,31 @@ if(STUDIO){
   });
 }
 
-const viewInfo={scripts:['选题与脚本',''],create:['素材与粗剪',''],evaluate:['成片评测',''],analytics:['数据复盘','']};
+function renderConnections(){
+  const k=connectionConfig, configured=(value)=>!STUDIO?'需在本地配置':k?.unavailable?'本地服务连接失败':!k?'正在读取配置':value?'密钥已配置':'尚未配置密钥';
+  $('connectionMode').textContent=STUDIO?'本地工作台 · 配置状态不代表余额或调用成功':'在线展示 · 实际生成需打开本地工作台';
+  const rows=[
+    ['脚本模型','工作台服务通过 API 调用模型；在本机 .env 配置 DEEPSEEK_API_KEY，或 SCRIPT_API_KEY / SCRIPT_BASE_URL / SCRIPT_MODEL。',configured(k?.deepseek)],
+    ['配音','优先使用已配置的 MiniMax；未配置时由 macOS 系统语音配音。MiniMax 通过 MINIMAX_API_KEY 接入。',!STUDIO?'本地生成时选择服务':!k?'正在读取配置':k.unavailable?'配置状态未知':k.minimax?'MiniMax 密钥已配置':'使用 macOS 系统语音'],
+    ['素材匹配','从仓库随附的本地素材和标签匹配，不是在线搜索，也没有接云端素材库。',Object.keys(R.clips).length+' 段素材 · 本地标签匹配'],
+    ['剪映工程','工作台写入工程文件夹，剪映读取工程。没有直接控制剪映，也不会自动启动剪映。',STUDIO&&!R.preview_only?'本机工程已生成 · 客户端打开待验证':'只有演示记录，需先生成本机工程'],
+    ['成片评测','上传 MP4 后，本机语音转写和抽帧；画面及转写文本发送给评测模型。使用 VIDEO_API_KEY，未单独设置时可复用 DeepSeek 密钥。',configured(k?.video)],
+    ['发布与复盘','人工发布；当前复盘读取演示发布记录与 CSV。本地 review.py 处理后由页面展示。', '未接入平台自动发布或真实数据 API']
+  ];
+  $('connectionRows').innerHTML=rows.map(([name,how,status])=>`<tr><th scope="row">${esc(name)}</th><td>${esc(how)}</td><td>${esc(status)}</td></tr>`).join('');
+}
+$('connectionDraftGuide').addEventListener('click',()=>{$('draftBtn').click()});
+const viewInfo={connections:['流程与连接',''],scripts:['选题与脚本',''],create:['素材与粗剪',''],evaluate:['成片评测',''],analytics:['数据复盘','']};
 function setView(view,updateHash=true){
   if(!viewInfo[view])view='scripts';if(HOSTED)view='evaluate';
   if(state.playing)setPlaying(false);
   const player=$('reviewPlayer');if(player)player.pause();
-  ['scripts','create','evaluate','analytics'].forEach(v=>$(v+'View').hidden=v!==view);
-  document.querySelectorAll('.nav button[data-view]').forEach(b=>{if(b.dataset.view===view)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
+  ['scripts','create','evaluate','analytics','connections'].forEach(v=>$(v+'View').hidden=v!==view);
+  document.querySelectorAll('.sidebar button[data-view]').forEach(b=>{if(b.dataset.view===view)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
   const [title,desc]=viewInfo[view];$('viewTitle').textContent=title;$('breadcrumbTitle').textContent=title;$('viewDescription').textContent=desc;$('viewDescription').hidden=!desc;
   $('scriptActions').hidden=view!=='scripts';$('createActions').hidden=view!=='create';document.body.dataset.view=view;$('footWrap').hidden=view!=='create';
   if(view==='analytics')renderAnalytics();
+  if(view==='connections')renderConnections();
   if(updateHash){history.pushState(null,'','#'+view);window.scrollTo({top:0,behavior:'instant'})}
 }
 document.querySelectorAll('button[data-view]').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.view)));
