@@ -48,6 +48,16 @@ class ScriptWorkflowTests(unittest.TestCase):
         self.assertEqual(studio.read_script_session()['id'], 'new-script')
         self.assertFalse(studio.job['running'])
 
+    def test_insufficient_balance_keeps_saved_scripts_and_explains_recovery(self):
+        (self.out / 'script-session.json').write_text(json.dumps(self.session))
+        with patch('pipeline.generate_script_session', side_effect=RuntimeError('model 返回 402：private upstream details')), patch.object(studio.llm, 'model_config', return_value={'api_key': 'test'}):
+            status, data = self.post('/api/scripts', {'topic': 'test'})
+        self.assertEqual(status, 400)
+        self.assertIn('余额不足', data['error'])
+        self.assertNotIn('private', data['error'])
+        self.assertEqual(studio.read_script_session()['id'], 'new-script')
+        self.assertFalse(studio.job['running'])
+
     def test_produce_rejects_stale_or_unselected_script(self):
         (self.out / 'script-session.json').write_text(json.dumps(self.session))
         for data in [{'session_id': 'old', 'variant': 'A'}, {'session_id': 'new-script'}, {'session_id': 'new-script', 'variant': 'Z'}]:

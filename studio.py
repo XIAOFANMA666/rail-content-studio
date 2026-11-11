@@ -211,6 +211,8 @@ class H(BaseHTTPRequestHandler):
                 with lock:
                     job["running"] = False
                 message = str(e) if isinstance(e, ValueError) else "脚本生成失败，请检查模型配置或额度后重试。"
+                if re.search(r"返回 402[：:]", str(e)):
+                    message = "模型账户余额不足，请充值后重试。已有脚本仍可选用并制作粗剪。"
                 return self._send(400, {"error": message})
         if path == "/api/run":
             body = self._json()

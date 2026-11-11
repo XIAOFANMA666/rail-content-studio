@@ -42,6 +42,17 @@
 
 
 .generation-controls{border-top:0;margin-bottom:32px}.generation-controls h2,.production-heading h2{font-size:21px;line-height:1.4;font-weight:650;margin:0 0 18px}.generation-controls .compose-bar{padding-bottom:0}.script-result-heading{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin:24px 0 18px}.script-result-heading h2{font-size:18px;margin:0}.script-result-heading>span{font-size:12px;color:var(--muted)}.script-versions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}.script-version{min-width:0;border-top:3px solid var(--line);padding-top:14px}.script-version.selected{border-color:var(--accent)}.script-version-head{display:flex;justify-content:space-between;align-items:center;gap:8px}.script-version-head h3{font-size:20px;margin:0}.script-version-head span{font-size:12px;color:var(--accent)}.script-version-head button[aria-pressed=true]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}.script-idea{font-size:13px;color:var(--muted);margin:14px 0}.script-lines{padding-left:20px;margin:16px 0}.script-lines li{padding:10px 0;border-bottom:1px solid var(--line);font-size:14px;line-height:1.6}.script-lines p{margin:0}.script-lines p[lang]{font-size:12px;color:var(--muted);margin-top:6px}.script-checks{font-size:12px;color:var(--warn)}.production-actions{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:0 0 22px;padding:14px 0;border-block:1px solid var(--line)}.production-actions p{margin:0;font-size:13px;color:var(--muted)}#produceGo{font-size:18px;min-height:56px;padding:14px 28px;white-space:nowrap}.generation-controls .pipeline-strip{padding:12px 0;margin:12px 0;border-top:0}.script-workspace{scroll-margin-top:20px}@media(max-width:1100px){.script-versions{gap:18px}.script-version-head{flex-wrap:wrap}}@media(max-width:740px){.script-versions{grid-template-columns:1fr;gap:28px}.production-actions,.script-result-heading{align-items:stretch;flex-direction:column}#produceGo{width:100%}}
+
+/* Task hierarchy: creation and editing are separate, first-class workspaces. */
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+:root{--font-ui:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Noto Sans SC",sans-serif;--accent:#8c6209;--editor-accent:#aa7a14;--bg:#f6f7f5;--panel:#ffffff;--panel-2:#edeFEB;--sidebar-bg:#eceeeb;--line:#d9ded8;--fg:#202620;--muted:#626b63;--dim:#69736b}
+:root[data-theme=dark]{--bg:#101419;--panel:#191f26;--panel-2:#232b35;--sidebar-bg:#151a20;--line:#343e49;--fg:#f0f3f5;--muted:#b0bac5;--dim:#a0aeba;--accent:#efc65b;--accent-ink:#201a0a;--editor-accent:#efc65b}
+::selection{background:color-mix(in srgb,var(--accent) 25%,transparent);color:var(--fg)}input,textarea{caret-color:var(--accent)}.wrap{margin-left:200px;padding:0 28px 28px;max-width:none}.sidebar{width:200px;padding:28px 16px}.sidebar .brand{font-size:25px}.brand-name small{font-size:11px;letter-spacing:.06em}.sidebar .nav{margin-top:48px;gap:8px}.sidebar .nav button{font-size:14px;min-height:48px;border-radius:8px;padding:12px}.sidebar .nav button[aria-current=page]{background:var(--panel);color:var(--fg);font-weight:650}.sidebar .nav button[aria-current=page]:after{width:2px;background:var(--accent);top:15px;bottom:15px}.sidebar .nav button[aria-current=page] svg{color:var(--accent)}.top{height:56px}.top-tools .mode{font-size:11px}.page-head{min-height:100px;padding:24px 0;align-items:center}.page-head h1{font-size:30px;line-height:1.2;letter-spacing:-.03em}.head-actions .btn{padding:10px 16px;font-size:13px;min-height:42px}.btn{font-size:13px;min-height:36px;border-radius:7px;font-weight:550;line-height:1.45}.btn.primary:hover{filter:brightness(1.06)}button:not(:disabled):active{transform:translateY(1px)}.workspace{animation:none}.generation-controls{margin:0;max-width:1600px}.ask{grid-template-columns:minmax(240px,1fr) 120px 170px auto;gap:16px;align-items:end}.ask label{display:flex;flex-direction:column;gap:9px;font-size:12px;font-weight:550;color:var(--muted);min-width:0}.ask input,.ask select{height:52px;width:100%;font-size:14px;padding:12px 14px;border-radius:7px;color:var(--fg)}.ask #askGo{height:52px;min-height:52px;min-width:156px;font-size:16px;padding:12px 24px;border-radius:7px}.ask-hint{min-height:20px;font-size:12px;margin:12px 0 0}.script-result-heading{margin:30px 0 0;min-height:40px;align-items:center}.script-result-heading h2{font-size:20px;letter-spacing:-.02em}.production-actions{border-top:0;margin:0 0 24px;padding:12px 0 20px}.production-actions p{font-size:13px}#produceGo{font-size:14px;min-height:44px;padding:10px 20px;border-radius:7px}.script-versions{gap:24px}.script-version{padding:18px 0 0;border-top:2px solid var(--line)}.script-version-head{min-height:40px}.script-version-head h3{font-size:22px;font-weight:650}.script-version.selected{border-top-color:var(--accent)}.script-version-head button{font-size:12px;padding:8px 12px}.script-idea{font-size:12px;line-height:1.7;min-height:42px;margin:12px 0 14px}.script-lines{list-style:none;padding:0;margin:0;counter-reset:script-line}.script-lines li{position:relative;padding:15px 0 15px 28px;font-size:14px;line-height:1.7;counter-increment:script-line}.script-lines li:before{content:counter(script-line,decimal-leading-zero);position:absolute;left:0;top:18px;font-size:10px;color:var(--dim);font-variant-numeric:tabular-nums}.script-lines p[lang]{font-size:12px;line-height:1.65;margin-top:5px}.script-checks{line-height:1.7;margin-top:14px;font-size:11px}.script-checks p{margin:0}.editor-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 0 18px}.editor-task{display:flex;align-items:center;gap:12px;min-width:0}.task-dot{width:7px;height:7px;flex-shrink:0;border-radius:50%;background:var(--good)}.editor-task strong{font-size:14px;font-weight:550;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:40vw}.editor-task>span:last-child{font-size:11px;color:var(--muted);white-space:nowrap}.editor-tools{display:flex;gap:8px;align-items:center;flex-shrink:0}.editor-tools .btn{font-size:12px}.studio-grid{grid-template-columns:minmax(210px,.82fr) minmax(280px,1.13fr) minmax(280px,1fr);gap:16px}.studio-grid>section{height:clamp(350px,calc(100dvh - 500px),520px);padding:16px;border:1px solid var(--line);border-radius:8px;box-shadow:none}.studio-grid .section-head h2{font-size:17px}.preview-column .section-label{font-size:15px}.preview-column .screen{height:clamp(260px,calc(100dvh - 606px),420px);max-height:420px;max-width:100%;border-radius:6px}.preview-column .transport{min-height:32px;margin-top:12px}.preview-column .play{width:34px;height:34px}.preview-column .tc{font-size:11px}.material-search,.material-filter{font-size:12px;min-height:36px}.material-grid{gap:16px 12px}.material-title{font-size:12px;line-height:1.5;margin-top:7px}.material-duration{font-size:11px}.inspector .seg-tabs button{font-size:12px;min-height:32px;padding:5px 8px}.inspector .seg-en{font-size:17px;line-height:1.5;font-weight:550}.inspector .seg-zh{font-size:13px}.inspector .shot-tabs button{font-size:12px;min-height:32px;padding:5px 10px}.inspector .cand{grid-template-columns:72px minmax(0,1fr) 46px;gap:10px;padding:12px 0}.inspector .cand img{width:72px;height:50px}.inspector .cand .nm{font-size:12px;line-height:1.5}.inspector .cand .meta{font-size:10px}.inspector .cand button{min-height:30px;font-size:11px;padding:4px 7px}.inspector .btn.text{font-size:12px;min-height:32px}.timeline-panel{margin-top:16px;border-radius:8px}.timeline-heading{padding:12px 16px}.timeline-heading h2{font-size:17px}.timeline-row{margin-bottom:7px}.track-label{font-size:12px}.timeline-clip{font-size:11px}.video-clip span{font-size:10px}.video-clip small{font-size:9px}.timeline-footer{font-size:11px;padding:9px 16px}.pipeline-strip{margin:12px 0 20px;padding:12px 0;border-top:0;gap:16px}.pipeline-stages li{font-size:12px}.details-row{margin-top:16px}.details-row summary{font-size:13px;min-height:42px}.video-review{max-width:none}.upload-area{display:grid;grid-template-columns:minmax(240px,.75fr) minmax(360px,1.25fr);gap:48px;padding:32px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:transparent;border-radius:0}.upload-intro h2{font-size:24px;margin:0 0 12px}.upload-control{min-width:0}.upload-control label{font-size:13px}.upload-control input[type=file]{font-size:14px;padding:16px 0;max-width:100%}#reviewGo{min-height:48px;font-size:15px;padding:12px 24px}.review-cost{display:block;font-size:12px;margin:12px 0;color:var(--muted)}.works-toolbar{padding:8px 0 20px}.platform-tabs button{font-size:14px;min-height:40px}.works-table th{font-size:12px}.works-table td{font-size:13px}.work-title{font-size:14px}.work-gallery{gap:24px}.analytics-top h2{font-size:22px}.review-meta{margin-top:20px}
+@media(min-width:1680px){.wrap{padding-inline:36px}.studio-grid{grid-template-columns:minmax(260px,.8fr) minmax(420px,1.1fr) minmax(340px,1fr)}}
+@media(max-width:1250px) and (min-width:981px){.sidebar{width:176px;padding-inline:12px}.sidebar .brand{padding:0 8px}.brand-name{display:block}.sidebar .nav button{justify-content:flex-start;padding:12px 10px}.sidebar .nav button span{display:block}.wrap{margin-left:176px;padding-inline:20px}.studio-grid{grid-template-columns:minmax(180px,.8fr) minmax(230px,1fr) minmax(240px,1fr);gap:12px}.editor-task>span:last-child{display:none}.ask{grid-template-columns:minmax(170px,1fr) 100px 140px auto;gap:10px}.ask #askGo{min-width:138px;padding-inline:16px}.script-versions{gap:18px}}
+@media(max-width:980px){.sidebar{width:76px;padding:24px 6px}.brand-name{display:none}.sidebar .brand{padding:0 18px}.sidebar .nav{margin-top:36px;gap:12px}.sidebar .nav button{display:flex;flex-direction:column;gap:6px;padding:10px 2px}.sidebar .nav button span{display:block;font-size:10px;line-height:1.3}.sidebar .nav button svg{width:19px;height:19px}.wrap{margin-left:76px;padding-inline:20px}.studio-grid{grid-template-columns:minmax(220px,.85fr) minmax(280px,1fr);gap:16px}.studio-grid>.inspector{grid-column:1/-1;height:auto;max-height:none}.inspector #inspect{overflow:visible}.inspector .cands{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 24px}.editor-task>span:last-child{display:none}.ask{grid-template-columns:1fr 1fr auto}.ask .topic-field{grid-column:1/-1}.script-versions{grid-template-columns:1fr;gap:32px}.script-idea{min-height:0}.script-lines{display:grid;grid-template-columns:1fr 1fr;gap:0 28px}.script-version-head{flex-wrap:nowrap}.upload-area{grid-template-columns:1fr;gap:20px}.page-head{align-items:flex-start;gap:16px}.head-actions{justify-content:flex-end}.head-actions .btn{padding:8px 12px}.script-result-heading{margin-top:24px}}
+@media(max-width:640px){.wrap{padding-inline:14px}.page-head{display:block;padding:24px 0 20px;min-height:0}.page-head h1{font-size:26px}.head-actions{justify-content:flex-start;margin-top:16px;gap:8px}.head-actions .btn{font-size:12px;min-height:40px}.top{min-height:56px;padding:0;gap:8px;flex-wrap:nowrap}.breadcrumb{font-size:11px}.top-tools{gap:0}.theme-toggle{font-size:11px}.theme-toggle #themeText{display:none}.ask{grid-template-columns:1fr 1fr;gap:12px}.ask .topic-field,.ask #askGo{grid-column:1/-1}.ask label{font-size:11px;gap:7px}.ask input,.ask select{font-size:13px}.script-result-heading{display:flex;align-items:flex-start;gap:8px}.script-result-heading h2{font-size:18px}.production-actions{display:flex;flex-direction:column;align-items:stretch;gap:12px}.script-lines{display:block}.script-version-head h3{font-size:21px}.script-lines li{font-size:14px}.editor-bar{display:block}.editor-task strong{max-width:100%;font-size:13px}.editor-tools{margin-top:12px}.studio-grid{grid-template-columns:1fr}.studio-grid>.preview-column{grid-row:1;height:auto;min-height:430px}.preview-column .screen{height:340px;max-height:340px}.studio-grid>.material-column{height:400px}.studio-grid>.inspector{grid-column:auto}.inspector .cands{display:block}.timeline-heading{flex-wrap:wrap;gap:10px}.timeline-heading label{margin-left:0}.timeline-heading input{width:80px}.timeline-heading h2{font-size:16px}.script-result-heading>span{font-size:11px}.upload-area{padding-top:20px}.upload-intro h2{font-size:22px}.upload-control input[type=file]{font-size:12px}.works-toolbar{gap:16px}.platform-tabs{gap:14px}.platform-tabs button{font-size:12px}.view-controls{flex-wrap:wrap}}
+
 </style>
 </head>
 <body>
@@ -49,6 +60,7 @@
   <aside class="sidebar" aria-label="侧边导航">
     <div class="brand" aria-label="轨道内容工作台"><span class="brand-mark" aria-hidden="true"></span><span class="brand-name">轨道 <small>内容工作台</small></span></div>
     <nav class="nav" aria-label="工作区">
+      <button type="button" data-view="scripts" aria-label="选题与脚本" class="compose-only"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9zM14 3v6h6M8 13h8M8 17h5"/></svg><span>选题与脚本</span></button>
       <button type="button" data-view="create" aria-label="素材与粗剪" aria-current="page" class="compose-only"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 4v16M17 4v16M3 9h4m-4 6h4m10-6h4m-4 6h4"/></svg><span>素材与粗剪</span></button>
       <button type="button" data-view="evaluate" aria-label="成片评测"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 4-5 8-8 9-3-1-8-5-8-9V6zM8 12l3 3 5-6"/></svg><span>成片评测</span></button>
       <button type="button" data-view="analytics" id="reviewBtn" aria-label="数据复盘" class="compose-only"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10h4v10m2 0V4h4v16m2 0V7h4v13"/></svg><span>数据复盘</span></button>
@@ -59,31 +71,36 @@
   </header>
   <div class="page-head">
     <div><h1 id="viewTitle">素材与粗剪</h1><p id="viewDescription"></p></div>
+    <div class="head-actions compose-only" id="scriptActions" hidden><button class="btn" type="button" data-view="create">打开剪辑台 →</button></div>
     <div class="head-actions compose-only" id="createActions">
-      <button type="button" class="btn text" id="skillBtn">剪辑规则</button>
-      <button type="button" class="btn" id="draftBtn" disabled>查看剪映草稿 ↗</button>
+      <button type="button" class="btn" data-view="scripts">选用脚本</button>
+      <button type="button" class="btn primary" id="saveDraftBtn" disabled>写入剪映工程</button>
+      <button type="button" class="btn" data-view="evaluate">评测成片 →</button>
     </div>
   </div>
   <main>
-    <section id="createView" class="workspace" aria-label="素材与粗剪">
-      <section class="generation-controls" aria-labelledby="creationHeading"><h2 id="creationHeading">选题与脚本</h2>
+    <section id="scriptsView" class="workspace" aria-label="选题与脚本">
+      <section class="generation-controls" aria-labelledby="creationHeading"><h2 id="creationHeading" class="sr-only">输入选题</h2>
       <section id="askPanel" class="compose-bar" aria-label="输入选题">
         <form class="ask" id="askForm">
-          <input id="askTopic" placeholder="输入一个选题，例如：坐火车穿越瑞士阿尔卑斯" required maxlength="80" aria-label="选题">
-          <select id="askMarket" aria-label="目标观众所在国家"><option>英国</option></select>
-          <select id="askPlatform" aria-label="发布平台"><option>TikTok</option><option>Instagram</option><option>YouTube Shorts</option></select>
+          <label class="topic-field"><span>视频选题</span><input id="askTopic" placeholder="想做什么内容？例如：坐火车穿越瑞士阿尔卑斯" required maxlength="80" aria-label="选题"></label>
+          <label class="market-field"><span>目标市场</span><select id="askMarket" aria-label="目标观众所在国家"><option>英国</option></select></label>
+          <label class="platform-field"><span>发布平台</span><select id="askPlatform" aria-label="发布平台"><option>TikTok</option><option>Instagram</option><option>YouTube Shorts</option></select></label>
           <button class="btn primary" id="askGo" type="submit">生成脚本 →</button>
         </form>
         <p class="ask-hint" id="askHint" role="status"></p>
       </section>
-      <div class="pipeline-strip"><ol class="pipeline-stages" id="stageStrip" aria-label="生成进度"></ol><button class="btn small" id="gen">回放已有运行</button></div>
+
       <section class="script-workspace" aria-labelledby="scriptsHeading">
         <div class="script-result-heading"><h2 id="scriptsHeading">脚本</h2><span id="scriptSource"></span></div>
         <div class="production-actions"><p id="productionStatus" role="status"></p><button class="btn primary" id="produceGo" type="button" disabled>生成配音与粗剪 →</button></div>
         <div id="scriptVersions" class="script-versions"></div>
       </section>
       </section>
-      <div class="section-head production-heading"><h2>素材与粗剪</h2></div>
+      </section>
+    <section id="createView" class="workspace" aria-label="素材与粗剪" hidden>
+      <div class="editor-bar"><div class="editor-task"><span class="task-dot" aria-hidden="true"></span><strong id="editorTitle"></strong><span id="editorMeta"></span></div><div class="editor-tools"><button type="button" class="btn text" id="skillBtn">剪辑规则</button><button type="button" class="btn" id="draftBtn" disabled>查看工程</button></div></div>
+      <div class="studio-grid-anchor production-heading"></div>
       <div class="studio-grid">
         <section class="material-column" aria-label="素材库">
           <div class="section-head"><h2>素材库</h2><span class="stat-label" id="materialCount"></span></div>
@@ -110,6 +127,7 @@
         <div class="timeline-scroll"><div id="timelineCanvas" class="timeline-canvas"><div id="timelineTracks"></div><div class="playhead-area" aria-hidden="true"><div id="timelinePlayhead" class="timeline-playhead"></div></div></div></div>
         <div class="timeline-footer"><span id="timelineStatus"></span></div>
       </section>
+      <div class="pipeline-strip"><ol class="pipeline-stages" id="stageStrip" aria-label="生成进度"></ol><button class="btn small" id="gen">回放已有运行</button></div>
       <div class="details-row">
         <div><details><summary>草稿检查</summary><div id="scoreBox"><p class="empty">生成后显示检查结果。</p></div></details><details><summary>国家与平台规则</summary><p class="empty">依据脚本与人工素材标签，仍需人工确认。</p><ul class="rules" id="rules"><li>生成后显示规则检查结果。</li></ul></details></div>
         <div><details><summary>任务信息</summary><dl class="kv" id="kv"></dl></details><details id="runDetails"><summary>运行记录</summary><ol class="steps" id="steps" aria-live="polite"></ol></details></div>
@@ -519,6 +537,9 @@ function renderInspect(){
 }
 function renderEdits(){
   const sw=swaps(), n=Object.values(sw).reduce((a,o)=>a+Object.keys(o).length,0);
+  $('saveDraftBtn').disabled=!STUDIO||!state.gen||!n||!!R.preview_only||state.running;
+  $('saveDraftBtn').textContent=n?'写入剪映 · '+n+' 处修改':'写入剪映工程';
+  $('saveDraftBtn').title=n?'将镜头修改写回本机工程':'替换镜头后可写入工程';
   $('edits').hidden=!STUDIO||!state.gen;
   if(!STUDIO)return;
   $('edits').innerHTML=n?`<span>${n} 个镜头待写入</span><button class="btn" id="undoSw">撤销</button>${R.preview_only?'<span>仅预览；生成本机草稿后可写入剪映</span>':'<button class="btn primary" id="writeDraft">写入剪映</button>'}`
@@ -686,8 +707,8 @@ function openWork(id){
 function openReview(){setView('analytics')}
 function renderScriptWorkspace(){
   const source=scriptSession||R, scripts=source.scripts, produced=scriptSession&&R.scripts.generated_by===scriptSession.scripts.generated_by;
-  $('scriptsHeading').textContent=(scriptSession?(produced?'已制作脚本':'待制作脚本'):'当前粗剪脚本')+' · '+source.title;
-  $('scriptSource').textContent=scriptSession?(selectedVariant?'已选 '+selectedVariant+' 版':'请选择一版'):'已采用 '+scripts.chosen+' 版';
+  $('scriptsHeading').textContent=scriptSession?(produced?'脚本版本 · 已制作':'脚本版本'):'当前作品的脚本';
+  $('scriptSource').textContent=scripts.variants.length+' 个版本';
   $('scriptVersions').innerHTML=scripts.variants.map(v=>`<article class="script-version ${selectedVariant===v.id?'selected':''}">
     <div class="script-version-head"><h3>${esc(v.id)} 版</h3>${scriptSession?`<button class="btn" type="button" data-script-choice="${esc(v.id)}" aria-pressed="${selectedVariant===v.id}" ${state.running?'disabled':''}>${selectedVariant===v.id?'已选用':'选用此版'}</button>`:`<span>${v.id===scripts.chosen?'已用于粗剪':''}</span>`}</div>
     ${v.idea?`<p class="script-idea">${esc(v.idea)}</p>`:''}
@@ -695,19 +716,11 @@ function renderScriptWorkspace(){
     <div class="script-checks">${v.checks.filter(c=>!c.ok||c.msg?.includes('人工')).map(c=>`<p>${esc(c.msg)}</p>`).join('')}</div>
     </article>`).join('');
   $('produceGo').disabled=!STUDIO||!scriptSession||!selectedVariant||state.running;
-  $('productionStatus').textContent=scriptSession?(selectedVariant?'已选 '+selectedVariant+' 版 · '+scriptSession.title:'选择脚本后开始制作'):'先生成脚本，再选择版本制作';
+  $('productionStatus').textContent=scriptSession?(selectedVariant?'已选用 '+selectedVariant+' 版':'选用一版，继续制作'):'生成脚本后可选择版本';
 }
 $('scriptVersions').addEventListener('click',e=>{const b=e.target.closest('[data-script-choice]');if(!b||state.running)return;selectedVariant=b.dataset.scriptChoice;renderScriptWorkspace()});
-function openScript(){
-  const X=R.scripts;
-  $('modalCard').innerHTML=`<h3>脚本初稿与审核</h3><p>生成：${esc(X.generated_by)}。三版都按"冷知识开头 → 路线 → 画面 → 利益点 → 搜码钩子"的结构写，再按规则和事实库逐条审核。</p>
-   <div class="vt">${X.variants.map(v=>`<div class="var ${v.id===X.chosen?'ok':''}"><h4>${v.id} 版 <span class="band ${v.id===X.chosen?'ok':v.ok?'mid':'bad'}">${v.id===X.chosen?'采用':v.ok?'备选':'拦下'}</span></h4>${v.idea?`<p style="margin-bottom:6px">思路：${esc(v.idea)}</p>`:''}
-     <ol>${v.lines.map(l=>`<li>${esc(l.en)}<br><small>${esc(l.zh)}</small></li>`).join('')}</ol>
-     <ul class="ck">${v.checks.map(c=>`<li><span class="${c.ok?'ok-ic':'bad-ic'}">${c.ok?'✓':'✕'}</span> ${esc(c.name)}：${esc(c.msg)}</li>`).join('')}</ul></div>`).join('')}</div>
-   <p>事实库：${X.facts.map(f=>f.id+' '+esc(f.text)).join('；')}</p>
-   <div style="display:flex;justify-content:flex-end"><button class="btn primary" id="closeM">关闭</button></div>`;
-  $('modal').hidden=false;
-}
+function openScript(){setView('scripts');window.scrollTo({top:0,behavior:'smooth'})}
+
 $('steps').addEventListener('click',e=>{const li=e.target.closest('li.link.done');if(!li||state.running)return;({'选题':openTopic,'写脚本':openScript,'读取 Skill':openSkill})[li.dataset.step]()});
 $('modal').addEventListener('click',e=>{if(e.target.id==='modal'||e.target.id==='closeM')$('modal').hidden=true});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')$('modal').hidden=true});
@@ -827,8 +840,8 @@ if(STUDIO){
   });
   if(isInput)$('askTopic').value=R.title;
   if(!HOSTED) fetch('/api/keys').then(r=>r.json()).then(k=>{
-    const miss=[!k.deepseek&&'脚本模型',!k.minimax&&'配音服务'].filter(Boolean);
-    if(miss.length)$('askHint').innerHTML+=` <b>${!k.deepseek?'脚本服务尚未配置，当前可查看已有结果。':'配音服务未配置，将使用系统语音。'}</b>`;
+    if(!k.deepseek)$('askHint').textContent='脚本服务尚未配置，当前可查看已有结果。';
+    $('produceGo').title=k.minimax?'使用已选脚本生成配音、字幕和剪映工程':'使用系统语音生成配音，并生成字幕和剪映工程';
     if(!k.deepseek)$('askGo').disabled=true;
     if(k.models){const labels={script:'脚本',video:'评测',tts:'配音'};$('kv').insertAdjacentHTML('beforeend',`<dt>本机配置</dt><dd>${Object.entries(k.models).map(([key,v])=>esc(labels[key]||key)+' · '+esc(v.provider)+' / '+esc(v.model)).join('<br>')}<br><small>配置状态不代表本次已调用。</small></dd>`)}
   }).catch(()=>{$('askGo').disabled=true;$('askHint').textContent='暂时无法连接本地服务，请刷新后重试。'});
@@ -868,20 +881,21 @@ if(STUDIO){
   });
 }
 
-const viewInfo={create:['素材与粗剪',R.title],evaluate:['成片评测',''],analytics:['数据复盘','']};
+const viewInfo={scripts:['选题与脚本',''],create:['素材与粗剪',''],evaluate:['成片评测',''],analytics:['数据复盘','']};
 function setView(view,updateHash=true){
-  if(!viewInfo[view])view='create';if(HOSTED)view='evaluate';
+  if(!viewInfo[view])view='scripts';if(HOSTED)view='evaluate';
   if(state.playing)setPlaying(false);
   const player=$('reviewPlayer');if(player)player.pause();
-  ['create','evaluate','analytics'].forEach(v=>$(v+'View').hidden=v!==view);
-  document.querySelectorAll('[data-view]').forEach(b=>{if(b.dataset.view===view)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
+  ['scripts','create','evaluate','analytics'].forEach(v=>$(v+'View').hidden=v!==view);
+  document.querySelectorAll('.nav button[data-view]').forEach(b=>{if(b.dataset.view===view)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
   const [title,desc]=viewInfo[view];$('viewTitle').textContent=title;$('breadcrumbTitle').textContent=title;$('viewDescription').textContent=desc;$('viewDescription').hidden=!desc;
-  $('createActions').hidden=view!=='create';$('footWrap').hidden=view!=='create';
+  $('scriptActions').hidden=view!=='scripts';$('createActions').hidden=view!=='create';document.body.dataset.view=view;$('footWrap').hidden=view!=='create';
   if(view==='analytics')renderAnalytics();
-  if(updateHash)history.pushState(null,'','#'+view);
+  if(updateHash){history.pushState(null,'','#'+view);window.scrollTo({top:0,behavior:'instant'})}
 }
-document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.view)));
-window.addEventListener('popstate',()=>setView(location.hash.slice(1)==='review'?'analytics':location.hash.slice(1),false));
+document.querySelectorAll('button[data-view]').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.view)));
+function routeView(){const route=location.hash.slice(1);return route==='review'?'analytics':/^(done|produced|skill)/.test(route)?'create':['script','topic'].includes(route)?'scripts':route;}
+window.addEventListener('popstate',()=>setView(routeView(),false));
 function updateThemeControl(){
   const dark=document.documentElement.dataset.theme==='dark',label=dark?'白天模式':'暗黑模式';
   $('themeText').textContent=label;$('themeIcon').textContent=dark?'☀':'◐';
@@ -894,6 +908,7 @@ $('modeLabel').textContent=HOSTED?'在线评测':STUDIO?'本地工作台':'运�
 $('durationLabel').textContent=R.total_s.toFixed(1)+'s';$('scrub').max=Math.max(.01,R.total_s-.01);
 $('scrub').addEventListener('input',()=>{if(!state.gen)return;state.t=Number($('scrub').value);const seg=segAt(state.t);state.seg=seg.i;state.shot=shotAt(seg,state.t);renderAll()});
 $('inspect').addEventListener('keydown',e=>{if(!e.target.matches('[data-seg]')||!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();const n=S.length,i=+e.target.dataset.seg,next=e.key==='Home'?0:e.key==='End'?n-1:(i+(e.key==='ArrowRight'?1:-1)+n)%n;jumpTo(next,0);$('inspect').querySelector(`[data-seg="${next}"]`).focus()});
+$('saveDraftBtn').addEventListener('click',()=>{if($('writeDraft'))$('writeDraft').click()});
 $('scriptBtn').addEventListener('click',openScript);$('skillBtn').addEventListener('click',openSkill);
 function renderInlineLibrary(){
   const query=$('materialSearch').value.trim().toLowerCase(),filter=$('materialFilter').value;
@@ -939,10 +954,11 @@ if(!STUDIO){['askGo','askTopic','askMarket','askPlatform'].forEach(id=>$(id).dis
 renderSteps(0,-1);
 if(!HOSTED)showDone(1);
 if(scriptSession&&R.scripts.generated_by!==scriptSession.scripts.generated_by)renderSteps(1,-1,[{step:'写脚本',msg:'三版脚本已生成'}]);
-setView(HOSTED?'evaluate':location.hash==='#review'?'analytics':location.hash.slice(1),false);
+setView(HOSTED?'evaluate':routeView(),false);
+$('editorTitle').textContent=R.title;$('editorMeta').textContent=R.country+' / '+R.platform+' · '+R.total_s.toFixed(1)+' 秒';
 const hm=location.hash.match(/^#done(?:-([\d.]+))?/);
-if(!HOSTED&&hm)showDone(parseFloat(hm[1]||'1'));
-if(!HOSTED&&location.hash==='#produced'){$('productionStatus').textContent='粗剪已生成 · '+R.title;document.querySelector('.production-heading').scrollIntoView({block:'start'});}
+if(!HOSTED&&hm){setView('create',false);showDone(parseFloat(hm[1]||'1'));}
+if(!HOSTED&&location.hash==='#produced'){setView('create',false);$('productionStatus').textContent='粗剪已生成 · '+R.title;}
 if(!HOSTED&&['#topic','#script','#skill'].includes(location.hash))({'#topic':openTopic,'#script':openScript,'#skill':openSkill})[location.hash]();
 </script>
 </body>
