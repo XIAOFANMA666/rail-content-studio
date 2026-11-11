@@ -122,3 +122,9 @@ git pull --ff-only
 本版基于 `ethan17461/ai-roughcut-demo` 的提交 `b665263ea92dc8b0c911c9b89d7532fb83570b9d`，保留原流水线及贡献归属，并加入本次工作台界面改版和首次拉取启动支持。原仓库提到的分叉贡献来自 `yubb6688-alt/ai-roughcut-demo`。素材来源链接保留在 `data/library.json` 与页面素材预览中；剪映工程使用 [pyJianYingDraft](https://github.com/GuanYixuan/pyJianYingDraft)。本仓库不新增对上游代码或第三方素材的授权承诺。
 
 本次发布检查覆盖界面交互、单元测试及无密钥首次启动；未重新调用付费模型或验收剪映真实导入。`docs/evidence/` 和 `AGENTS.md` 保留上游历史记录，其中旧界面、旧链接、实测数值与能力说明须按其原始版本理解；本版启动方式与交付范围以本 README 为准。
+
+## 视频热点与真实平台数据
+
+- 「选题策划 → 视频热点 → 配置采集来源」：[接入说明](docs/video-hotspots.html)。TikTok、Instagram、YouTube 均为待配置；已预留环境变量，没有启用三平台采集器或新增定时任务。工作台只读取 AIHOT 已公开收录的原视频链接，按发布时间区分近 24 小时与历史参考；营销案例文章不会当作视频热点。
+- 本地 AIHOT 默认 API 为 `http://127.0.0.1:3301`、网页为 `http://127.0.0.1:3300`，可用 `.env` 中的 `AIHOT_API_URL`、`AIHOT_SITE_URL` 修改。AIHOT 需另行部署，不包含在本仓库中。历史参考只检查最新 6 条公开历史记录，不等于检索完整历史库。
+- 「数据复盘 → 真实数据接入说明」：[CSV 与平台 API 接入路径](docs/platform-data.html)。平台授权、真实账号取数和更多指标字段尚未接通；配置说明不等于完成接入。

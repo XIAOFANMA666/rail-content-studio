@@ -17,6 +17,7 @@ from urllib.parse import unquote, urlparse
 import llm
 import script_store
 import script_edit
+import topic_feed
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(ROOT, "output")
@@ -95,6 +96,11 @@ class H(BaseHTTPRequestHandler):
             return self._send(200, page(), "text/html; charset=utf-8")
         if path == "/api/script-library":
             return self._send(200, {"sessions": script_store.summaries(OUT), "vocabulary": script_edit.vocabulary()})
+        if path == "/api/topic-feed":
+            return self._send(200, topic_feed.read_feed())
+        if path in ("/docs/video-hotspots.html", "/docs/platform-data.html"):
+            with open(os.path.join(ROOT, path.lstrip("/")), encoding="utf-8") as f:
+                return self._send(200, f.read(), "text/html; charset=utf-8")
         if path == "/api/status":
             with lock:
                 return self._send(200, dict(job))
@@ -197,7 +203,8 @@ class H(BaseHTTPRequestHandler):
                     if not llm.model_config("script")["api_key"]:
                         raise ValueError("请先配置脚本模型密钥。")
                     from pipeline import generate_script_session
-                    session = generate_script_session(topic, body.get("market") or "英国", body.get("platform") or "TikTok")
+                    brief = script_edit.text(body.get("brief", ""), "创作要求", 2000, False)
+                    session = generate_script_session(topic, body.get("market") or "英国", body.get("platform") or "TikTok", brief)
                     session = script_store.add(OUT, session)
                     with lock:
                         job["running"] = False
