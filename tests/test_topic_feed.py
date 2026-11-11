@@ -39,7 +39,7 @@ class TopicFeedTests(unittest.TestCase):
     def test_configuration_status_never_exposes_secret(self):
         with patch.object(topic_feed.llm, 'load_env', return_value={'YOUTUBE_API_KEY': 'test-secret'}), patch.object(topic_feed, 'read_json', return_value={'items': []}):
             result = topic_feed.read_feed()
-        self.assertIn('采集器待接', result['platforms'][0]['status'])
+        self.assertNotIn('platforms', result)
         self.assertNotIn('test-secret', str(result))
 
     def test_video_classifier_rejects_articles_and_script_urls(self):

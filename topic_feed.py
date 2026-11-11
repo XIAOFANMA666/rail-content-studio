@@ -56,9 +56,7 @@ def read_feed(now=None):
     now = now or datetime.now(timezone.utc)
     cutoff = now - timedelta(hours=24)
     result = {"recent": None, "history": None, "errors": {}, "site": site,
-              "checked_at": now.isoformat(), "freshness": None,
-              "platforms": [{"name": name, "status": "配置已填写 · 采集器待接" if os.environ.get(key) or env.get(key) else "待配置数据接口"}
-                            for name, key in (("YouTube", "YOUTUBE_API_KEY"), ("TikTok", "VIDEO_TRENDS_TIKTOK_FEED_URL"), ("Instagram", "VIDEO_TRENDS_INSTAGRAM_FEED_URL"))]}
+              "checked_at": now.isoformat(), "freshness": None}
     if not api or not site:
         result["errors"]["config"] = "AIHOT 地址无效，请在本机 .env 填写 HTTP 或 HTTPS 地址。"
         return result

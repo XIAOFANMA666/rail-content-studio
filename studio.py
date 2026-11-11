@@ -18,6 +18,7 @@ import llm
 import script_store
 import script_edit
 import topic_feed
+import video_trends
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(ROOT, "output")
@@ -96,6 +97,11 @@ class H(BaseHTTPRequestHandler):
             return self._send(200, page(), "text/html; charset=utf-8")
         if path == "/api/script-library":
             return self._send(200, {"sessions": script_store.summaries(OUT), "vocabulary": script_edit.vocabulary()})
+        if path == "/api/video-trends":
+            try:
+                return self._send(200, video_trends.read(OUT))
+            except (video_trends.FeedError, OSError):
+                return self._send(500, {"error": "本地视频数据无法读取，请检查文件与目录权限。"})
         if path == "/api/topic-feed":
             return self._send(200, topic_feed.read_feed())
         if path in ("/docs/video-hotspots.html", "/docs/platform-data.html"):
@@ -140,6 +146,25 @@ class H(BaseHTTPRequestHandler):
 
     def do_POST(self):
         path = urlparse(self.path).path
+        if path == "/api/video-trends/collect":
+            if self.headers.get("Origin") not in (f"http://localhost:{PORT}", f"http://127.0.0.1:{PORT}"):
+                return self._send(403, {"error": "请从本地工作台发起采集。"})
+            try:
+                if self.headers.get("Content-Type", "").split(";")[0] != "application/json":
+                    raise ValueError()
+                if not 0 < int(self.headers.get("Content-Length", 0)) <= 4096:
+                    raise ValueError()
+                body = self._json()
+            except (ValueError, TypeError):
+                return self._send(400, {"error": "采集请求格式不正确或超过 4 KB。"})
+            try:
+                return self._send(200, video_trends.collect(OUT, body))
+            except video_trends.BusyError as e:
+                return self._send(409, {"error": str(e)})
+            except video_trends.FeedError as e:
+                return self._send(400, {"error": str(e)})
+            except OSError:
+                return self._send(500, {"error": "保存视频数据失败，请检查本机目录权限或磁盘空间。"})
         if path == "/api/video-review":
             # 只接受工作台自己发起的请求，避免其他网站借本机账号触发付费请求。
             if self.headers.get("Origin") not in (f"http://127.0.0.1:{PORT}", f"http://localhost:{PORT}"):

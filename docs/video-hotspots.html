@@ -1,12 +1,48 @@
 <!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>视频热点接入 · 轨道</title>
-<style>:root{color-scheme:light dark}body{font:16px/1.8 system-ui,sans-serif;max-width:920px;margin:48px auto;padding:0 24px}h1{font-size:32px;line-height:1.3}h2{margin-top:36px;font-size:22px}a{color:light-dark(#896000,#f6cc69)}table{border-collapse:collapse;width:100%}th,td{text-align:left;vertical-align:top;padding:14px 10px;border-bottom:1px solid #8886}code{overflow-wrap:anywhere}small{opacity:.7}.scroll{overflow:auto}li{margin:10px 0}</style>
-<a href="../#topics">← 返回工作台</a><h1>视频热点接入</h1><p>TikTok、Instagram、YouTube。当前已预留接入配置，尚未开始采集；没有真实视频热度数据。</p>
-<h2>准备位置</h2><div class="scroll"><table><tr><th>平台</th><th>本机 .env 配置项</th><th>下一步</th></tr>
-<tr><td>YouTube</td><td><code>YOUTUBE_API_KEY</code></td><td>启用 YouTube Data API v3，创建受限 API Key。之后开发并验证关键词搜索、视频统计和入库。</td></tr>
-<tr><td>TikTok</td><td><code>VIDEO_TRENDS_TIKTOK_FEED_URL</code></td><td>确定可授权使用的视频发现／热点数据服务。账号自身的视频查询权限不能代替全平台热点搜索。</td></tr>
-<tr><td>Instagram</td><td><code>VIDEO_TRENDS_INSTAGRAM_FEED_URL</code></td><td>确定可授权使用的 Reels 发现／热点数据服务；自身账号 Insights 与发现其他账号的热点是两件事。</td></tr></table></div>
-<p>填写配置只代表准备了凭据或来源地址。采集器、数据字段与权限需完成实际对接，才会变为可用。密钥仅保存在本机 .env，不填在前端或 Git 中。</p>
-<h2>视频如何进入选题池</h2><ol><li>按火车旅行、路线、卧铺、购票等主题发现候选视频。</li><li>保存平台视频 ID、原视频链接、作者、发布时间、取数时间及平台实际返回的指标。缺失指标保留空值。</li><li>按平台分别判断热度；有连续快照才能算增长速度。未校准阈值前只称为「视频候选」，不声称是爆款。</li><li>通过 AIHOT 外部导入接口收录，经筛选后由工作台只读公开结果。工作台的「采用标题」仅填入选题，不自动生成或发布。</li></ol>
-<p>AIHOT 的 <code>industry/sources.json</code> 已预留 <code>rail-video-tiktok</code>、<code>rail-video-instagram</code>、<code>rail-video-youtube</code> 三个 external 信源，均为停用状态。这是种子配置，当前运行数据库尚未导入它们；之后需由后台创建并试跑，再决定启用。既有营销案例保留，不冒充视频热点。</p>
-<h2>每日更新的边界</h2><p>工作台读取 AIHOT 已收录内容，打开页面不会触发爬取或付费模型调用。目前没有新增定时采集任务；平台接通后再配置每日执行、失败提示和最近成功时间。电脑休眠或本地服务停止时无法保证更新。旧视频即使今天入库，也保留原发布时间。</p>
-<h2>参考接口</h2><p><a href="https://developers.google.com/youtube/data/reference/rest/v3/search/list">YouTube 公开搜索</a> · <a href="https://developers.google.com/youtube/data/reference/rest/v3/videos/list">YouTube 视频统计</a> · <a href="https://developers.tiktok.com/docs/en/tiktok-api-v2-video-query">TikTok 授权账号的视频查询</a> · <a href="https://developers.tiktok.com/docs/en/research-api-faq">TikTok Research API 资格说明</a> · <a href="https://developers.facebook.com/docs/instagram-platform/insights/">Instagram Insights 官方入口</a></p><p>此处是接口准备说明，不表示已取得任何平台或第三方服务的权限，也不代表下载或二次使用视频的授权。</p></html>
+<style>:root{color-scheme:light dark}body{font:16px/1.8 system-ui,sans-serif;max-width:920px;margin:48px auto;padding:0 24px}h1{font-size:32px;line-height:1.3}h2{margin-top:36px;font-size:22px}a{color:light-dark(#086d69,#64d7ca)}table{border-collapse:collapse;width:100%}th,td{text-align:left;vertical-align:top;padding:14px 10px;border-bottom:1px solid #8886}code{overflow-wrap:anywhere}pre{background:#8881;padding:20px;overflow:auto;border-radius:8px;font-size:14px}small{opacity:.7}.scroll{overflow:auto}li{margin:10px 0}</style>
+<a href="../#topics">← 返回工作台</a><h1>视频热点接入</h1>
+<p>接入代码已就绪。YouTube 使用官方搜索和统计接口；TikTok、Instagram 使用下方约定的数据服务格式。是否已连通，以工作台最近一次采集结果为准。</p>
+<h2>1. 配置本机凭据</h2>
+<p>编辑仓库根目录的 <code>.env</code>。该文件已被 Git 忽略，网页不会显示密钥；无需重启，保存后刷新工作台列表即可读取新配置。</p>
+<pre>YOUTUBE_API_KEY=
+VIDEO_TRENDS_TIKTOK_FEED_URL=
+VIDEO_TRENDS_TIKTOK_TOKEN=
+VIDEO_TRENDS_INSTAGRAM_FEED_URL=
+VIDEO_TRENDS_INSTAGRAM_TOKEN=</pre>
+<div class="scroll"><table><tr><th>平台</th><th>如何取得凭据</th><th>当前接入范围</th></tr>
+<tr><td>YouTube</td><td>在 <a href="https://console.cloud.google.com/apis/library/youtube.googleapis.com">Google Cloud</a> 创建或选用项目，启用 YouTube Data API v3，在「API 和服务 → 凭据」创建 API Key。API 限制选择 YouTube Data API v3；本服务由 Python 后端请求，不使用浏览器 HTTP referrer 限制。可按服务部署条件设置 IP 限制。</td><td>关键词搜索一页（最多 25 条），再批量读取公开视频的累计播放、点赞和评论。地区表示可在该地区观看，不代表作者所在地。并非 Shorts 专属榜单。</td></tr>
+<tr><td>TikTok</td><td>选定有权使用的视频发现服务，将符合下面格式的 HTTPS 接口地址写入 FEED_URL；如需 Bearer 认证，将令牌写入 TOKEN。</td><td>已实现标准 JSON 接收器；尚未选定、购买或实测具体供应商。普通账号视频查询不能当作全平台热点搜索。</td></tr>
+<tr><td>Instagram</td><td>同上，服务需返回 Reels 原链接和可提供的公开指标。</td><td>已实现标准 JSON 接收器；尚未对接具体供应商，也不包含 Instagram 账号 OAuth 或 Insights。</td></tr></table></div>
+<h2>2. TikTok / Instagram 数据服务格式</h2>
+<p>工作台发出 <code>GET</code> 请求，追加 <code>q</code>、<code>region</code>、<code>days</code> 和 <code>limit=25</code>。接口需按关键词、地区和时间筛选；不支持这些筛选的供应商需要适配，不能直接填入任意 API 地址。现有 URL 查询参数保留，同名筛选参数会被覆盖。</p>
+<pre>GET https://your-provider.example/videos?q=train+travel&amp;region=GB&amp;days=7&amp;limit=25
+Authorization: Bearer &lt;本机 TOKEN，仅在配置时发送&gt;</pre>
+<p>返回 JSON 对象与 <code>items</code> 数组。下面是格式示例，不会自动导入：</p>
+<pre>{
+  "items": [
+    {
+      "title": "Train journey",
+      "url": "https://www.tiktok.com/@example/video/1234567890",
+      "author": "example",
+      "published_at": "2026-11-10T09:00:00Z",
+      "metrics_at": "2026-11-11T09:00:00Z",
+      "metrics": {
+        "views": 12345,
+        "likes": 120,
+        "comments": 8,
+        "shares": null
+      }
+    }
+  ]
+}</pre>
+<p>必填：标题、平台原视频 HTTPS 链接。Instagram 链接格式为 <code>https://www.instagram.com/reel/短码/</code>。播放等指标必须为非负整数或 <code>null</code>，不能填「1.2K」。未知发布时间留空；时间必须包含时区。未提供指标时间时，界面标注为“指标取回时间”，不冒充平台更新时间。</p>
+<p>接口最多返回 100 条、2 MB，单次请求超时 15 秒，不自动跟随重定向。任一记录格式错误时，本次该平台批次不入库，之前的数据保留；其他平台继续采集。无结果须返回 <code>{"items":[]}</code>，权限或额度问题应返回对应 HTTP 错误。</p>
+<h2>3. 在工作台试采集</h2>
+<ol><li>打开「选题策划 → 视频热点」，刷新列表，确认目标平台显示“已配置 · 尚未采集”。</li><li>选择平台、关键词、地区和时间范围，点击「采集视频」。只请求已配置的平台。</li><li>核对最近成功时间、返回条数、原视频链接与指标。首次实测成功后再将该平台认定为可用。</li><li>选择「采用标题」带入脚本选题，人工调整后生成。引用视频不等于获得下载或复用授权。</li></ol>
+<p>配置缺失时按钮不可用；401 表示凭据问题，403 通常需要检查接口权限或额度，429 表示限流或额度问题。不要把密钥粘贴进聊天、前端或 Git。YouTube 额度以 <a href="https://developers.google.com/youtube/data/reference/rest/v3/search/list">官方搜索接口说明</a>与项目控制台为准。</p>
+<h2>保存与刷新</h2>
+<p>结果保存在本机 <code>output/video-trends.json</code>，按平台视频 ID 去重，采用最新指标时间的记录。刷新页面可以继续查看；采集失败保留旧数据并显示错误和最近成功时间。列表同时保留 AIHOT 已收录的视频参考，AIHOT 断开不会影响平台采集结果。</p>
+<p>仅手动采集，不设置定时任务；页面打开和“刷新列表”不请求平台。相邻采集至少间隔 30 秒。缓存最多 500 条，读取或采集时清理超过 30 天未重新取得的数据；服务停止期间不会执行清理。只显示平台原始累计指标，不推算增长率、不生成跨平台热度分，也不下载视频。</p>
+<h2>接口依据</h2>
+<p><a href="https://developers.google.com/youtube/data/reference/rest/v3/search/list">YouTube 搜索</a> · <a href="https://developers.google.com/youtube/data/reference/rest/v3/videos/list">视频统计</a> · <a href="https://developers.google.com/youtube/terms/developer-policies">YouTube 数据使用政策</a> · <a href="https://developers.tiktok.com/docs/en/display-api-overview">TikTok Display API 范围</a> · <a href="https://developers.tiktok.com/docs/en/research-api-faq">TikTok Research API 资格</a></p>
+</html>

@@ -133,10 +133,18 @@
 
       <section class="topic-pool" aria-labelledby="topicPoolHeading">
         <div class="section-head"><h2>视频热点</h2><a class="btn" href="docs/video-hotspots.html" target="_blank" rel="noopener">配置采集来源 ↗</a></div>
-        <p id="videoFeedStatus" class="empty" role="status">TikTok · Instagram · YouTube：待配置数据接口</p>
-        <div class="works-toolbar"><div class="platform-tabs" role="group" aria-label="视频候选时间范围"><button type="button" class="platform-tab" data-feed-period="recent" aria-pressed="true">近 24 小时</button><button type="button" class="platform-tab" data-feed-period="history" aria-pressed="false">历史视频参考</button></div><button type="button" class="btn" id="refreshVideoFeed">刷新已收录视频</button></div>
+        <form id="videoCollectForm" class="ops-form" style="margin:20px 0">
+          <label>搜索关键词<input id="videoQuery" value="train travel" maxlength="100" required></label>
+          <label>平台<select id="videoPlatform"><option value="all">全部平台</option><option>YouTube</option><option>TikTok</option><option>Instagram</option></select></label>
+          <label>地区<select id="videoRegion"><option value="GB">英国</option><option value="US">美国</option><option value="FR">法国</option><option value="DE">德国</option><option value="IT">意大利</option><option value="ES">西班牙</option></select></label>
+          <label>采集范围<select id="videoDays"><option value="1">近 24 小时</option><option value="7" selected>近 7 天</option><option value="30">近 30 天</option></select></label>
+          <div class="wide"><button type="submit" class="btn primary" id="collectVideos">采集视频</button></div>
+        </form>
+        <p id="videoFeedStatus" class="empty" role="status">正在检查视频数据源…</p>
+        <p id="videoCollectStatus" class="empty" role="status"></p>
+        <div class="works-toolbar"><div class="platform-tabs" role="group" aria-label="视频候选时间范围"><button type="button" class="platform-tab" data-feed-period="recent" aria-pressed="false">近 24 小时</button><button type="button" class="platform-tab" data-feed-period="week" aria-pressed="true">近 7 天</button><button type="button" class="platform-tab" data-feed-period="history" aria-pressed="false">全部已存视频</button></div><button type="button" class="btn" id="refreshVideoFeed">刷新列表</button></div>
         <ul id="videoFeedList" class="topic-pool-list"></ul>
-        <p class="empty">仅展示原视频链接；热度指标尚未接入，当前不作为爆款榜单。</p>
+        <p class="empty">按平台分别查看累计播放；缺失指标显示「—」。采集会使用接口额度，刷新列表不采集。候选视频不代表爆款或素材授权。</p>
 
         <div class="topic-pool-heading"><h2 id="topicPoolHeading">选题池</h2><span id="topicPoolSource">预置示例 · 非每日热点</span></div>
         <ul id="topicPoolList" class="topic-pool-list"></ul>
@@ -715,22 +723,45 @@ $('draftBtn').addEventListener('click',()=>{
   $('modal').hidden=false;$('modalCard').focus();
 });
 
-let videoFeed=null,videoFeedPeriod='recent',videoFeedBusy=false;
+let videoFeed=null,videoFeedPeriod='week',videoFeedBusy=false,videoCollectBusy=false,videoRows=[];
+function videoMetric(value){return Number.isSafeInteger(value)?value.toLocaleString('zh-CN'):'—'}
 function renderVideoFeed(){
-  const rows=videoFeed?.[videoFeedPeriod];
-  $('videoFeedList').innerHTML=rows?.length?rows.map((v,i)=>`<li class="topic-pool-row"><div><strong>${esc(v.title)}</strong><small>${esc(v.platform)} · ${esc(v.source)} · ${v.published_at?esc(v.published_at.slice(0,10)):'发布时间未知'}</small><a href="${esc(v.original)}" target="_blank" rel="noopener">查看原视频 ↗</a></div><button class="btn" type="button" data-use-video="${i}" ${!STUDIO||HOSTED?'disabled':''}>采用标题 →</button></li>`).join(''):`<li class="topic-pool-row">${!STUDIO||HOSTED?'请在本地工作台连接视频数据源。':!videoFeed?'等待读取已收录视频。':rows===null?'视频来源暂时不可用，请检查服务后刷新。':videoFeedPeriod==='recent'?'近 24 小时暂无已收录视频。':'当前抽取的最新 6 条历史记录中暂无视频参考。'}</li>`;
+  const now=Date.now(),platform=$('videoPlatform').value;
+  const rows=(videoFeed?.items||[]).filter(v=>(platform==='all'||v.platform===platform)&&(videoFeedPeriod==='history'||(v.published_at&&Date.parse(v.published_at)<=now&&Date.parse(v.published_at)>=now-(videoFeedPeriod==='recent'?1:7)*86400000)));
+  videoRows=rows.slice(0,50);
+  $('videoFeedList').innerHTML=videoRows.length?videoRows.map((v,i)=>`<li class="topic-pool-row"><div><strong>${esc(v.title)}</strong><small>${esc(v.platform)} · ${esc(v.author||v.source)} · 发布 ${v.published_at?esc(v.published_at.slice(0,10)):'时间未知'}</small><small>播放 ${videoMetric(v.metrics?.views)} · 点赞 ${videoMetric(v.metrics?.likes)} · 评论 ${videoMetric(v.metrics?.comments)} · 分享 ${videoMetric(v.metrics?.shares)}</small><small>${esc(v.source)}${v.metrics_at?' · 指标'+(v.metrics_time_basis==='provider'?'时间 ':'取回时间 ')+esc(new Date(v.metrics_at).toLocaleString('zh-CN')):''}</small><a href="${esc(v.original)}" target="_blank" rel="noopener">查看原视频 ↗</a></div><button class="btn" type="button" data-use-video="${i}" ${!STUDIO||HOSTED?'disabled':''}>采用标题 →</button></li>`).join(''):`<li class="topic-pool-row">${!STUDIO||HOSTED?'请在本地工作台连接视频数据源。':!videoFeed?'等待读取已存视频。':'当前范围暂无已存视频。配置数据源后点击「采集视频」。'}</li>`;
+  $('collectVideos').disabled=!STUDIO||HOSTED||videoCollectBusy||!(videoFeed?.platforms||[]).some(p=>p.configured&&(platform==='all'||p.name===platform));
 }
 async function refreshVideoFeed(){
   if(videoFeedBusy||!STUDIO||HOSTED)return;
   videoFeedBusy=true;$('refreshVideoFeed').disabled=true;
-  try{const r=await fetch('/api/topic-feed');if(!r.ok)throw new Error();videoFeed=await r.json();
-    $('videoFeedStatus').textContent=videoFeed.platforms.map(p=>p.name+'：'+p.status).join(' · ')+(Object.keys(videoFeed.errors).length?' · AIHOT 读取异常':' · AIHOT 已连接');
-  }catch(_){videoFeed={recent:null,history:null};$('videoFeedStatus').textContent='无法读取视频来源，请确认本地工作台已重启。'}
+  try{
+    const results=await Promise.allSettled(['/api/video-trends','/api/topic-feed'].map(async url=>{const r=await fetch(url),d=await r.json();if(!r.ok)throw new Error(d.error||'无法读取视频来源');return d}));
+    const main=results[0],legacy=results[1];
+    const data=main.status==='fulfilled'?main.value:{items:[],platforms:[]};
+    const existing=legacy.status==='fulfilled'?[...(legacy.value.recent||[]),...(legacy.value.history||[])]:[];
+    const seen=new Set(data.items.map(v=>v.original));
+    videoFeed={...data,items:[...data.items,...existing.filter(v=>!seen.has(v.original)&&seen.add(v.original))]};
+    $('videoFeedStatus').textContent=main.status==='fulfilled'?data.platforms.map(p=>p.name+'：'+p.status+(p.error?'（'+p.error+'）':'')+(p.succeeded_at?' · 最近成功 '+new Date(p.succeeded_at).toLocaleString('zh-CN'):'')).join('；'):main.reason.message;
+    if(legacy.status==='rejected'||Object.keys(legacy.value.errors||{}).length)$('videoFeedStatus').textContent+='；AIHOT 暂不可用，已存平台数据仍可查看';
+  }catch(_){$('videoFeedStatus').textContent='无法读取视频来源，请确认本地工作台已重启。'}
   finally{videoFeedBusy=false;$('refreshVideoFeed').disabled=false;renderVideoFeed()}
 }
+$('videoCollectForm').addEventListener('submit',async e=>{
+  e.preventDefault();if(videoCollectBusy||!STUDIO||HOSTED)return;
+  videoCollectBusy=true;renderVideoFeed();$('videoCollectStatus').textContent='正在采集并保存视频…';
+  try{const platform=$('videoPlatform').value,platforms=videoFeed.platforms.filter(p=>p.configured&&(platform==='all'||p.name===platform)).map(p=>p.name);
+    const r=await fetch('/api/video-trends/collect',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:$('videoQuery').value.trim(),region:$('videoRegion').value,days:Number($('videoDays').value),platforms})});
+    const data=await r.json();if(!r.ok)throw new Error(data.error||'采集失败');
+    $('videoCollectStatus').textContent=data.platforms.filter(p=>platforms.includes(p.name)).map(p=>p.name+'：'+(p.error?p.error:'已保存 '+p.count+' 条')).join('；');
+    await refreshVideoFeed();
+  }catch(error){$('videoCollectStatus').textContent=error.message}
+  finally{videoCollectBusy=false;renderVideoFeed()}
+});
+$('videoPlatform').addEventListener('change',renderVideoFeed);
 $('refreshVideoFeed').addEventListener('click',refreshVideoFeed);
 document.querySelectorAll('[data-feed-period]').forEach(b=>b.addEventListener('click',()=>{videoFeedPeriod=b.dataset.feedPeriod;document.querySelectorAll('[data-feed-period]').forEach(x=>x.setAttribute('aria-pressed',x===b));renderVideoFeed()}));
-$('videoFeedList').addEventListener('click',e=>{const b=e.target.closest('[data-use-video]');if(!b||!STUDIO||HOSTED||state.running||$('askTopic').disabled)return;const row=videoFeed?.[videoFeedPeriod]?.[Number(b.dataset.useVideo)];if(!row)return;$('askTopic').value=row.title.slice(0,80);$('askTopic').focus();$('askHint').textContent='已带入参考标题，可调整选题后生成脚本。';renderTopicPool()});
+$('videoFeedList').addEventListener('click',e=>{const b=e.target.closest('[data-use-video]');if(!b||!STUDIO||HOSTED||state.running||$('askTopic').disabled)return;const row=videoRows[Number(b.dataset.useVideo)];if(!row)return;$('askTopic').value=row.title.slice(0,80);$('askTopic').focus();$('askHint').textContent='已带入参考标题，可调整选题后生成脚本。';renderTopicPool()});
 function renderTopicPool(){
   const pool=R.topic?.pool||[];
   $('topicPoolSource').textContent=`${pool.length} 个预置选题 · 非每日热点`;
