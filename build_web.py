@@ -22,5 +22,5 @@ tpl = open(os.path.join(ROOT, "web", "template.html"), encoding="utf-8").read()
 review_path = os.path.join(ROOT, "data", "review", "review.json")
 review = open(review_path, encoding="utf-8").read() if os.path.exists(review_path) else "null"   # 数据复盘的结果（review.py 生成）
 open(os.path.join(ROOT, "index.html"), "w", encoding="utf-8").write(
-    tpl.replace("/*__RESULT__*/null", result).replace("/*__REVIEW__*/null", review))
+    tpl.replace("/*__RESULT__*/null", result.replace("<", "\\u003c")).replace("/*__REVIEW__*/null", review))
 print("index.html built")

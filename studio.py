@@ -46,7 +46,7 @@ def read_script_session():
 
 def page():
     tpl = open(os.path.join(ROOT, "web", "template.html"), encoding="utf-8").read()
-    result = json.dumps(read_result(), ensure_ascii=False)
+    result = json.dumps(read_result(), ensure_ascii=False).replace("<", "\\u003c")
     review_path = os.path.join(ROOT, "data", "review", "review.json")
     review = open(review_path, encoding="utf-8").read() if os.path.exists(review_path) else "null"
     return (tpl.replace("/*__RESULT__*/null", result).replace("/*__REVIEW__*/null", review)
@@ -227,7 +227,14 @@ class H(BaseHTTPRequestHandler):
                 if path == "/api/scripts/rewrite":
                     if not llm.model_config("script")["api_key"]:
                         raise ValueError("请先配置脚本模型密钥；手动编辑和保存无需密钥。")
-                    response = script_edit.rewrite(session, body["variant"], body.get("instruction"))
+                    import copy
+                    draft = copy.deepcopy(session)
+                    if body.get("content") is not None:
+                        edited = script_edit.validate(body["content"], body["variant"])
+                        draft["scripts"]["variants"] = [edited if v["id"] == edited["id"] else v for v in draft["scripts"]["variants"]]
+                    if body.get("title") is not None:
+                        draft["title"] = script_edit.text(body["title"], "选题名称", 80)
+                    response = script_edit.rewrite(draft, body["variant"], body.get("instruction"))
                     with lock:
                         job["running"] = False
                     return self._send(200, response)

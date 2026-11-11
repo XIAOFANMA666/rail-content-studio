@@ -556,7 +556,7 @@ def main():
 
     result = {"mode": "live" if args.topic else "demo", "run_id": time.strftime("%Y%m%d%H%M%S"),
               "topic": topic_out,
-              "scripts": {"generated_by": generated_by, "variants": variants, "chosen": chosen["id"], "rejected": rejected, "facts": facts["facts"]},
+              "scripts": {"session_id": prepared["id"] if prepared else None, "generated_by": generated_by, "variants": variants, "chosen": chosen["id"], "rejected": rejected, "facts": facts["facts"]},
               "title": script["title"] if args.topic else script["title"], "country": script["country"], "platform": script["platform"],
               "skill": {**skill, "voice": {**voice, "used": voice_name, "engine": engine}}, "total_s": total_s, "segments": plan,
               "rules": rule_out, "score": review,

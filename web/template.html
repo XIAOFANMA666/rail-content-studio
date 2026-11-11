@@ -57,6 +57,10 @@
 
 .connection-entry{margin-top:auto;display:flex;align-items:center;gap:12px;background:transparent;border:0;border-top:1px solid var(--line);padding:20px 12px 0;text-align:left;color:var(--muted);font-size:13px}.connection-entry svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.5;flex-shrink:0}.connection-entry:hover,.connection-entry[aria-current=page]{color:var(--accent)}#connectionsView{max-width:1450px}.connection-intro{display:flex;align-items:center;justify-content:space-between;gap:24px;margin:8px 0 24px}.connection-intro h2,.connection-section h2{font-size:21px;line-height:1.4;margin:0;font-weight:650}.connection-intro>span{font-size:12px;color:var(--muted)}.workflow-map{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));list-style:none;padding:0;margin:0;border-block:1px solid var(--line)}.workflow-map li{position:relative;display:flex;align-items:flex-start;flex-direction:column;padding:24px 24px 24px 0;min-width:0}.workflow-map li+li{padding-left:24px;border-left:1px solid var(--line)}.workflow-number{color:var(--accent);font-size:14px;font-variant-numeric:tabular-nums;margin-bottom:12px}.workflow-map h3{font-size:17px;line-height:1.5;margin:0 0 8px}.workflow-map p{font-size:13px;color:var(--muted);line-height:1.8;margin:0 0 20px}.workflow-map button{margin-top:auto;font-size:12px;text-align:left}.workflow-after{display:grid;grid-template-columns:1fr auto 2fr;gap:24px;padding:24px 0;border-bottom:1px dashed var(--line)}.workflow-after strong{font-size:14px}.workflow-after p{font-size:13px;color:var(--muted);line-height:1.75;margin:8px 0 0}.workflow-after button{padding-left:0;margin-top:8px}.workflow-arrow{align-self:center;color:var(--dim)}.connection-section{margin-top:40px}.connection-table-wrap{overflow:auto;margin-top:20px}.connection-table{border-collapse:collapse;width:100%;text-align:left;font-size:13px;line-height:1.75}.connection-table th,.connection-table td{padding:16px;border-bottom:1px solid var(--line);vertical-align:top}.connection-table th:first-child{padding-left:0;width:130px}.connection-table thead th{color:var(--muted);font-size:12px;font-weight:500}.connection-table tbody th{font-weight:600;white-space:nowrap}.connection-table td:last-child{width:240px;color:var(--muted)}.handoff-list{margin-top:18px}.handoff-list>div{display:grid;grid-template-columns:210px 1fr;gap:24px;padding:16px 0;border-bottom:1px solid var(--line);font-size:13px;line-height:1.8}.handoff-list dt{font-weight:600}.handoff-list dd{margin:0;color:var(--muted)}@media(max-width:1100px){.workflow-map{grid-template-columns:repeat(2,minmax(0,1fr))}.workflow-map li:nth-child(3){padding-left:0;border-left:0}.workflow-map li:nth-child(n+3){border-top:1px solid var(--line)}}@media(max-width:980px){.connection-entry{flex-direction:column;gap:8px;padding:20px 0 0;font-size:10px;text-align:center}.connection-intro{align-items:flex-start;flex-direction:column;gap:12px}.connection-table{min-width:640px}}@media(max-width:640px){.workflow-map{grid-template-columns:1fr}.workflow-map li,.workflow-map li+li{padding:20px 0;border-left:0}.workflow-map li+li{border-top:1px solid var(--line)}.workflow-after{grid-template-columns:1fr;gap:16px}.workflow-arrow{display:none}.handoff-list>div{grid-template-columns:1fr;gap:4px}.connection-section h2,.connection-intro h2{font-size:19px}}
 
+
+.script-library{display:flex;align-items:end;gap:14px;flex-wrap:wrap;margin:24px 0 12px;padding:20px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.script-library label{display:grid;gap:7px;font-size:12px;color:var(--muted);min-width:160px;flex:1}.script-library input,.script-library select,.script-editor input,.script-editor textarea,.script-editor select{width:100%;font:inherit;background:var(--panel,var(--bg));color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:10px;box-sizing:border-box}.script-library select{max-width:100%}.script-tools{display:flex;gap:6px;flex-wrap:wrap}.script-version-head{flex-wrap:wrap}.script-editor{width:min(960px,calc(100vw - 36px));max-height:88vh;box-sizing:border-box;overflow:auto;border:1px solid var(--line);border-radius:12px;padding:28px;background:var(--bg);color:var(--fg)}.script-editor::backdrop{background:#0008}.script-editor h2{font-size:24px;margin:0}.script-editor header,.script-editor footer{display:flex;gap:12px;align-items:center;justify-content:space-between}.script-editor label{display:grid;gap:8px;font-size:12px;color:var(--muted)}.script-editor textarea{resize:vertical;min-height:74px;line-height:1.6}.script-editor fieldset{border:0;border-top:1px solid var(--line);padding:18px 0;margin:20px 0}.script-editor legend{font-size:14px;padding-right:12px}.script-editor-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.script-editor-grid .wide{grid-column:1/-1}.script-editor details{margin-top:12px}.script-editor summary{cursor:pointer;font-size:12px;color:var(--muted)}.script-editor footer{position:sticky;bottom:-28px;padding:16px 0;background:var(--bg);border-top:1px solid var(--line)}.script-editor-status{font-size:13px;line-height:1.7;color:var(--muted);white-space:pre-line}.script-compare{width:100%;border-collapse:collapse;font-size:13px;margin:16px 0}.script-compare th,.script-compare td{text-align:left;vertical-align:top;padding:12px;border-bottom:1px solid var(--line);width:50%;white-space:pre-wrap;overflow-wrap:anywhere}.script-editor .rewrite-bar{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end;margin:20px 0}.script-editor select[multiple]{min-height:110px}.script-editor .editor-meta{margin:24px 0 16px}.script-library-status{font-size:12px;color:var(--muted)}
+@media(max-width:640px){.script-editor{padding:18px}.script-editor-grid{grid-template-columns:1fr}.script-editor .rewrite-bar{grid-template-columns:1fr}.script-editor footer{bottom:-18px}.script-library label{min-width:100%;}.script-compare th,.script-compare td{padding:8px}}
 </style>
 </head>
 <body>
@@ -98,6 +102,12 @@
       </section>
 
       <section class="script-workspace" aria-labelledby="scriptsHeading">
+        <div class="script-library" id="scriptLibrary" hidden>
+          <label>搜索脚本<input id="scriptSearch" type="search" placeholder="按选题名称查找"></label>
+          <label>已保存的选题<select id="scriptProject" aria-label="已保存的选题"></select></label>
+          <label>历史版本<select id="scriptRevision" aria-label="历史版本"></select></label>
+          <button class="btn" id="importScript" type="button">收录当前作品</button>
+        </div><p id="libraryStatus" class="script-library-status" role="status"></p>
         <div class="script-result-heading"><h2 id="scriptsHeading">脚本</h2><span id="scriptSource"></span></div>
         <div class="production-actions"><p id="productionStatus" role="status"></p><button class="btn primary" id="produceGo" type="button" disabled>生成配音与粗剪 →</button></div>
         <div id="scriptVersions" class="script-versions"></div>
@@ -170,6 +180,17 @@
   </main>
   <details class="foot-wrap compose-only" id="footWrap"><summary>素材来源与能力说明</summary><div class="foot" id="foot"></div></details>
 </div>
+<dialog class="script-editor" id="scriptEditor" aria-labelledby="scriptEditorTitle">
+  <header><h2 id="scriptEditorTitle">编辑脚本</h2><button class="btn" id="editorClose" type="button">关闭</button></header>
+  <form id="scriptEditorForm">
+    <div class="script-editor-grid editor-meta"><label>选题名称<input id="editTitle" required maxlength="80"></label><label>开头思路<input id="editIdea" maxlength="500"></label></div>
+    <div class="rewrite-bar"><label>AI 修改意见<textarea id="rewriteInstruction" maxlength="2000" placeholder="例如：保留路线，开头更有悬念"></textarea></label><button class="btn" type="button" id="rewriteGo">AI 改写预览</button></div>
+    <div id="rewriteComparison" hidden></div><div id="scriptEditLines"></div>
+    <label>待核对事实（每行一项）<textarea id="editClaims"></textarea></label>
+    <p class="script-editor-status" id="editorStatus" role="status"></p>
+    <footer><span class="script-library-status">保存为新版本，保留原稿</span><button class="btn primary" id="saveScript" type="submit">保存新版本</button></footer>
+  </form>
+</dialog>
 <div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-label="工作台详情"><div class="modal-card" id="modalCard" tabindex="-1"></div></div>
 <div id="infoTooltip" class="info-tooltip" role="tooltip" hidden></div>
 <script>
@@ -178,7 +199,9 @@ const STUDIO = /*__STUDIO__*/false;  // 本地工作台（studio.py 提供）时
 const HOSTED = /*__HOSTED__*/false;  // 云端仅提供成片评测，不能生成或写入剪映草稿
 let scriptSession = /*__SCRIPT_SESSION__*/null;
 let connectionConfig = null;
-let selectedVariant = scriptSession && R.scripts.generated_by===scriptSession.scripts.generated_by ? R.scripts.chosen : null;
+let selectedVariant = scriptSession?.scripts.chosen || (scriptSession && R.scripts.session_id===scriptSession.id ? R.scripts.chosen : null);
+let scriptLibrary=[], scriptVocabulary={tags:[],places:[]}, editorBase=null, editorInitial='', editorAction='edit', editorBusy=false, libraryBusy=false;
+function isProducedScript(){return scriptSession && R.scripts.session_id===scriptSession.id}
 const REVIEW = /*__REVIEW__*/null;  // 数据复盘的结果（review.py 生成），没有就不显示入口
 const $=id=>document.getElementById(id);
 const S=R.segments;
@@ -454,19 +477,110 @@ function openWork(id){
 }
 function openReview(){setView('analytics')}
 function renderScriptWorkspace(){
-  const source=scriptSession||R, scripts=source.scripts, produced=scriptSession&&R.scripts.generated_by===scriptSession.scripts.generated_by;
+  const source=scriptSession||R, scripts=source.scripts, produced=isProducedScript();
   $('scriptsHeading').textContent=scriptSession?(produced?'脚本版本 · 已制作':'脚本版本'):'当前作品的脚本';
-  $('scriptSource').textContent=scripts.variants.length+' 个版本';
+  $('scriptSource').textContent=scripts.variants.length+' 个候选'+(scriptSession?' · 历史版本 '+(scriptSession.revision||1):'');
   $('scriptVersions').innerHTML=scripts.variants.map(v=>`<article class="script-version ${selectedVariant===v.id?'selected':''}">
-    <div class="script-version-head"><h3>${esc(v.id)} 版</h3>${scriptSession?`<button class="btn" type="button" data-script-choice="${esc(v.id)}" aria-pressed="${selectedVariant===v.id}" ${state.running?'disabled':''}>${selectedVariant===v.id?'已选用':'选用此版'}</button>`:`<span>${v.id===scripts.chosen?'已用于粗剪':''}</span>`}</div>
+    <div class="script-version-head"><h3>${esc(v.id)} 版</h3>${scriptSession?`<div class="script-tools"><button class="btn" type="button" data-script-edit="${esc(v.id)}" ${state.running?'disabled':''}>编辑 / 改写</button><button class="btn" type="button" data-script-choice="${esc(v.id)}" aria-pressed="${selectedVariant===v.id}" ${state.running?'disabled':''}>${selectedVariant===v.id?'已选用':'选用此版'}</button></div>`:`<span>${v.id===scripts.chosen?'已用于粗剪':''}</span>`}</div>
     ${v.idea?`<p class="script-idea">${esc(v.idea)}</p>`:''}
     <ol class="script-lines">${v.lines.map(l=>`<li><p>${esc(l.en)}</p><p lang="zh-CN">${esc(l.zh)}</p></li>`).join('')}</ol>
-    <div class="script-checks">${v.checks.filter(c=>!c.ok||c.msg?.includes('人工')).map(c=>`<p>${esc(c.msg)}</p>`).join('')}</div>
+    <div class="script-checks">${(v.checks||[]).filter(c=>!c.ok||c.msg?.includes('人工')).map(c=>`<p>${esc(c.msg)}</p>`).join('')}</div>
     </article>`).join('');
   $('produceGo').disabled=!STUDIO||!scriptSession||!selectedVariant||state.running;
   $('productionStatus').textContent=scriptSession?(selectedVariant?'已选用 '+selectedVariant+' 版':'选用一版，继续制作'):'生成脚本后可选择版本';
 }
-$('scriptVersions').addEventListener('click',e=>{const b=e.target.closest('[data-script-choice]');if(!b||state.running)return;selectedVariant=b.dataset.scriptChoice;renderScriptWorkspace()});
+async function scriptRequest(path,body){
+  const r=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const data=await r.json();if(!r.ok)throw new Error(data.error||'操作失败');return data;
+}
+function applyScript(session){
+  scriptSession=session;selectedVariant=session.scripts.chosen||null;
+  $('askTopic').value=session.title;$('askMarket').value=session.country;$('askPlatform').value=session.platform;
+  renderScriptWorkspace();renderScriptLibrary();
+}
+async function refreshScriptLibrary(){
+  const r=await fetch('/api/script-library');const data=await r.json();if(!r.ok)throw new Error(data.error||'脚本库读取失败');
+  scriptLibrary=data.sessions;scriptVocabulary=data.vocabulary;renderScriptLibrary();
+}
+function renderScriptLibrary(){
+  if(!STUDIO||HOSTED)return;$('scriptLibrary').hidden=false;
+  const query=$('scriptSearch').value.trim().toLowerCase(), groups=new Map();
+  scriptLibrary.forEach(s=>{if(!groups.has(s.project_id)&&(!query||s.title.toLowerCase().includes(query)))groups.set(s.project_id,s)});
+  $('scriptProject').innerHTML='<option value="">选择已保存的选题</option>'+[...groups.values()].map(s=>`<option value="${esc(s.project_id)}">${esc(s.title)}</option>`).join('');
+  $('scriptProject').value=scriptSession?.project_id||'';
+  const versions=scriptLibrary.filter(s=>s.project_id===scriptSession?.project_id);
+  $('scriptRevision').innerHTML=versions.map(s=>`<option value="${esc(s.id)}">v${s.revision} · ${esc(s.action)}${s.created_at?' · '+esc(new Date(s.created_at).toLocaleString()):''}</option>`).join('');
+  $('scriptRevision').value=scriptSession?.id||'';
+  $('scriptRevision').disabled=!versions.length;
+}
+async function openSavedScript(id,variant){
+  if(state.running||libraryBusy)return;libraryBusy=true;
+  try{applyScript(await scriptRequest('/api/scripts/open',{session_id:id,variant}));$('libraryStatus').textContent='已打开保存的脚本';}
+  catch(err){$('libraryStatus').textContent=err.message;renderScriptLibrary()}
+  finally{libraryBusy=false}
+}
+$('scriptSearch').addEventListener('input',renderScriptLibrary);
+$('scriptProject').addEventListener('change',e=>{const s=scriptLibrary.find(s=>s.project_id===e.target.value);if(s)openSavedScript(s.id)});
+$('scriptRevision').addEventListener('change',e=>openSavedScript(e.target.value));
+$('importScript').addEventListener('click',async()=>{
+  if(state.running||libraryBusy)return;libraryBusy=true;$('importScript').disabled=true;
+  try{applyScript(await scriptRequest('/api/scripts/import',{}));await refreshScriptLibrary();$('libraryStatus').textContent='当前作品脚本已收录，可编辑和另存版本';}
+  catch(err){$('libraryStatus').textContent=err.message}finally{libraryBusy=false;$('importScript').disabled=false}
+});
+$('scriptVersions').addEventListener('click',e=>{
+  if(state.running||libraryBusy)return;const edit=e.target.closest('[data-script-edit]');if(edit){openScriptEditor(edit.dataset.scriptEdit);return}
+  const b=e.target.closest('[data-script-choice]');if(b)openSavedScript(scriptSession.id,b.dataset.scriptChoice);
+});
+function editorContent(){
+  const original=editorBase.scripts.variants.find(v=>v.id===$('scriptEditor').dataset.variant);
+  return {...original,idea:$('editIdea').value,claims:$('editClaims').value.split('\n').map(s=>s.trim()).filter(Boolean),
+    lines:[...$('scriptEditLines').querySelectorAll('fieldset')].map((row,i)=>({...original.lines[i],
+      en:row.querySelector('[data-field="en"]').value,zh:row.querySelector('[data-field="zh"]').value,on_screen:row.querySelector('[data-field="on_screen"]').value,
+      tags:[...row.querySelector('[data-field="tags"]').selectedOptions].map(o=>o.value),places:[...row.querySelector('[data-field="places"]').selectedOptions].map(o=>o.value)}))};
+}
+function editorSnapshot(){return JSON.stringify({title:$('editTitle').value,content:editorContent()})}
+function fillEditor(variant){
+  $('editIdea').value=variant.idea||'';$('editClaims').value=(variant.claims||[]).join('\n');
+  $('scriptEditLines').innerHTML=variant.lines.map((l,i)=>`<fieldset><legend>第 ${i+1} 句 · ${esc(l.role||'口播')}</legend><div class="script-editor-grid">
+    <label>英文口播<textarea data-field="en" required maxlength="1000">${esc(l.en)}</textarea></label><label>中文对照<textarea data-field="zh" required maxlength="1000">${esc(l.zh)}</textarea></label>
+    <label class="wide">英文花字<input data-field="on_screen" maxlength="200" value="${esc(l.on_screen||'')}"></label></div>
+    <details><summary>画面标签与地点</summary><div class="script-editor-grid">${['tags','places'].map(key=>`<label>${key==='tags'?'画面标签（1–3 个）':'地点'}<select data-field="${key}" multiple size="4">${scriptVocabulary[key].map(t=>`<option ${l[key]?.includes(t)?'selected':''}>${esc(t)}</option>`).join('')}</select></label>`).join('')}</div></details></fieldset>`).join('');
+}
+async function openScriptEditor(id){
+  try{await refreshScriptLibrary()}catch(err){$('libraryStatus').textContent=err.message;return}
+  editorBase=JSON.parse(JSON.stringify(scriptSession));editorAction='edit';$('scriptEditor').dataset.variant=id;
+  $('scriptEditorTitle').textContent='编辑 '+id+' 版';$('editTitle').value=editorBase.title;
+  fillEditor(editorBase.scripts.variants.find(v=>v.id===id));editorInitial=editorSnapshot();
+  $('rewriteInstruction').value='';$('rewriteComparison').hidden=true;$('rewriteComparison').innerHTML='';
+  $('editorStatus').textContent='修改口播后，请同步核对中文、花字和画面标签。';
+  $('scriptEditor').dataset.head=scriptLibrary.find(s=>s.project_id===editorBase.project_id)?.id||editorBase.id;
+  $('scriptEditor').showModal();$('editTitle').focus();
+}
+function closeEditor(){if(editorBusy)return;if(editorSnapshot()!==editorInitial&&!confirm('修改尚未保存，确定放弃这些修改吗？'))return;$('scriptEditor').close()}
+$('editorClose').addEventListener('click',closeEditor);
+$('scriptEditor').addEventListener('cancel',e=>{e.preventDefault();closeEditor()});
+window.addEventListener('beforeunload',e=>{if($('scriptEditor').open&&(editorBusy||editorSnapshot()!==editorInitial)){e.preventDefault();e.returnValue=''}});
+function editorSetBusy(busy){editorBusy=busy;$('scriptEditor').querySelectorAll('input,textarea,select,button').forEach(n=>n.disabled=busy)}
+$('rewriteGo').addEventListener('click',async()=>{
+  if(editorBusy||!$('scriptEditorForm').reportValidity())return;
+  const instruction=$('rewriteInstruction').value.trim();if(!instruction){$('editorStatus').textContent='请先填写修改意见';$('rewriteInstruction').focus();return}
+  const before=editorContent();editorSetBusy(true);$('editorStatus').textContent='正在改写，原稿已保留…';
+  try{
+    const data=await scriptRequest('/api/scripts/rewrite',{session_id:editorBase.id,variant:before.id,instruction,content:before,title:$('editTitle').value});
+    fillEditor(data.variant);editorAction='rewrite';
+    const describe=l=>[l.en,l.zh,l.on_screen?'花字：'+l.on_screen:'', '画面：'+(l.tags||[]).join(' / '), '地点：'+(l.places||[]).join(' / ')].filter(Boolean).join('\n');
+    $('rewriteComparison').innerHTML='<h3>改写对照</h3><table class="script-compare"><thead><tr><th>修改前</th><th>AI 改写</th></tr></thead><tbody>'+before.lines.map((l,i)=>`<tr><td>${esc(describe(l))}</td><td>${esc(describe(data.variant.lines[i]))}</td></tr>`).join('')+'</tbody></table>';
+    $('rewriteComparison').hidden=false;$('editorStatus').textContent='改写尚未保存。核对后可继续编辑，确认后保存新版本。\n'+data.variant.checks.filter(c=>!c.ok||c.msg.includes('人工')).map(c=>c.msg).join('\n');
+  }catch(err){$('editorStatus').textContent=err.message}finally{editorSetBusy(false)}
+});
+$('scriptEditorForm').addEventListener('submit',async e=>{
+  e.preventDefault();if(editorBusy)return;const content=editorContent(),title=$('editTitle').value;editorSetBusy(true);
+  try{
+    const session=await scriptRequest('/api/scripts/save',{session_id:editorBase.id,variant:content.id,content,title,action:editorAction,expected_head:$('scriptEditor').dataset.head});
+    applyScript(session);$('scriptEditor').close();$('libraryStatus').textContent='已保存 v'+session.revision+'，原稿保留。选用此版后可重新制作。';
+    await refreshScriptLibrary();
+  }catch(err){$('editorStatus').textContent=err.message}finally{editorSetBusy(false)}
+});
 function openScript(){setView('scripts');window.scrollTo({top:0,behavior:'smooth'})}
 
 $('steps').addEventListener('click',e=>{const li=e.target.closest('li.link.done');if(!li||state.running)return;({'选题':openTopic,'写脚本':openScript,'读取 Skill':openSkill})[li.dataset.step]()});
@@ -596,8 +710,8 @@ if(STUDIO){
   }).catch(()=>{connectionConfig={unavailable:true};renderConnections();$('askGo').disabled=true;$('askHint').textContent='暂时无法连接本地服务，请刷新后重试。'});
   function generationBusy(busy){
     state.running=busy;
-    ['askGo','produceGo','askTopic','askMarket','askPlatform'].forEach(id=>$(id).disabled=busy);
-    document.querySelectorAll('[data-script-choice]').forEach(b=>b.disabled=busy);
+    ['askGo','produceGo','askTopic','askMarket','askPlatform','scriptProject','scriptRevision','importScript'].forEach(id=>$(id).disabled=busy);
+    document.querySelectorAll('[data-script-choice],[data-script-edit]').forEach(b=>b.disabled=busy);
     if(!busy)$('produceGo').disabled=!scriptSession||!selectedVariant;
   }
   $('askForm').addEventListener('submit',async e=>{
@@ -607,13 +721,13 @@ if(STUDIO){
     try{
       const r=await fetch('/api/scripts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
       const data=await r.json();if(!r.ok)throw new Error(data.error||'脚本生成失败');
-      scriptSession=data;selectedVariant=null;renderScriptWorkspace();renderSteps(1,-1,[{step:'写脚本',msg:'三版脚本已生成'}]);
+      applyScript(data);await refreshScriptLibrary();renderSteps(1,-1,[{step:'写脚本',msg:'三版脚本已生成'}]);
       $('askHint').textContent='三版脚本已生成';$('scriptsHeading').scrollIntoView({block:'start',behavior:'smooth'});
     }catch(err){$('askHint').textContent='生成失败：'+err.message}
     finally{generationBusy(false);$('askGo').textContent='生成脚本 →'}
   });
   $('produceGo').addEventListener('click',async()=>{
-    if(state.running||!scriptSession||!selectedVariant)return;
+    if(state.running||libraryBusy||!scriptSession||!selectedVariant)return;
     generationBusy(true);setPlaying(false);$('produceGo').textContent='正在制作…';$('productionStatus').textContent='正在生成配音…';
     try{
       const r=await fetch('/api/produce',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session_id:scriptSession.id,variant:selectedVariant})});
@@ -713,11 +827,12 @@ new MutationObserver(()=>{if(!$('modal').hidden){requestAnimationFrame(()=>{if(!
 document.addEventListener('keydown',e=>{if(e.key!=='Tab'||$('modal').hidden)return;const nodes=[...$('modalCard').querySelectorAll('button,a,input,select,summary,[tabindex="0"]')].filter(n=>!n.disabled&&n.getClientRects().length);const first=nodes[0],last=nodes[nodes.length-1];if(!first){e.preventDefault();return}if(e.shiftKey&&(document.activeElement===first||document.activeElement===$('modalCard'))){e.preventDefault();last.focus()}else if(!e.shiftKey&&(document.activeElement===last||document.activeElement===$('modalCard'))){e.preventDefault();first.focus()}});
 if(!STUDIO){$('reviewGo').disabled=true;$('reviewFile').disabled=true;$('reviewStatus').textContent='当前是静态回放。请在本地工作台上传成片并运行评测。'}
 renderScriptWorkspace();
+if(STUDIO&&!HOSTED)refreshScriptLibrary().catch(err=>{$('libraryStatus').textContent=err.message});
 if(scriptSession&&!HOSTED){$('askTopic').value=scriptSession.title;$('askMarket').value=scriptSession.country;$('askPlatform').value=scriptSession.platform;}
 if(!STUDIO){['askGo','askTopic','askMarket','askPlatform'].forEach(id=>$(id).disabled=true);$('askHint').innerHTML='在线演示 · <a href="http://localhost:18772">打开本地工作台生成内容 ↗</a>';}
 renderSteps(0,-1);
 if(!HOSTED)showDone(1);
-if(scriptSession&&R.scripts.generated_by!==scriptSession.scripts.generated_by)renderSteps(1,-1,[{step:'写脚本',msg:'三版脚本已生成'}]);
+if(scriptSession&&!isProducedScript())renderSteps(1,-1,[{step:'写脚本',msg:'三版脚本已生成'}]);
 setView(HOSTED?'evaluate':routeView(),false);
 $('editorTitle').textContent=R.title;$('editorMeta').textContent=R.country+' / '+R.platform+' · '+R.total_s.toFixed(1)+' 秒';
 const hm=location.hash.match(/^#done(?:-([\d.]+))?/);
