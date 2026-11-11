@@ -22,6 +22,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pymediainfo import MediaInfo
 
 import draft_scoring
+import llm
 
 MAX_SECONDS = 180
 MAX_BYTES = 100 * 1024 * 1024
@@ -286,8 +287,8 @@ def _transcribe(path):
         from faster_whisper import WhisperModel
         with _speech_lock:
             if _speech_model is None:
-                model_name = os.environ.get('WHISPER_MODEL', 'small.en')
-                if model_name not in ('tiny.en', 'base.en', 'small.en'):
+                model_name = os.environ.get('WHISPER_MODEL') or llm.load_env().get('WHISPER_MODEL') or 'small.en'
+                if model_name not in ('tiny.en', 'base.en', 'small.en', 'small'):
                     raise ValueError('语音模型配置无效。')
                 _speech_model = WhisperModel(model_name, device='cpu', compute_type='int8', cpu_threads=4)
             chunk_seconds = int(os.environ.get('WHISPER_CHUNK_SECONDS', '0'))

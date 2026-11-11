@@ -352,6 +352,22 @@ def redraft(swaps_path, draft_root):
     print(f"redraft: {n} swaps, draft checked")
 
 
+def generate_script_session(topic, market, platform):
+    """Only write scripts; keep the existing preview, audio and draft intact."""
+    import uuid
+    facts, lib = load("facts.json"), load("library.json")
+    raw, usage, _, _ = write_scripts_llm(topic, market, platform, facts, lib)
+    variants = []
+    for v in raw:
+        checks = check_script(v, facts)
+        variants.append({**v, "checks": checks, "ok": all(c["ok"] for c in checks)})
+    if not variants:
+        raise ValueError("模型未返回脚本，请重试。")
+    return {"id": uuid.uuid4().hex, "title": topic, "country": market, "platform": platform,
+            "usage": usage, "scripts": {"variants": variants, "chosen": None, "facts": facts["facts"],
+            "generated_by": f"{usage['provider']} · {usage['model']} · {time.strftime('%Y-%m-%d %H:%M')}"}}
+
+
 # ---------------- 主流程 ----------------
 def main():
     ap = argparse.ArgumentParser()
@@ -360,11 +376,20 @@ def main():
     ap.add_argument("--market", default="英国")
     ap.add_argument("--platform", default="TikTok")
     ap.add_argument("--tts", choices=["auto", "minimax", "macos"], default="auto")
+    ap.add_argument("--script-file", help="使用已生成并由用户选定的脚本")
+    ap.add_argument("--variant", help="用户选定的脚本版本")
     ap.add_argument("--redraft", help="人工换镜头的 swaps.json")
     args = ap.parse_args()
     if args.redraft:
         return redraft(args.redraft, args.draft_root)
 
+    prepared = None
+    if args.script_file:
+        with open(args.script_file, encoding="utf-8") as f:
+            prepared = json.load(f)
+        if args.variant not in [v["id"] for v in prepared["scripts"]["variants"]]:
+            raise ValueError("请选择有效的脚本版本")
+        args.topic, args.market, args.platform = prepared["title"], prepared["country"], prepared["platform"]
     t0 = time.time()
     tts_dir = os.path.join(OUT, "tts")
     shutil.rmtree(tts_dir, ignore_errors=True)
@@ -390,8 +415,12 @@ def main():
         topic_out = {"note": topics["note"], "month": topics["month"], "nodes": topics["nodes"], "pool": scored, "chosen": pick["id"]}
         log("选题", f"{len(scored)} 个候选选题，按 历史爆款率×0.5 + 营销节点×0.3 + 利益点可植入×0.2 打分，选中 {pick['id']}「{pick['title']}」（{pick['score']}）", t0)
 
-    # 写脚本
-    if args.topic:
+    # 写脚本，或复用已经确认的版本（不再次调用模型）
+    if prepared:
+        raw, usage = prepared["scripts"]["variants"], prepared["usage"]
+        usage_info["deepseek"] = usage
+        generated_by = prepared["scripts"]["generated_by"]
+    elif args.topic:
         raw, usage, sys_prompt, user_prompt = write_scripts_llm(topic_title, args.market, args.platform, facts, lib)
         usage_info["deepseek"] = usage
         generated_by = f"{usage['provider']}（{usage['model']}，{time.strftime('%Y-%m-%d %H:%M')} 现场生成，{usage.get('total_tokens', '?')} tokens，{usage.get('seconds')} 秒）"
@@ -404,6 +433,8 @@ def main():
                          "checks": ch, "ok": all(c["ok"] for c in ch)})
     passed = [v for v in variants if v["ok"]]
     chosen = passed[0] if passed else min(variants, key=lambda v: sum(not c["ok"] for c in v["checks"]))
+    if prepared:
+        chosen = next(v for v in variants if v["id"] == args.variant)
     rejected = [f"{v['id']} 版：{next(c['msg'] for c in v['checks'] if not c['ok'])}" for v in variants if not v["ok"]]
     script["lines"] = [dict(l) for l in chosen["lines"]]
     who = usage_info["deepseek"]["provider"] if args.topic else "脚本 Agent"

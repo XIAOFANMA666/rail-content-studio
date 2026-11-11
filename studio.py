@@ -38,13 +38,22 @@ def read_result():
     return result
 
 
+def read_script_session():
+    path = os.path.join(OUT, "script-session.json")
+    if os.path.isfile(path):
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+    return None
+
+
 def page():
     tpl = open(os.path.join(ROOT, "web", "template.html"), encoding="utf-8").read()
     result = json.dumps(read_result(), ensure_ascii=False)
     review_path = os.path.join(ROOT, "data", "review", "review.json")
     review = open(review_path, encoding="utf-8").read() if os.path.exists(review_path) else "null"
     return (tpl.replace("/*__RESULT__*/null", result).replace("/*__REVIEW__*/null", review)
-               .replace("/*__STUDIO__*/false", "true"))
+               .replace("/*__STUDIO__*/false", "true")
+               .replace("/*__SCRIPT_SESSION__*/null", json.dumps(read_script_session(), ensure_ascii=False)))
 
 
 def run_pipeline(args):
@@ -165,6 +174,44 @@ class H(BaseHTTPRequestHandler):
                 return self._send(400, {"error": str(e)})
             except Exception:
                 return self._send(500, {"error": "评测失败，请检查依赖和服务配置后重试。"})
+        if path in ("/api/scripts", "/api/produce"):
+            if self.headers.get("Origin") not in (f"http://localhost:{PORT}", f"http://127.0.0.1:{PORT}"):
+                return self._send(403, {"error": "请从本地工作台操作。"})
+            body = self._json()
+            with lock:
+                if job["running"]:
+                    return self._send(409, {"error": "已有生成任务正在进行。"})
+                job.update(running=True, log=[], error=None)
+            try:
+                if path == "/api/scripts":
+                    topic = (body.get("topic") or "").strip()[:80]
+                    if not topic:
+                        raise ValueError("请先输入选题。")
+                    if not llm.model_config("script")["api_key"]:
+                        raise ValueError("请先配置脚本模型密钥。")
+                    from pipeline import generate_script_session
+                    session = generate_script_session(topic, body.get("market") or "英国", body.get("platform") or "TikTok")
+                    os.makedirs(OUT, exist_ok=True)
+                    path_tmp = os.path.join(OUT, "script-session.tmp")
+                    with open(path_tmp, "w", encoding="utf-8") as f:
+                        json.dump(session, f, ensure_ascii=False)
+                    os.replace(path_tmp, os.path.join(OUT, "script-session.json"))
+                    with lock:
+                        job["running"] = False
+                    return self._send(200, session)
+                session = read_script_session()
+                if not session or session["id"] != body.get("session_id"):
+                    raise ValueError("脚本已更新，请刷新后重新选择。")
+                if body.get("variant") not in [v["id"] for v in session["scripts"]["variants"]]:
+                    raise ValueError("请先选择一个脚本版本。")
+                args = ["--script-file", os.path.join(OUT, "script-session.json"), "--variant", body["variant"]]
+                threading.Thread(target=run_pipeline, args=(args,), daemon=True).start()
+                return self._send(200, {"ok": True})
+            except Exception as e:
+                with lock:
+                    job["running"] = False
+                message = str(e) if isinstance(e, ValueError) else "脚本生成失败，请检查模型配置或额度后重试。"
+                return self._send(400, {"error": message})
         if path == "/api/run":
             body = self._json()
             topic = (body.get("topic") or "").strip()[:80]
