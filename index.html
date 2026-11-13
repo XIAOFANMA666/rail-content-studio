@@ -104,10 +104,12 @@
       <button type="button" class="btn" data-view="scripts">选用脚本</button>
       <button type="button" class="btn" id="draftBtn" disabled>导入剪映指引</button>
       <button type="button" class="btn primary" id="saveDraftBtn" disabled>写入剪映工程</button>
+      <button type="button" class="btn" id="exportRoughcutBtn" disabled>导出粗剪 MP4</button>
       <button type="button" class="btn" data-view="evaluate">评测成片 →</button>
     </div>
   </div>
   <div class="ops-status" id="opsStatus" role="status"></div>
+  <div class="ops-status" id="exportRoughcutStatus" role="status" aria-live="polite"></div>
   <div class="task-context compose-only" id="taskContext" hidden><div><span class="context-caption">当前任务</span><select id="activeTaskSelect" aria-label="当前任务"></select><span class="mono" id="activeTaskId"></span></div><div class="context-actions"><span id="activeTaskOwner"></span><button class="btn text" id="editTaskButton" type="button">任务信息</button></div></div>
   <main>
     <section id="overviewView" class="workspace" aria-label="生产总览" hidden>
@@ -636,6 +638,7 @@ function renderInspect(){
   renderEdits();
 }
 function renderEdits(){
+  $('exportRoughcutBtn').disabled=!STUDIO||HOSTED||!state.gen||!!state.running||!!state.exporting;
   const sw=swaps(), n=Object.values(sw).reduce((a,o)=>a+Object.keys(o).length,0);
   $('saveDraftBtn').disabled=!STUDIO||!state.gen||!n||!!R.preview_only||state.running;
   $('saveDraftBtn').textContent=n?'写入剪映 · '+n+' 处修改':'写入剪映工程';
@@ -1288,6 +1291,20 @@ $('durationLabel').textContent=R.total_s.toFixed(1)+'s';$('scrub').max=Math.max(
 $('scrub').addEventListener('input',()=>{if(!state.gen)return;state.t=Number($('scrub').value);const seg=segAt(state.t);state.seg=seg.i;state.shot=shotAt(seg,state.t);renderAll()});
 $('inspect').addEventListener('keydown',e=>{if(!e.target.matches('[data-seg]')||!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();const n=S.length,i=+e.target.dataset.seg,next=e.key==='Home'?0:e.key==='End'?n-1:(i+(e.key==='ArrowRight'?1:-1)+n)%n;jumpTo(next,0);$('inspect').querySelector(`[data-seg="${next}"]`).focus()});
 $('saveDraftBtn').addEventListener('click',()=>{if($('writeDraft'))$('writeDraft').click()});
+$('exportRoughcutBtn').addEventListener('click',async()=>{
+  if(state.exporting||state.running)return;
+  state.exporting=true;renderEdits();
+  const button=$('exportRoughcutBtn'),status=$('exportRoughcutStatus');
+  button.textContent='正在导出…';status.textContent='正在合成当前预览的镜头、配音与字幕，请保持页面打开。';
+  try{
+    const response=await fetch('/api/export-roughcut',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({run_id:R.run_id,swaps:swaps()})});
+    const data=await response.json();if(!response.ok)throw new Error(data.error||'导出失败');
+    status.replaceChildren(document.createTextNode('粗剪已导出 · '));
+    const link=document.createElement('a');link.href=data.url;link.download=data.filename;link.textContent='下载 MP4';status.appendChild(link);link.click();
+  }catch(error){status.textContent='导出失败：'+error.message}
+  finally{state.exporting=false;button.textContent='导出粗剪 MP4';renderEdits()}
+});
+
 $('scriptBtn').addEventListener('click',openScript);$('skillBtn').addEventListener('click',openSkill);
 function renderInlineLibrary(){
   const query=$('materialSearch').value.trim().toLowerCase(),filter=$('materialFilter').value;

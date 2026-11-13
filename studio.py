@@ -17,6 +17,7 @@ from urllib.parse import unquote, urlparse
 import llm
 import script_store
 import script_edit
+import roughcut_export
 import topic_feed
 import video_trends
 
@@ -114,7 +115,9 @@ class H(BaseHTTPRequestHandler):
             return self._send(200, {"deepseek": bool(llm.model_config("script")["api_key"]), "minimax": llm.has("MINIMAX_API_KEY"), "video": bool(llm.model_config("video")["api_key"]),
                                     "models": llm.models_in_use()})
         # 静态文件：clips/、thumbs/；audio/ 直接读 output/tts/（每次生成都是新的）
-        if path.startswith("/audio/"):
+        if re.fullmatch(r"/exports/roughcut-[a-f0-9]{32}\.mp4", path):
+            f = os.path.join(OUT, "exports", os.path.basename(path))
+        elif path.startswith("/audio/"):
             audio_root = os.path.join(OUT, "tts") if os.path.isfile(os.path.join(OUT, "result.json")) else os.path.join(ROOT, "audio")
             f = os.path.join(audio_root, os.path.basename(path))
         elif path.startswith(("/clips/", "/thumbs/")):
@@ -140,6 +143,8 @@ class H(BaseHTTPRequestHandler):
                 self.send_response(200)
         self.send_header("Content-Type", ctype)
         self.send_header("Accept-Ranges", "bytes")
+        if path.startswith("/exports/"):
+            self.send_header("Content-Disposition", f'attachment; filename="{os.path.basename(path)}"')
         self.send_header("Content-Length", str(len(data)))
         self.end_headers()
         self.wfile.write(data)
@@ -292,6 +297,29 @@ class H(BaseHTTPRequestHandler):
                 if re.search(r"返回 402[：:]", str(e)):
                     message = "模型账户余额不足，请充值后重试。已有脚本仍可选用并制作粗剪。"
                 return self._send(400, {"error": message})
+        if path == "/api/export-roughcut":
+            if self.headers.get("Origin") not in (f"http://localhost:{PORT}", f"http://127.0.0.1:{PORT}"):
+                return self._send(403, {"error": "请从本地工作台导出。"})
+            with lock:
+                if job["running"]:
+                    return self._send(409, {"error": "当前任务正在处理，请完成后再导出。"})
+                job["running"] = True
+            try:
+                if not 0 < int(self.headers.get("Content-Length", 0)) <= 32768:
+                    raise ValueError("导出请求过大或为空。")
+                body = self._json()
+                result = read_result()
+                if body.get("run_id") != result.get("run_id"):
+                    return self._send(409, {"error": "粗剪已更新，请刷新后重新导出。"})
+                response = roughcut_export.render(ROOT, OUT, result, body.get("swaps", {}))
+            except (ValueError, TypeError) as exc:
+                return self._send(400, {"error": str(exc)})
+            except Exception:
+                return self._send(500, {"error": "导出失败，已有粗剪与工程仍保留。"})
+            finally:
+                with lock:
+                    job["running"] = False
+            return self._send(200, response)
         if path == "/api/run":
             body = self._json()
             topic = (body.get("topic") or "").strip()[:80]
@@ -307,15 +335,23 @@ class H(BaseHTTPRequestHandler):
             threading.Thread(target=run_pipeline, args=(args,), daemon=True).start()
             return self._send(200, {"ok": True})
         if path == "/api/redraft":
-            if not os.path.isfile(os.path.join(OUT, "result.json")):
-                return self._send(409, {"error": "当前为随仓库附带的演示。请先生成本机草稿，再写入镜头修改。"})
-            swaps = self._json().get("swaps") or {}
-            sp = os.path.join(OUT, "swaps.json")
-            json.dump(swaps, open(sp, "w"), ensure_ascii=False)
-            r = subprocess.run([sys.executable, os.path.join(ROOT, "pipeline.py"), "--redraft", sp], cwd=ROOT, capture_output=True, text=True)
-            if r.returncode != 0:
-                return self._send(500, {"error": (r.stderr or r.stdout)[-400:]})
-            return self._send(200, {"ok": True, "msg": r.stdout.strip()})
+            with lock:
+                if job["running"]:
+                    return self._send(409, {"error": "当前任务正在处理，请稍后再写入工程。"})
+                job["running"] = True
+            try:
+                if not os.path.isfile(os.path.join(OUT, "result.json")):
+                    return self._send(409, {"error": "当前为随仓库附带的演示。请先生成本机草稿，再写入镜头修改。"})
+                swaps = self._json().get("swaps") or {}
+                sp = os.path.join(OUT, "swaps.json")
+                json.dump(swaps, open(sp, "w"), ensure_ascii=False)
+                r = subprocess.run([sys.executable, os.path.join(ROOT, "pipeline.py"), "--redraft", sp], cwd=ROOT, capture_output=True, text=True)
+                if r.returncode != 0:
+                    return self._send(500, {"error": (r.stderr or r.stdout)[-400:]})
+                return self._send(200, {"ok": True, "msg": r.stdout.strip()})
+            finally:
+                with lock:
+                    job["running"] = False
         return self._send(404, {"error": "not found"})
 
     def log_message(self, *a):
