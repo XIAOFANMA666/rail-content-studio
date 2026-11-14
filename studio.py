@@ -20,6 +20,7 @@ import script_edit
 import roughcut_export
 import topic_feed
 import video_trends
+import media_http
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(ROOT, "output")
@@ -33,14 +34,14 @@ def read_result():
     path = os.path.join(OUT, "result.json")
     if os.path.isfile(path):
         with open(path, encoding="utf-8") as f:
-            return json.load(f)
+            return media_http.enrich_result(ROOT, OUT, json.load(f))
     with open(os.path.join(ROOT, "index.html"), encoding="utf-8") as f:
         match = re.search(r"const R = (.*?);\nconst STUDIO =", f.read(), re.S)
     if not match:
         raise ValueError("演示数据缺失，请重新拉取完整仓库。")
     result = json.loads(match.group(1))
     result["preview_only"] = True
-    return result
+    return media_http.enrich_result(ROOT, OUT, result)
 
 
 def read_script_session():
@@ -93,6 +94,8 @@ class H(BaseHTTPRequestHandler):
         return json.loads(self.rfile.read(n) or b"{}")
 
     def do_GET(self):
+        if media_http.handle_get(self, ROOT, OUT):
+            return
         path = unquote(urlparse(self.path).path)
         if path in ("/", "/index.html"):
             return self._send(200, page(), "text/html; charset=utf-8")
@@ -150,6 +153,8 @@ class H(BaseHTTPRequestHandler):
         self.wfile.write(data)
 
     def do_POST(self):
+        if media_http.handle_post(self, ROOT, OUT, PORT):
+            return
         path = urlparse(self.path).path
         if path == "/api/video-trends/collect":
             if self.headers.get("Origin") not in (f"http://localhost:{PORT}", f"http://127.0.0.1:{PORT}"):
@@ -311,6 +316,7 @@ class H(BaseHTTPRequestHandler):
                 result = read_result()
                 if body.get("run_id") != result.get("run_id"):
                     return self._send(409, {"error": "粗剪已更新，请刷新后重新导出。"})
+                media_http.validate_swaps(ROOT, OUT, result, body.get("swaps", {}))
                 response = roughcut_export.render(ROOT, OUT, result, body.get("swaps", {}))
             except (ValueError, TypeError) as exc:
                 return self._send(400, {"error": str(exc)})
