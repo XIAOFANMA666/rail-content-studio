@@ -38,6 +38,35 @@ class ScriptWorkflowTests(unittest.TestCase):
         r = c.getresponse(); status, body = r.status, json.loads(r.read()); c.close()
         return status, body
 
+    def test_derivation_keeps_current_script_and_variant(self):
+        import script_store
+        mother = script_store.add(str(self.out), self.session)
+        other = script_store.add(str(self.out), {**self.session, 'id': 'other'})
+        before = (self.out / 'script-library.json').read_bytes()
+        with patch.object(studio.llm, 'model_config', return_value={'api_key': 'test'}), \
+             patch.object(studio.script_edit, 'derive', return_value={'directions': []}) as derive:
+            status, _ = self.post('/api/scripts/derive', {'session_id': mother['id'], 'variant': 'A', 'mode': 'fission'})
+        self.assertEqual(status, 200)
+        self.assertEqual(derive.call_args.args[:3], (mother, 'A', 'fission'))
+        self.assertEqual((self.out / 'script-library.json').read_bytes(), before)
+        self.assertEqual(studio.read_script_session()['id'], other['id'])
+
+    def test_custom_rules_remain_manual_and_disabled_rules_are_skipped(self):
+        from pipeline import rule_results
+        rules_path = self.out / 'rules.json'
+        rules_path.write_text(json.dumps({'scope': 'original', 'rules': []}))
+        rules = [{'id': 'R1', 'name': 'Disabled', 'enabled': False},
+                 {'id': 'MANUAL', 'name': 'Check manually'}]
+        with patch.object(studio, 'RULES_PATH', str(rules_path)):
+            status, first = self.post('/api/rules', {'scope': 'other', 'rules': rules})
+            second_status, second = self.post('/api/rules', {'rules': rules})
+        self.assertEqual((status, second_status), (200, 200))
+        self.assertEqual(second['scope'], 'original')
+        self.assertGreater(second['version'], first['version'])
+        check, = rule_results(second['rules'], {'R1': {'ok': True, 'msg': 'pass'}})
+        self.assertEqual(check['id'], 'MANUAL')
+        self.assertIsNone(check['ok'])
+
     def test_generate_keeps_cut_and_audio_and_waits_for_selection(self):
         with patch('pipeline.generate_script_session', return_value=self.session), patch.object(studio.llm, 'model_config', return_value={'api_key': 'test'}):
             status, data = self.post('/api/scripts', {'topic': 'test'})

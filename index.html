@@ -111,7 +111,7 @@
   </div>
   <div class="ops-status" id="opsStatus" role="status"></div>
   <div class="ops-status" id="exportRoughcutStatus" role="status" aria-live="polite"></div>
-  <div class="task-context compose-only" id="taskContext" hidden><div><span class="context-caption">当前任务</span><select id="activeTaskSelect" aria-label="当前任务"></select><span class="mono" id="activeTaskId"></span></div><div class="context-actions"><span id="activeTaskOwner"></span><button class="btn text" id="editTaskButton" type="button">任务信息</button></div></div>
+  <div class="task-context compose-only" id="taskContext" hidden><div><span class="context-caption">当前任务</span><select id="activeTaskSelect" aria-label="当前任务"></select><span class="mono" id="activeTaskId"></span></div><div class="context-actions"><button class="btn text" id="memoBtn" type="button">Memo-0</button><button type="button" class="btn text" id="rulesBtn">合规规则</button><span id="activeTaskOwner"></span><button class="btn text" id="editTaskButton" type="button">任务信息</button></div></div>
   <main>
     <section id="overviewView" class="workspace" aria-label="生产总览" hidden>
       <div class="overview-caption"><span>内容生产进度</span><span>本机任务记录 <button class="info-button" type="button" aria-label="任务数据范围" data-help="已保存脚本会自动列入任务；新建任务、负责人、终审与发布记录只保存在当前浏览器，不代表团队权限或多人协作已经接通。">i</button></span></div>
@@ -120,7 +120,7 @@
       <div class="task-table-wrap"><table class="task-table"><thead><tr><th>任务 / 选题</th><th>市场 / 平台</th><th>负责人</th><th>当前环节</th><th>计划交付</th><th><span class="sr-only">操作</span></th></tr></thead><tbody id="taskRows"></tbody></table></div>
       <div class="overview-bottom"><section><div class="section-head"><h2>交接提醒</h2><span id="handoffCount"></span></div><div id="handoffQueue"></div></section><section><div class="section-head"><h2>最近一次粗剪</h2><button class="btn text" type="button" data-view="create">查看作品 ↗</button></div><div id="recentProduction"></div></section></div>
     </section>
-    <section id="topicsView" class="workspace" aria-label="选题策划" hidden><div class="planning-grid"><section><div class="section-head"><h2>创作要求</h2><button class="btn text" type="button" data-new-task>新建任务</button></div><div id="topicBrief" class="topic-brief"></div><div id="topicFormSlot"></div></section><section><div class="section-head"><h2>参考与依据</h2><span class="capability-tag">人工提供</span></div><div id="topicReference"></div><div class="planned-capability"><h3>案例拆解</h3><span class="capability-tag">计划功能</span><p>授权案例的结构拆解与引用依据，尚未接入自动分析。</p><a href="https://my.feishu.cn/wiki/GMpewKWsVi7ktnk0WBYcRwSAnIg" target="_blank" rel="noopener">查看需求方案 ↗</a></div></section></div><div id="topicPoolSlot"></div></section>
+    <section id="topicsView" class="workspace" aria-label="选题策划" hidden><div class="planning-grid"><section><div class="section-head"><h2>创作要求</h2><button class="btn text" type="button" data-new-task>新建任务</button></div><div id="topicBrief" class="topic-brief"></div><div id="topicFormSlot"></div></section><section><div class="section-head"><h2>参考与依据</h2><span class="capability-tag">人工提供</span></div><div id="topicReference"></div><div class="planned-capability"><h3>案例拆解</h3><span class="capability-tag">计划功能</span><p>授权案例的结构拆解与引用依据，尚未接入自动分析。</p><a href="https://my.feishu.cn/wiki/GMpewKWsVi7ktnk0WBYcRwSAnIg" target="_blank" rel="noopener">查看需求方案 ↗</a></div></section></div><div id="topicPoolSlot"></div><section class="topic-pool" id="qualityReflow" hidden><div class="section-head"><h2>优质脚本回流</h2><span id="qualitySource" class="capability-tag">本地脚本库</span></div><div id="qualityList" class="quality-grid"></div></section></section>
 
     <section id="scriptsView" class="workspace" aria-label="选题与脚本">
       <section class="generation-controls" aria-labelledby="creationHeading"><h2 id="creationHeading" class="sr-only">输入选题</h2>
@@ -164,7 +164,7 @@
           <label>历史版本<select id="scriptRevision" aria-label="历史版本"></select></label>
           <button class="btn" id="importScript" type="button">收录当前作品</button>
         </div><p id="libraryStatus" class="script-library-status" role="status"></p>
-        <div class="script-result-heading"><h2 id="scriptsHeading">脚本</h2><span id="scriptSource"></span></div>
+        <div class="script-result-heading"><h2 id="scriptsHeading">脚本</h2><span id="scriptSource"></span><button type="button" class="btn text" id="deriveBtn">复用 / 裂变</button></div>
         <div class="production-actions"><p id="productionStatus" role="status"></p><button class="btn primary" id="produceGo" type="button" disabled>生成配音与粗剪 →</button></div>
         <div class="script-approval"><label><input type="checkbox" id="scriptConfirm">已核对路线、优惠与语言，确认当前版本用于制作</label><span id="scriptConfirmStatus"></span></div><div id="scriptTaskMismatch" class="handoff-note" hidden>当前任务还没有脚本。先在选题策划中生成候选脚本。</div><div id="scriptVersions" class="script-versions"></div>
       </section>
@@ -240,6 +240,19 @@
   <details class="foot-wrap compose-only" id="footWrap"><summary>素材来源与能力说明</summary><div class="foot" id="foot"></div></details>
 </div>
 <dialog class="task-dialog" id="taskDialog" aria-labelledby="taskDialogTitle"><header><h2 id="taskDialogTitle">新建任务</h2><button class="btn text" type="button" id="closeTaskDialog">关闭</button></header><form id="taskForm" class="ops-form"><label class="wide">选题 / 任务名称<input id="taskTitleInput" required maxlength="80" placeholder="例如：伦敦到苏格兰的夜车旅行"></label><label>目标市场<select id="taskMarketInput"><option>英国</option><option disabled>其他市场 · 待接入</option></select></label><label>发布平台<select id="taskPlatformInput"><option>TikTok</option><option>Instagram</option><option>YouTube Shorts</option></select></label><label>负责人<input id="taskOwnerInput" maxlength="60" placeholder="运营或剪辑负责人"></label><label>计划交付日期<input id="taskDueInput" type="date"></label><label class="wide">创作要求<textarea id="taskBriefInput" maxlength="2000" rows="3" placeholder="目标人群、路线、营销节点、已确认的优惠条件"></textarea></label><label class="wide">参考资料链接<input id="taskReferenceInput" type="url" maxlength="2000" placeholder="授权案例或需求资料链接"></label><label class="checkbox-field wide"><input id="taskReferenceConfirmed" type="checkbox">已核实参考资料的来源与使用权限</label><div class="wide ops-form-actions"><button class="btn primary" type="submit" id="taskSaveButton">创建任务</button></div></form></dialog>
+<dialog class="task-dialog" id="rulesDialog" aria-labelledby="rulesDialogTitle"><header><h2 id="rulesDialogTitle">合规规则库</h2><button class="btn text" type="button" id="closeRules">关闭</button></header>
+<p class="empty" id="rulesScope"></p>
+<div id="rulesList" class="rules-editor"></div>
+<details class="rules-block" id="rulesEditor" open><summary>导入规则</summary><textarea id="rulesImport" rows="4" placeholder='粘贴 JSON 数组，或 {"rules":[...]}；字段：id、name、why、check、suggestion'></textarea><div class="rules-actions"><button class="btn" type="button" id="rulesImportGo">解析导入</button><button class="btn primary" type="button" id="rulesSaveGo">保存并生效</button></div></details>
+<details class="rules-block" id="rulesSearch"><summary>搜索规则资料</summary><p class="empty">先用搜索找官方说明，再把结果粘到上面的导入框；自动抓取还没接。</p><div class="rules-actions"><input id="rulesQuery" placeholder="例如：ASA 价格广告 规则 英国"><button class="btn" type="button" id="rulesSearchGo">去搜索 ↗</button></div></details>
+<p class="empty" id="rulesStatus" role="status"></p></dialog>
+<dialog class="task-dialog" id="deriveDialog" aria-labelledby="deriveDialogTitle"><header><h2 id="deriveDialogTitle">复用 / 裂变</h2><button class="btn text" type="button" id="closeDerive">关闭</button></header>
+<p class="empty" id="deriveSource"></p>
+<p id="deriveLocal" hidden><a href="http://localhost:18772/#scripts">打开本地工作台生成方向 ↗</a></p>
+<div class="ops-form" id="deriveForm"><label>方式<select id="deriveMode"><option value="topic">复用选题</option><option value="structure">复用结构</option><option value="fission">裂变新选题</option></select></label><label>必留要素<input id="deriveKept" maxlength="200" placeholder="如：伦敦到苏格兰这条线"></label><label class="wide">变化条件<textarea id="deriveChanges" rows="2" maxlength="500" placeholder="换人群、换路线、换营销节点…"></textarea></label><div class="wide ops-form-actions"><button class="btn primary" type="button" id="deriveGo">生成 3 个方向</button></div></div>
+<div id="deriveResults"></div><p class="empty" id="deriveStatus" role="status"></p></dialog>
+<dialog class="task-dialog" id="identityDialog" aria-labelledby="identityTitle"><header><h2 id="identityTitle">先选身份</h2></header><p class="empty">身份决定 Memo-0 长期记忆按谁记、按谁取。之后可以在 Memo-0 里切换。</p><form id="identityForm" class="ops-form"><label>角色<select id="identityRole"><option>编导一</option><option>编导二</option><option>文案</option><option>组长</option></select></label><label>名字（可选）<input id="identityName" maxlength="20" placeholder="如 小马"></label><div class="wide ops-form-actions"><button class="btn primary" type="submit">进入</button></div></form></dialog>
+<dialog class="task-dialog" id="memoDialog" aria-labelledby="memoTitle"><header><h2 id="memoTitle">Memo-0</h2><button class="btn text" type="button" id="closeMemo">关闭</button></header><div class="memo-head"><span id="memoIdentity"></span><button class="btn text" type="button" id="memoSwitch">切换身份</button></div><p class="empty" id="memoShort"></p><div class="rules-actions"><input id="memoSearch" placeholder="搜索记忆"><button class="btn" type="button" id="memoExport">导出 JSON</button></div><div id="memoList" class="memo-list"></div><div class="memo-add"><textarea id="memoText" rows="2" maxlength="300" placeholder="例如：开头 3 秒内必须出现路线或价格锚点"></textarea><div class="rules-actions"><input id="memoMarket" maxlength="20" placeholder="市场，可不填"><button class="btn primary" type="button" id="memoAdd">记一条</button></div></div><p class="empty" id="memoStatus" role="status"></p></dialog>
 <dialog class="script-editor" id="scriptEditor" aria-labelledby="scriptEditorTitle">
   <header><h2 id="scriptEditorTitle">编辑脚本</h2><button class="btn" id="editorClose" type="button">关闭</button></header>
   <form id="scriptEditorForm">
@@ -627,7 +640,7 @@ function renderRules(){
     if(r.id==='R2'){ok=!sc.faces;msg=ok?'所选镜头里没有可识别人脸（人工标注）':`${sc.faces} 个镜头有可识别人脸`}
     if(r.id==='R3'){ok=!sc.brand;msg=ok?'所选镜头未标注品牌标识（人工标注）':`${sc.brand} 个镜头露出手机品牌标识`}
     if(r.id==='R6'&&sc.wrong){ok=false;msg='有镜头地点和脚本不符'}
-    return `<li><span class="${ok?'ok-ic':'bad-ic'}">${ok?'✓':'✕'}</span><span><b>${esc(r.name)}</b> · ${esc(msg)}</span></li>`}).join('');
+    return `<li><span class="${ok?'ok-ic':ok===null?'':'bad-ic'}">${ok?'✓':ok===null?'?':'✕'}</span><span><b>${esc(r.name)}</b> · ${esc(msg)}</span></li>`}).join('');
 }
 function renderInspect(){
   const seg=S[state.seg]; const sh=seg.shots[state.shot]||seg.shots[0];
@@ -1028,6 +1041,7 @@ function editorSetBusy(busy){editorBusy=busy;$('scriptEditor').querySelectorAll(
 $('rewriteGo').addEventListener('click',async()=>{
   if(editorBusy||!$('scriptEditorForm').reportValidity())return;
   const instruction=$('rewriteInstruction').value.trim();if(!instruction){$('editorStatus').textContent='请先填写修改意见';$('rewriteInstruction').focus();return}
+  memoCapture(instruction,editorBase.country);
   const before=editorContent();editorSetBusy(true);$('editorStatus').textContent='正在改写，原稿已保留…';
   try{
     const data=await scriptRequest('/api/scripts/rewrite',{session_id:editorBase.id,variant:before.id,instruction,content:before,title:$('editTitle').value});
@@ -1184,12 +1198,14 @@ if(STUDIO){
   $('askForm').addEventListener('submit',async e=>{
     e.preventDefault();if(state.running)return;
     generationBusy(true);renderSteps(0,0,[{step:'写脚本',msg:''}]);$('askGo').textContent='正在写脚本…';$('askHint').textContent='正在生成 3 版脚本…';
-    const body={topic:$('askTopic').value.trim(),market:$('askMarket').value,platform:$('askPlatform').value,brief:opsTask()?.brief||''};
+    const derived=activeDerivation();
+    const deriveNote=derived?`参考母稿《${deriveCtx.title}》(${deriveCtx.modeText})，方向：${deriveCtx.direction.title}；变化：${deriveCtx.direction.difference}；人群：${deriveCtx.direction.audience}；切入：${deriveCtx.direction.angle}；必留：${deriveCtx.direction.keep}；待核实：${deriveCtx.direction.check}`:'';
+    const body={topic:$('askTopic').value.trim(),market:$('askMarket').value,platform:$('askPlatform').value,brief:[opsTask()?.brief,deriveNote,memoBrief($('askMarket').value)].filter(Boolean).join('\n').slice(0,2000)};
     try{
       const r=await fetch('/api/scripts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
       const data=await r.json();if(!r.ok)throw new Error(data.error||'脚本生成失败');
-      opsAttachGenerated(data);applyScript(data);await refreshScriptLibrary();setView('scripts');renderSteps(1,-1,[{step:'写脚本',msg:'三版脚本已生成'}]);
-      $('askHint').textContent='三版脚本已生成';$('scriptsHeading').scrollIntoView({block:'start',behavior:'smooth'});
+      opsAttachGenerated(data);if(derived)opsAttachDerive();applyScript(data);await refreshScriptLibrary();setView('scripts');renderSteps(1,-1,[{step:'写脚本',msg:'三版脚本已生成'}]);
+      $('askHint').textContent='三版脚本已生成';memoPush('生成脚本：'+data.title);$('scriptsHeading').scrollIntoView({block:'start',behavior:'smooth'});
     }catch(err){$('askHint').textContent='生成失败：'+err.message}
     finally{generationBusy(false);$('askGo').textContent='生成脚本 →'}
   });
@@ -1237,8 +1253,9 @@ const opsTask=()=>ops.tasks.find(t=>t.id===ops.active)||null;
 const opsKey=t=>t?.sessionId&&t?.variant?t.sessionId+':'+t.variant:null;
 const opsRecord=t=>t?.records?.[opsKey(t)]||{};
 const opsId=()=> 'RW-'+crypto.randomUUID().slice(0,8).toUpperCase();
+const opsTaskState=t=>opsRecord(t).publication?'已交付':opsRecord(t).confirmed?'已确认':t?.state==='待重查'?'待重查':t?.projectId?'编辑中':'草稿';
 function opsSave(){try{localStorage.setItem(OPS_KEY,JSON.stringify(ops));return true}catch(_){$('opsStatus').textContent='浏览器存储不可用，任务交接记录尚未保存。请允许本地存储后重试。';return false}}
-function opsBlank(title,country='英国',platform='TikTok'){return {id:opsId(),title,country,platform,owner:'',due:'',brief:'',reference:'',referenceConfirmed:false,records:{},createdAt:new Date().toISOString()}}
+function opsBlank(title,country='英国',platform='TikTok'){return {id:opsId(),title,country,platform,owner:'',due:'',brief:'',reference:'',referenceConfirmed:false,records:{},createdAt:new Date().toISOString(),state:'草稿'}}
 function opsSync(){
   if(HOSTED)return;
   const heads=new Map();scriptLibrary.forEach(s=>{if(!heads.has(s.project_id))heads.set(s.project_id,s)});
@@ -1250,9 +1267,9 @@ function opsSync(){
   opsSave();
 }
 function opsSelectSession(session){opsSync();const t=ops.tasks.find(t=>t.projectId===session.project_id);if(t)ops.active=t.id;opsSave()}
-function opsAttachGenerated(session){let t=opsTask();if(!t||t.projectId){const previous=t;t=opsBlank(session.title,session.country,session.platform);if(previous)['owner','due','brief','reference','referenceConfirmed'].forEach(k=>t[k]=previous[k]);ops.tasks.push(t)}t.projectId=session.project_id;t.sessionId=session.id;t.revision=session.revision||1;t.title=session.title;t.variant=null;ops.active=t.id;opsSave()}
-function opsStage(t){const r=opsRecord(t);if(r.publication&&r.confirmed&&r.decision==='pass')return 'analytics';if(r.decision==='pass')return 'publish';if(r.assessment)return r.decision==='reject'?'create':'evaluate';if(r.confirmed)return 'create';return t.projectId?'scripts':'topics'}
-function opsStageText(t){const r=opsRecord(t),stage=opsStage(t);return stage==='analytics'?'待补真实数据':r.decision==='reject'?'退回修改':stage==='evaluate'?'待人工终审':stage==='publish'?'待人工发布':stage==='create'?'制作与精修':stage==='scripts'?'脚本待确认':'选题待完善'}
+function opsAttachGenerated(session){let t=opsTask();if(!t||t.projectId){const previous=t;t=opsBlank(session.title,session.country,session.platform);if(previous)['owner','due','brief','reference','referenceConfirmed'].forEach(k=>t[k]=previous[k]);ops.tasks.push(t)}t.projectId=session.project_id;t.sessionId=session.id;t.revision=session.revision||1;t.title=session.title;t.variant=null;t.state='编辑中';ops.active=t.id;opsSave()}
+function opsStage(t){const r=opsRecord(t);if(t.state==='待重查'&&!r.confirmed)return 'scripts';if(r.publication&&r.confirmed&&r.decision==='pass')return 'analytics';if(r.decision==='pass')return 'publish';if(r.assessment)return r.decision==='reject'?'create':'evaluate';if(r.confirmed)return 'create';return t.projectId?'scripts':'topics'}
+function opsStageText(t){const r=opsRecord(t),stage=opsStage(t);if(t.state==='待重查'&&!r.confirmed)return '待重查';return stage==='analytics'?'待补真实数据':r.decision==='reject'?'退回修改':stage==='evaluate'?'待人工终审':stage==='publish'?'待人工发布':stage==='create'?'制作与精修':stage==='scripts'?'脚本待确认':'选题待完善'}
 function opsStageLabel(stage){return OPS_STAGES.find(x=>x[0]===stage)?.[1]||'选题'}
 function opsReference(url){try{const u=new URL(url);return ['https:','http:'].includes(u.protocol)?u.href:''}catch(_){return ''}}
 function opsArchivePublication(r){if(r.publication){r.publicationHistory=[...(r.publicationHistory||[]),r.publication];r.publication=null}}
@@ -1268,7 +1285,7 @@ function opsScriptGate(){
   document.querySelector('.script-approval').hidden=!!t&&!matches;
   if(selectedVariant&&!confirmed)$('productionStatus').textContent='确认当前脚本后，继续制作';
 }
-$('scriptConfirm').addEventListener('change',()=>{const t=opsTask();if(!t||!selectedVariant)return;t.sessionId=scriptSession.id;t.variant=selectedVariant;const key=opsKey(t);t.records[key]={...opsRecord(t),confirmed:$('scriptConfirm').checked,confirmedAt:new Date().toISOString()};if(!$('scriptConfirm').checked){t.records[key].decision=null;opsArchivePublication(t.records[key])}opsSave();opsScriptGate();opsRender(document.body.dataset.view)});
+$('scriptConfirm').addEventListener('change',()=>{const t=opsTask();if(!t||!selectedVariant)return;t.sessionId=scriptSession.id;t.variant=selectedVariant;const key=opsKey(t);t.records[key]={...opsRecord(t),confirmed:$('scriptConfirm').checked,confirmedAt:new Date().toISOString()};t.state=$('scriptConfirm').checked?'已确认':'编辑中';memoPush(($('scriptConfirm').checked?'确认':'取消确认')+'脚本 '+(selectedVariant||''));if(!$('scriptConfirm').checked){t.records[key].decision=null;opsArchivePublication(t.records[key])}opsSave();opsScriptGate();opsRender(document.body.dataset.view)});
 async function opsActivate(id,view){
   if(state.running||libraryBusy){$('opsStatus').textContent='当前任务仍在执行，请完成后再切换。';return}
   const t=ops.tasks.find(t=>t.id===id);if(!t)return;ops.active=id;opsSave();
@@ -1288,20 +1305,204 @@ function opsOverview(){
   $('stageOverview').innerHTML=OPS_STAGES.map(([key,name,action],i)=>`<button type="button" class="stage-stop ${opsFilter===key?'selected':''}" data-stage-filter="${key}" aria-label="查看${name}任务"><span class="stage-number">${String(i+1).padStart(2,'0')}</span><span class="stage-name">${name}<small>${action}</small></span><strong>${ops.tasks.filter(t=>opsStage(t)===key).length}</strong></button>`).join('');
   const query=$('taskSearch').value.trim().toLowerCase();
   const rows=ops.tasks.filter(t=>(!query||(t.title+' '+t.owner+' '+t.id).toLowerCase().includes(query))&&(opsFilter==='all'||opsFilter==='active'&&!opsRecord(t).publication||opsFilter==='published'&&opsRecord(t).publication||opsFilter==='attention'&&['scripts','evaluate'].includes(opsStage(t))||opsFilter===opsStage(t)));
-  $('taskCount').textContent=ops.tasks.length;$('taskRows').innerHTML=rows.map(t=>`<tr><td><button type="button" class="task-title" data-open-task="${esc(t.id)}">${esc(t.title)}</button><small class="mono">${esc(t.id)}${t.revision?' · v'+t.revision:''}</small></td><td>${esc(t.country)}<small>${esc(t.platform)}</small></td><td>${esc(t.owner||'未分配')}</td><td><span class="stage-badge ${opsStage(t)}">${esc(opsStageText(t))}</span></td><td>${esc(t.due||'未安排')}</td><td><button class="btn text" type="button" data-open-task="${esc(t.id)}">继续 →</button></td></tr>`).join('')||'<tr><td colspan="6"><div class="ops-empty">'+(ops.tasks.length?'没有符合筛选条件的任务':'从一条选题开始，创建你的第一个任务')+'</div></td></tr>';
+  $('taskCount').textContent=ops.tasks.length;$('taskRows').innerHTML=rows.map(t=>`<tr><td><button type="button" class="task-title" data-open-task="${esc(t.id)}">${esc(t.title)}</button><small class="mono">${esc(t.id)}${t.revision?' · v'+t.revision:''}</small><em class="state-chip">${esc(opsTaskState(t))}</em></td><td>${esc(t.country)}<small>${esc(t.platform)}</small></td><td>${esc(t.owner||'未分配')}</td><td><span class="stage-badge ${opsStage(t)}">${esc(opsStageText(t))}</span></td><td>${esc(t.due||'未安排')}</td><td><button class="btn text" type="button" data-open-task="${esc(t.id)}">继续 →</button></td></tr>`).join('')||'<tr><td colspan="6"><div class="ops-empty">'+(ops.tasks.length?'没有符合筛选条件的任务':'从一条选题开始，创建你的第一个任务')+'</div></td></tr>';
   const waiting=ops.tasks.filter(t=>['scripts','evaluate','publish'].includes(opsStage(t)));
   $('handoffCount').textContent=waiting.length+' 项';$('handoffQueue').innerHTML=waiting.slice(0,4).map(t=>`<button type="button" class="handoff-row" data-open-task="${esc(t.id)}"><span><strong>${esc(t.title)}</strong><small>${esc(t.owner||'未分配负责人')} · ${esc(opsStageText(t))}</small></span><span aria-hidden="true">↗</span></button>`).join('')||'<p class="ops-empty compact">暂无待确认的交接</p>';
   $('recentProduction').innerHTML=`<div class="recent-work"><img src="${thumb(S[0].shots[0].clip)}" alt="最近粗剪的素材预览"><div><strong>${esc(R.title)}</strong><p>${esc(R.country)} · ${esc(R.platform)} · ${R.total_s.toFixed(1)} 秒</p><span class="capability-tag">${R.preview_only||!STUDIO?'历史回放':'本机运行结果'}</span></div></div>`;
   document.querySelectorAll('[data-task-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.taskFilter===opsFilter)));
 }
-function opsTopics(){const t=opsTask();$('topicBrief').innerHTML=t?`<div class="brief-metadata"><span>${esc(t.owner||'未分配负责人')}</span><span>${t.due?'计划交付 '+esc(t.due):'未安排交付日期'}</span></div>${t.brief?`<p>${esc(t.brief)}</p>`:'<p class="empty">在任务信息中补充人群、营销节点与优惠条件。</p>'}`:'<p class="empty">新建任务，明确本次内容方向和交接人。</p>';
+function opsTopics(){const t=opsTask();$('topicBrief').innerHTML=t?`<div class="brief-metadata"><span>${esc(t.owner||'未分配负责人')}</span><span>${t.due?'计划交付 '+esc(t.due):'未安排交付日期'}</span><span>状态：${esc(opsTaskState(t))}</span></div>${t.brief?`<p>${esc(t.brief)}</p>`:'<p class="empty">在任务信息中补充人群、营销节点与优惠条件。</p>'}`: (STUDIO?'<p class="empty">直接输入下面的选题就能生成脚本；任务会在生成后自动创建，负责人和交付日期可以稍后补。</p>':'<p class="empty">新建任务，明确本次内容方向和交接人。</p>');
   const href=opsReference(t?.reference);$('topicReference').innerHTML=href?`<a href="${esc(href)}" target="_blank" rel="noopener">打开参考资料 ↗</a><p class="empty">${t.referenceConfirmed?'来源与使用权限已由填写人确认':'来源与使用权限尚未确认'}</p>`:'<p class="empty">尚未添加参考资料</p><button class="btn" type="button" id="addReference">添加任务参考</button>';
   if($('addReference'))$('addReference').onclick=()=>opsOpenTask(t?.id||null);
+  if(STUDIO)loadQuality();
 }
 function opsOpenTask(id=null){if(state.running)return;opsEditing=id;const t=ops.tasks.find(t=>t.id===id);$('taskDialogTitle').textContent=t?'任务信息':'新建任务';$('taskSaveButton').textContent=t?'保存任务信息':'创建任务';
   const values={taskTitleInput:t?.title||'',taskMarketInput:t?.country||'英国',taskPlatformInput:t?.platform||'TikTok',taskOwnerInput:t?.owner||'',taskDueInput:t?.due||'',taskBriefInput:t?.brief||'',taskReferenceInput:t?.reference||''};Object.entries(values).forEach(([id,value])=>$(id).value=value);$('taskReferenceConfirmed').checked=!!t?.referenceConfirmed;$('taskMarketInput').disabled=!!t?.projectId;$('taskPlatformInput').disabled=!!t?.projectId;$('taskDialog').showModal();$('taskTitleInput').focus();}
 $('closeTaskDialog').onclick=()=>$('taskDialog').close();
-$('taskForm').onsubmit=e=>{e.preventDefault();let t=ops.tasks.find(t=>t.id===opsEditing);const created=!t;if(!t){t=opsBlank($('taskTitleInput').value.trim());ops.tasks.push(t)}Object.assign(t,{title:$('taskTitleInput').value.trim(),country:$('taskMarketInput').value,platform:$('taskPlatformInput').value,owner:$('taskOwnerInput').value.trim(),due:$('taskDueInput').value,brief:$('taskBriefInput').value.trim(),reference:$('taskReferenceInput').value.trim(),referenceConfirmed:$('taskReferenceConfirmed').checked});ops.active=t.id;if(opsSave()){$('taskDialog').close();$('opsStatus').textContent=created?'任务已创建 · '+t.id:'任务信息已保存';$('askTopic').value=t.title;$('askMarket').value=t.country;$('askPlatform').value=t.platform;opsRender('topics');setView('topics')}};
+let rulesDoc=null,deriveCtx=null;
+function opsAttachDerive(){if(!deriveCtx?.direction)return;const t=opsTask();if(!t)return;t.parent={sessionId:deriveCtx.sessionId,variant:deriveCtx.variant,title:deriveCtx.title,mode:deriveCtx.mode};t.brief=[t.brief,`母稿：《${deriveCtx.title}》·${deriveCtx.modeText}；方向：${deriveCtx.direction.title}；变化：${deriveCtx.direction.difference}`].filter(Boolean).join('\n');opsSave();deriveCtx=null}
+const localAuthoring=STUDIO&&!HOSTED;
+function activeDerivation(){
+  return deriveCtx?.direction&&$('askTopic').value.trim()===deriveCtx.direction.title&&
+    $('askMarket').value===deriveCtx.country&&$('askPlatform').value===deriveCtx.platform;
+}
+async function openRules(){
+  $('rulesStatus').textContent='正在读取…';
+  $('rulesList').replaceChildren();
+  $('rulesScope').textContent='';
+  $('rulesEditor').hidden=true;$('rulesSearch').hidden=true;
+  $('rulesDialog').showModal();
+  try{
+    const r=await fetch(localAuthoring?'/api/rules':'data/rules.json'),d=await r.json();
+    if(!r.ok)throw new Error(d.error||'规则库读取失败');
+    rulesDoc=d;renderRulesLibrary();$('rulesStatus').textContent='';
+    $('rulesEditor').hidden=!localAuthoring;$('rulesSearch').hidden=!localAuthoring;
+  }catch(e){$('rulesStatus').textContent=e.message}
+}
+function renderRulesLibrary(){
+  const rules=rulesDoc?.rules||[];
+  $('rulesScope').textContent='英国 × TikTok · '+(localAuthoring?(rulesDoc?.version?'版本 '+rulesDoc.version:'初始版本'):'公开规则预览 · 在本地工作台维护');
+  if(localAuthoring){
+    $('rulesList').innerHTML=rules.map((r,i)=>`<div class="rule-row" data-rule="${i}"><input type="checkbox" data-rule-enabled ${r.enabled!==false?'checked':''} aria-label="启用 ${esc(r.id)}"><input type="text" data-rule-name value="${esc(r.name)}" maxlength="80" aria-label="规则名称 ${esc(r.id)}"><input type="text" data-rule-why value="${esc(r.why||'')}" maxlength="300" aria-label="依据 ${esc(r.id)}"></div>`).join('')||'<p class="empty">还没有规则。</p>';
+  }else{
+    $('rulesList').innerHTML=rules.map(r=>`<div class="quality-card"><strong>${esc(r.name)}</strong>${r.enabled===false?' · 已停用':''}<small>${esc(r.why||'')}</small></div>`).join('')||'<p class="empty">还没有规则。</p>';
+  }
+}
+function collectRules(){
+  return [...$('rulesList').querySelectorAll('[data-rule]')].map((row,i)=>({
+    ...rulesDoc.rules[i],name:row.querySelector('[data-rule-name]').value.trim(),
+    why:row.querySelector('[data-rule-why]').value.trim(),enabled:row.querySelector('[data-rule-enabled]').checked
+  }));
+}
+async function saveRules(){
+  if(!localAuthoring||$('rulesSaveGo').disabled)return;
+  const rules=collectRules();
+  $('rulesSaveGo').disabled=true;
+  try{
+    const r=await fetch('/api/rules',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({rules})});
+    const d=await r.json();
+    if(!r.ok)throw new Error(d.error||'保存失败');
+    rulesDoc=d;renderRulesLibrary();
+    let invalidated=0;
+    for(const t of ops.tasks){
+      let changed=false;
+      for(const record of Object.values(t.records)){
+        if(!record?.confirmed||record.publication)continue;
+        Object.assign(record,{confirmed:false,decision:null,assessment:null});
+        changed=true;
+      }
+      if(changed){t.state='待重查';invalidated++}
+    }
+    const saved=opsSave();opsRender(document.body.dataset.view);opsScriptGate();
+    $('rulesStatus').textContent=`已保存 ${d.rules.length} 条规则 · ${invalidated} 项任务待重查`+
+      (saved?'。':'。浏览器未能保存任务状态。');
+  }catch(e){$('rulesStatus').textContent=e.message}
+  finally{$('rulesSaveGo').disabled=false}
+}
+function importRules(){
+  try{
+    const raw=JSON.parse($('rulesImport').value);
+    const list=Array.isArray(raw)?raw:raw?.rules;
+    if(!Array.isArray(list)||!list.length)throw new Error('没有可导入的规则。');
+    const byId=new Map(collectRules().map(r=>[r.id,r]));
+    const seen=new Set();
+    let next=1;
+    for(const r of list){
+      if(!r||typeof r!=='object'||Array.isArray(r))throw new Error('每条规则须为 JSON 对象。');
+      let id=String(r.id??'').trim();
+      if(!id){while(byId.has('R'+next))next++;id='R'+next++}
+      if(seen.has(id))throw new Error('规则编号重复：'+id);
+      seen.add(id);byId.set(id,{...byId.get(id),...r,id});
+    }
+    rulesDoc={...rulesDoc,rules:[...byId.values()]};renderRulesLibrary();
+    $('rulesStatus').textContent=`已导入 ${list.length} 条，保存后生效。`;
+    $('rulesImport').value='';
+  }catch(e){$('rulesStatus').textContent='导入失败：'+e.message}
+}
+$('rulesBtn').onclick=openRules;$('closeRules').onclick=()=>$('rulesDialog').close();$('rulesSaveGo').onclick=saveRules;$('rulesImportGo').onclick=importRules;
+$('rulesSearchGo').onclick=()=>{const q=$('rulesQuery').value.trim()||'TikTok 广告 规则 英国';window.open('https://www.bing.com/search?q='+encodeURIComponent(q),'_blank','noopener')};
+function openDerive(){
+  if($('deriveGo').disabled)return;
+  $('deriveForm').hidden=!localAuthoring;$('deriveLocal').hidden=localAuthoring;
+  if(localAuthoring&&(!scriptSession||!selectedVariant)){
+    $('libraryStatus').textContent='先在脚本工作室选用一版脚本作为母稿。';return;
+  }
+  $('deriveSource').textContent=localAuthoring?`母稿：${scriptSession.title} · ${selectedVariant} 版`:'选择一份母稿，再复用选题、复用结构或裂变出 3 个方向。';
+  $('deriveResults').replaceChildren();$('deriveStatus').textContent='';$('deriveDialog').showModal();
+}
+$('deriveBtn').onclick=openDerive;$('closeDerive').onclick=()=>$('deriveDialog').close();
+let deriveResults=null;
+$('deriveGo').onclick=async()=>{
+  if(!localAuthoring||!scriptSession||!selectedVariant)return;
+  const request={sessionId:scriptSession.id,variant:selectedVariant,title:scriptSession.title,
+    country:scriptSession.country,platform:scriptSession.platform,mode:$('deriveMode').value,
+    modeText:$('deriveMode').selectedOptions[0].textContent};
+  $('deriveForm').querySelectorAll('button,input,select,textarea').forEach(n=>n.disabled=true);
+  $('deriveResults').replaceChildren();$('deriveStatus').textContent='正在生成 3 个方向…';
+  try{
+    const d=await scriptRequest('/api/scripts/derive',{session_id:request.sessionId,variant:request.variant,
+      mode:request.mode,kept:$('deriveKept').value.trim(),changes:$('deriveChanges').value.trim()});
+    deriveResults={...request,directions:d.directions};
+    $('deriveResults').innerHTML=d.directions.map((x,i)=>`<div class="derive-card"><strong>${esc(x.title)}</strong><small>面向：${esc(x.audience)}</small><small>角度：${esc(x.angle)}</small><small>区别：${esc(x.difference)}</small><small>必留：${esc(x.keep||'—')} · 待核实：${esc(x.check||'—')}</small><button type="button" class="btn" data-pick-derive="${i}">用这个方向 →</button></div>`).join('');
+    $('deriveStatus').textContent='选用方向后，回到选题策划生成新脚本。';
+  }catch(e){$('deriveStatus').textContent=e.message}
+  finally{$('deriveForm').querySelectorAll('button,input,select,textarea').forEach(n=>n.disabled=false)}
+};
+$('deriveResults').addEventListener('click',e=>{
+  const b=e.target.closest('[data-pick-derive]');
+  const dir=b&&deriveResults?.directions[Number(b.dataset.pickDerive)];
+  if(!dir)return;
+  deriveCtx={...deriveResults,direction:dir};
+  $('askTopic').value=dir.title;$('askMarket').value=deriveCtx.country;$('askPlatform').value=deriveCtx.platform;
+  memoPush('采用方向：'+dir.title);
+  $('askHint').textContent=`已带入「${dir.title}」：${dir.angle}（母稿：${deriveCtx.title}）。`;
+  $('deriveDialog').close();setView('topics');
+});
+/* ---------- Memo-0 记忆 ---------- */
+const MEMO_KEY='rail-memo-v1';
+let memo={identity:null,cards:[],short:{}};
+try{memo=JSON.parse(localStorage.getItem(MEMO_KEY)||'null')||memo}catch(_){memo={identity:null,cards:[],short:{}}}
+if(!Array.isArray(memo.cards))memo.cards=[];if(!memo.short||typeof memo.short!=='object')memo.short={};
+let memoNext=Math.max(Number.isSafeInteger(memo.nextId)?memo.nextId:0,
+  ...memo.cards.map(c=>Number(/^MEMO-(\d+)$/.exec(c.id)?.[1]||-1)+1));
+const memoIds=new Set();
+for(const card of memo.cards){
+  if(memoIds.has(card.id))card.id='MEMO-'+memoNext++;
+  memoIds.add(card.id);
+}
+function memoSave(){
+  memo.nextId=memoNext;
+  try{localStorage.setItem(MEMO_KEY,JSON.stringify(memo));return true}
+  catch(_){$('memoStatus').textContent='浏览器存储不可用，记忆没有保存。';return false}
+}
+function memoLabel(){return memo.identity?`${memo.identity.role}${memo.identity.name?' · '+memo.identity.name:''}`:'未选身份'}
+function renderIdentity(){$('memoIdentity').textContent='当前身份：'+memoLabel()}
+function openIdentity(){$('identityRole').value=memo.identity?.role||'编导一';$('identityName').value=memo.identity?.name||'';$('identityDialog').showModal()}
+$('identityForm').addEventListener('submit',e=>{e.preventDefault();memo.identity={role:$('identityRole').value,name:$('identityName').value.trim()};const saved=memoSave();$('identityDialog').close();renderMemo();if(saved)$('memoStatus').textContent='身份已保存：'+memoLabel()});
+function memoFor(market){return memo.cards.filter(c=>c.enabled!==false&&(!memo.identity?.role||!c.role||c.role===memo.identity.role)&&(!c.market||c.market===(market||''))).slice(0,5)}
+function memoShortKey(){return ops.active||'general'}
+function memoShortText(){const s=memo.short[memoShortKey()];if(!s)return '';return [s.summary,...(s.events||[])].filter(Boolean).join('；')}
+function memoPush(text){if(!text)return;const key=memoShortKey();const s=memo.short[key]||(memo.short[key]={summary:'',events:[]});s.events.push(text);while(s.events.length>6){s.summary=[s.summary,s.events.shift()].filter(Boolean).join('；').slice(-300)}memoSave()}
+function memoBrief(market){const list=memoFor(market);if(list.length){list.forEach(c=>c.hits=(c.hits||0)+1);memoSave()}const short=memoShortText();return [list.length?'长期记忆：'+list.map(c=>`${c.id} ${c.text}`).join('；'):'',short?'近期：'+short:''].filter(Boolean).join('\n')}
+function addMemo(text,market){const clean=(text||'').trim().slice(0,300);if(!clean){$('memoStatus').textContent='请输入要保存的记忆。';return false}memo.cards.push({id:'MEMO-'+memoNext++,role:memo.identity?.role||'',market:(market||'').trim(),text:clean,source:'手动',createdAt:new Date().toISOString(),enabled:true,hits:0});const saved=memoSave();if(!saved)memo.cards.pop();renderMemo();return saved}
+function memoCapture(text,market){if(!memo.identity||!text)return;if(!/我是|我负责|以后|我们一般|不要|不能|必须|记得/.test(text))return;const clean=text.trim().slice(0,300);if(memo.cards.some(c=>c.text===clean))return;if(confirm('要记到 Memo-0 长期记忆吗？\n\n'+clean))addMemo(clean,market)}
+function renderMemo(){
+  renderIdentity();
+  const q=($('memoSearch')?.value||'').trim();
+  const list=memo.cards.filter(c=>!q||(c.text+c.market+c.role+c.id).includes(q));
+  $('memoList').innerHTML=list.length?list.map(c=>`<div class="memo-card" data-memo="${esc(c.id)}"><div class="memo-actions"><strong>${esc(c.text)}</strong><input type="checkbox" data-memo-enabled ${c.enabled!==false?'checked':''} aria-label="启用"></div><small>${esc(c.id)} · ${esc(c.role||'通用')}${c.market?' · '+esc(c.market):''} · 用过 ${c.hits||0} 次</small><div class="memo-actions"><small>${esc(c.source||'')}</small><button class="btn text" type="button" data-memo-delete>删除</button></div></div>`).join(''):'<p class="empty">还没有记忆。说一句"以后都…"或手动记一条。</p>';
+  $('memoShort').textContent='当前任务的短期记忆：'+(memoShortText()||'还没有，生成或确认脚本后会自动记。');
+}
+$('memoBtn').onclick=()=>{renderMemo();$('memoDialog').showModal()};
+$('closeMemo').onclick=()=>$('memoDialog').close();
+$('memoSwitch').onclick=openIdentity;
+$('memoSearch').addEventListener('input',renderMemo);
+$('memoAdd').onclick=()=>{if(addMemo($('memoText').value,$('memoMarket').value)){$('memoText').value='';$('memoStatus').textContent='已记一条。'}};
+$('memoExport').onclick=()=>{const blob=new Blob([JSON.stringify(memo,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='memo-0.json';a.click();URL.revokeObjectURL(a.href)};
+$('memoList').addEventListener('click',e=>{const del=e.target.closest('[data-memo-delete]');if(!del)return;const id=del.closest('[data-memo]').dataset.memo;memo.cards=memo.cards.filter(c=>c.id!==id);const saved=memoSave();renderMemo();if(saved)$('memoStatus').textContent='已删除 '+id});
+$('memoList').addEventListener('change',e=>{const box=e.target.closest('[data-memo-enabled]');if(!box)return;const id=box.closest('[data-memo]').dataset.memo;const card=memo.cards.find(c=>c.id===id);if(card){card.enabled=box.checked;memoSave()}});
+
+/* ---------- 优质脚本回流 ---------- */
+async function loadQuality(){
+  if(!STUDIO||HOSTED)return;
+  try{
+    const r=await fetch('/api/scripts/quality');const d=await r.json();if(!r.ok)throw new Error(d.error||'读取失败');
+    const items=d.items||[];
+    $('qualityReflow').hidden=false;
+    $('qualitySource').textContent=(d.source||'本地脚本库')+(items.length?' · '+items.length+' 条':'');
+    $('qualityList').innerHTML=items.length?items.map(x=>`<div class="quality-card"><strong>${esc(x.title)}</strong><small>${esc(x.country)} · ${esc(x.platform)} · ${esc(x.variant)} 版 · v${x.revision}</small><small>规则检查 ${x.passed}/${x.total}（${x.score} 分）· 待核实 ${x.claims} 项</small>${x.failed?.length?`<small>未过：${esc(x.failed.join('；'))}</small>`:''}<div class="quality-actions"><button class="btn text" type="button" data-quality-use="topic" data-session="${esc(x.session_id)}" data-variant="${esc(x.variant)}">复用选题</button><button class="btn text" type="button" data-quality-use="structure" data-session="${esc(x.session_id)}" data-variant="${esc(x.variant)}">复用结构</button><button class="btn text" type="button" data-quality-use="fission" data-session="${esc(x.session_id)}" data-variant="${esc(x.variant)}">裂变</button></div></div>`).join(''):'<p class="empty">脚本库里还没有通过规则检查的脚本。</p>';
+  }catch(_){$('qualityReflow').hidden=true}
+}
+$('qualityList').addEventListener('click',async e=>{
+  const b=e.target.closest('[data-quality-use]');if(!b)return;
+  try{await openSavedScript(b.dataset.session,b.dataset.variant);if(scriptSession?.id!==b.dataset.session||selectedVariant!==b.dataset.variant)throw new Error('母稿打开失败，请重新选择。');$('deriveMode').value=b.dataset.qualityUse;openDerive()}
+  catch(err){$('opsStatus').textContent=err.message}
+});
+
+/* ---------- 启动 ---------- */
+if(localAuthoring){if(memo.identity){renderMemo()}else{openIdentity()}}
+
+$('taskForm').onsubmit=e=>{e.preventDefault();let t=ops.tasks.find(t=>t.id===opsEditing);const created=!t;if(!t){t=opsBlank($('taskTitleInput').value.trim());ops.tasks.push(t)}Object.assign(t,{title:$('taskTitleInput').value.trim(),country:$('taskMarketInput').value,platform:$('taskPlatformInput').value,owner:$('taskOwnerInput').value.trim(),due:$('taskDueInput').value,brief:$('taskBriefInput').value.trim(),reference:$('taskReferenceInput').value.trim(),referenceConfirmed:$('taskReferenceConfirmed').checked});ops.active=t.id;memoCapture(t.brief,t.country);if(opsSave()){$('taskDialog').close();$('opsStatus').textContent=created?'任务已创建 · '+t.id:'任务信息已保存';$('askTopic').value=t.title;$('askMarket').value=t.country;$('askPlatform').value=t.platform;opsRender('topics');setView('topics')}};
 $('activeTaskSelect').onchange=e=>opsActivate(e.target.value,document.body.dataset.view);$('editTaskButton').onclick=()=>opsOpenTask(ops.active);
 $('taskSearch').oninput=opsOverview;
 document.addEventListener('click',e=>{const create=e.target.closest('[data-new-task]');if(create)opsOpenTask();const open=e.target.closest('[data-open-task]');if(open)opsActivate(open.dataset.openTask);const filter=e.target.closest('[data-task-filter],[data-stage-filter]');if(filter){opsFilter=filter.dataset.taskFilter||filter.dataset.stageFilter;opsOverview()}});
@@ -1309,9 +1510,9 @@ function opsAssessmentContext(){const t=opsTask();if(HOSTED||!$('bindTaskReview'
 function opsRecordAssessment(context,assessment){if(!context)return;const t=ops.tasks.find(t=>t.id===context.taskId);if(!t)return;const r=t.records[context.key]||{};const next={...assessment,reportId:context.reportId};if(JSON.stringify(r.assessment)!==JSON.stringify(next)){r.assessment=next;r.decision=null;opsArchivePublication(r);t.records[context.key]=r;opsSave();opsHumanReview()}}
 function opsHumanReview(){const t=opsTask(),r=opsRecord(t),contextKey=t?.id+':'+opsKey(t);if(contextKey!==opsReviewKey){opsReviewKey=contextKey;$('bindTaskReview').checked=false;$('reviewerConfirm').checked=false;$('reviewerName').value='';$('reviewerNote').value=''}$('bindTaskReview').disabled=!t||!r.confirmed;if($('bindTaskReview').disabled)$('bindTaskReview').checked=false;
   $('humanReviewStatus').textContent=r.assessment?`${r.assessment.file} · ${r.assessment.score} 分 · ${r.assessment.verdict}${r.decision==='pass'?' · 已记录终审通过':r.decision==='reject'?' · 已退回修改':''}`:'先将当前任务的成片关联并完成评测，再记录终审。';
-  $('approveTask').disabled=!r.assessment||r.assessment.verdict!=='通过';$('rejectTask').disabled=!r.assessment;
+  $('approveTask').disabled=!r.confirmed||!r.assessment||r.assessment.verdict!=='通过';$('rejectTask').disabled=!r.confirmed||!r.assessment;
 }
-function opsDecide(decision){const t=opsTask(),r=opsRecord(t),name=$('reviewerName').value.trim(),note=$('reviewerNote').value.trim();if(!t||!r.assessment)return;if(!name){$('reviewerName').reportValidity();return}if(decision==='pass'&&(r.assessment.verdict!=='通过'||!$('reviewerConfirm').checked)){$('humanReviewStatus').textContent='请先完成评测疑点处理，并确认已完整观看与核对成片。';return}if(decision==='reject'&&!note){$('humanReviewStatus').textContent='退回修改时请填写审核意见。';return}Object.assign(r,{decision,reviewer:name,reviewNote:note,reviewedAt:new Date().toISOString()});if(decision==='reject')opsArchivePublication(r);t.records[opsKey(t)]=r;if(opsSave()){opsHumanReview();if(decision==='pass')setView('publish')}}
+function opsDecide(decision){const t=opsTask(),r=opsRecord(t),name=$('reviewerName').value.trim(),note=$('reviewerNote').value.trim();if(!t||!r.confirmed||!r.assessment)return;if(!name){$('reviewerName').reportValidity();return}if(decision==='pass'&&(r.assessment.verdict!=='通过'||!$('reviewerConfirm').checked)){$('humanReviewStatus').textContent='请先完成评测疑点处理，并确认已完整观看与核对成片。';return}if(decision==='reject'&&!note){$('humanReviewStatus').textContent='退回修改时请填写审核意见。';return}Object.assign(r,{decision,reviewer:name,reviewNote:note,reviewedAt:new Date().toISOString()});if(decision==='reject')opsArchivePublication(r);t.records[opsKey(t)]=r;if(opsSave()){opsHumanReview();if(decision==='pass')setView('publish')}}
 $('humanReviewForm').onsubmit=e=>{e.preventDefault();opsDecide('pass')};$('rejectTask').onclick=()=>opsDecide('reject');
 function opsPublish(){const t=opsTask(),r=opsRecord(t),ready=r.decision==='pass';$('publishVersion').textContent=t?.variant?`${t.id} · v${t.revision} / ${t.variant}`:'';
   $('publishGate').innerHTML=ready?'终审已记录，人工发布后填写作品链接。':'<span>当前版本尚未完成终审</span><button class="btn text" type="button" id="goReviewGate">前往审核 →</button>';if($('goReviewGate'))$('goReviewGate').onclick=()=>setView('evaluate');
@@ -1321,7 +1522,7 @@ function opsPublish(){const t=opsTask(),r=opsRecord(t),ready=r.decision==='pass'
   const pubs=ops.tasks.flatMap(t=>Object.entries(t.records).flatMap(([key,v])=>[...(v.publicationHistory||[]),...(v.publication?[v.publication]:[])].map(publication=>({t,key,...publication}))));
   $('publicationList').innerHTML=pubs.map(p=>`<div class="publication-row"><div><strong>${esc(p.title)}</strong><small>${esc(p.t.platform)} · ${esc(p.account)} · ${esc(p.time.replace('T',' '))}</small></div><a href="${esc(opsReference(p.url))}" target="_blank" rel="noopener">查看作品 ↗</a></div>`).join('')||'<p class="ops-empty compact">暂无发布登记</p>';
 }
-$('publishForm').onsubmit=e=>{e.preventDefault();const t=opsTask(),r=opsRecord(t);if(r.decision!=='pass')return;const url=opsReference($('publishUrl').value);if(!url){$('publishStatus').textContent='请输入有效的 http 或 https 作品链接。';return}r.publication={title:$('publishTitle').value.trim(),tags:$('publishTags').value.trim(),account:$('publishAccount').value.trim(),time:$('publishTime').value,url};t.records[opsKey(t)]=r;if(opsSave()){opsPublish();$('publishStatus').textContent='发布登记已保存。真实平台数据尚未接入。'}};
+$('publishForm').onsubmit=e=>{e.preventDefault();const t=opsTask(),r=opsRecord(t);if(r.decision!=='pass')return;const url=opsReference($('publishUrl').value);if(!url){$('publishStatus').textContent='请输入有效的 http 或 https 作品链接。';return}r.publication={title:$('publishTitle').value.trim(),tags:$('publishTags').value.trim(),account:$('publishAccount').value.trim(),time:$('publishTime').value,url};t.records[opsKey(t)]=r;t.state='已交付';if(opsSave()){opsPublish();$('publishStatus').textContent='发布登记已保存。真实平台数据尚未接入。'}};
 function opsAssets(){const query=$('assetSearch').value.trim().toLowerCase(),clips=Object.entries(R.clips).filter(([id,c])=>(id+' '+c.title+' '+c.location+' '+c.tags.join(' ')).toLowerCase().includes(query));$('assetTotal').textContent=clips.length+' / '+Object.keys(R.clips).length+' 段素材';$('assetCollection').innerHTML=clips.map(([id,c])=>`<button type="button" class="asset-item" data-preview-clip="${esc(id)}"><div><img src="${thumb(id)}" alt="" loading="lazy"><span>${Number(c.clip_s).toFixed(1)}s</span></div><strong>${esc(c.title)}</strong><small>${esc(c.location)} · ${esc(c.tags.slice(0,3).join(' / '))}</small></button>`).join('')||'<p class="ops-empty">没有匹配的素材</p>'}
 $('assetSearch').oninput=opsAssets;$('assetRules').onclick=openSkill;$('assetCollection').onclick=e=>{const b=e.target.closest('[data-preview-clip]');if(b)previewMaterial(b.dataset.previewClip)};
 

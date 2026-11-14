@@ -63,3 +63,40 @@ def rewrite(session, variant_id, instruction):
             "原稿": original, "修改意见": instruction, "事实库": load("facts.json"), "素材词表": vocabulary()}
     data, usage = llm.script_json(system, json.dumps(user, ensure_ascii=False))
     return {"variant": validate(data.get("variant"), variant_id), "usage": usage}
+
+
+def derive(session, variant_id, mode, kept="", changes=""):
+    """基于母稿给出 3 个复用/裂变方向；不改动母稿。"""
+    modes = {"topic": "复用选题", "structure": "复用结构", "fission": "裂变新选题"}
+    if mode not in modes:
+        raise ValueError("请选择复用或裂变方式。")
+    original = next((v for v in session["scripts"]["variants"] if v["id"] == variant_id), None)
+    if original is None:
+        raise ValueError("找不到母稿，请刷新脚本库。")
+    kept = text(kept or "", "必留要素", 1000, False)
+    changes = text(changes or "", "变化条件", 1000, False)
+    rules = {"topic": "沿用母稿的路线或核心问题，换人群、切入角度、时长或利益点。",
+             "structure": "保留母稿有依据的叙事顺序（问题开头→体验→利益点→行动引导），换路线、场景与事实。",
+             "fission": "按人群、痛点、场景、路线、营销节点或表现形式展开 3 个差异明显的方向。"}[mode]
+    system = (DATA / "script_prompt.md").read_text(encoding="utf-8")
+    system += f'''
+
+现在只做选题方向，不写完整脚本。方式：{modes[mode]}。规则：{rules}
+只输出 JSON：{{"directions": [{{"title": "不超过 30 字的选题", "audience": "面向谁", "angle": "切入角度", "difference": "和母稿的区别", "keep": "必须保留的要素", "check": "需要重新核实的事实，没有就写无"}}]}}
+必须给 3 个差异明确的方向，不能只换几个词。不要编造价格、班次、优惠和素材授权；没有依据的写"待核实"。'''
+    user = {"母稿题目": session["title"], "国家": session["country"], "平台": session["platform"],
+            "母稿": original, "必留要素": kept, "变化条件": changes,
+            "事实库": load("facts.json"), "素材词表": vocabulary()}
+    data, usage = llm.script_json(system, json.dumps(user, ensure_ascii=False))
+    items = data.get("directions")
+    if not isinstance(items, list) or len(items) != 3:
+        raise ValueError("模型没有返回 3 个方向，请再试一次。")
+    clean = []
+    for item in items:
+        if not isinstance(item, dict):
+            raise ValueError("方向格式不正确，请再试一次。")
+        clean.append({key: text(item.get(key, ""), label, limit, key == "title")
+                      for key, label, limit in [("title", "方向题目", 60), ("audience", "人群", 200),
+                                                ("angle", "角度", 200), ("difference", "区别", 200),
+                                                ("keep", "必留", 200), ("check", "待核实", 200)]})
+    return {"mode": mode, "directions": clean, "usage": usage}

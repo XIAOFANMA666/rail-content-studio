@@ -136,16 +136,19 @@ def write_scripts_llm(topic, market, platform, facts, lib, brief=""):
 
 
 def check_script(variant, facts):
+    disabled = {r["id"] for r in load("rules.json")["rules"] if r.get("enabled") is False}
     lines = variant["lines"]
     text = " ".join(l["en"].lower() for l in lines)
     checks = []
     first = lines[0]["en"].lower()
     early = re.search(r"\d+%|code|save|off|uk\d+", first)
-    checks.append({"name": "开头不放利益点（R1）", "ok": not early, "msg": "第 1 句没有价格或优惠" if not early else f"第 1 句出现利益点：{lines[0]['en']}"})
+    if "R1" not in disabled:
+        checks.append({"name": "开头不放利益点（R1）", "ok": not early, "msg": "第 1 句没有价格或优惠" if not early else f"第 1 句出现利益点：{lines[0]['en']}"})
     long = [l["en"] for l in lines if len(l["en"].split()) > 14]
     checks.append({"name": "每句不超过 14 个词", "ok": not long, "msg": "都在 14 个词以内" if not long else f"{len(long)} 句超长：{long[0]}"})
     pct = [l["en"] for l in lines if "%" in l["en"] and not re.search(r"up to|extra|from", l["en"].lower())]
-    checks.append({"name": "价格写 up to / extra（R4）", "ok": not pct, "msg": "价格表述合规" if not pct else f"有价格没写 up to：{pct[0]}"})
+    if "R4" not in disabled:
+        checks.append({"name": "价格写 up to / extra（R4）", "ok": not pct, "msg": "价格表述合规" if not pct else f"有价格没写 up to：{pct[0]}"})
     conflict = [c["msg"] for c in facts["conflicts"] if all(w in text for w in c["if_all"])]
     claims = variant.get("claims") or []
     msg = conflict[0] if conflict else "没有和事实库冲突的说法"
@@ -319,6 +322,15 @@ def save_result(result):
 
 
 # ---------------- 人工换镜头后重写草稿 ----------------
+def rule_results(rules, hits):
+    manual_check = {"ok": None, "msg": "待人工核实"}
+    return [
+        {"id": rule["id"], "name": rule["name"], "why": rule.get("why", ""),
+         **hits.get(rule["id"], manual_check)}
+        for rule in rules if rule.get("enabled") is not False
+    ]
+
+
 def redraft(swaps_path, draft_root):
     """swaps.json：{"<句子序号>": {"<镜头序号>": "<素材编号>"}}。只换画面，配音和字幕不动。"""
     t0 = time.time()
@@ -339,8 +351,7 @@ def redraft(swaps_path, draft_root):
                          "coverage": cand["coverage"] if cand else 0, "excluded": cand["excluded"] if cand else None})
             n += 1
     hits = check_rules(result["segments"], skill)
-    for r in result["rules"]:
-        r.update(hits[r["id"]])
+    result["rules"] = rule_results(load("rules.json")["rules"], hits)
     result["run_id"] = time.strftime("%Y%m%d%H%M%S")
     # 写回原来那个草稿所在的文件夹（同名覆盖），不另开新草稿
     draft_root = os.path.dirname(result["draft"]["path"]) or draft_root
@@ -546,8 +557,8 @@ def main():
 
     # 规则检查（Demo 规则库：英国 × TikTok）
     hits = check_rules(plan, skill)
-    rule_out = [{"id": r["id"], "name": r["name"], "why": r["why"], **hits[r["id"]]} for r in rules["rules"]]
-    log("检索国家 / 平台规则", f"{script['country']} × {script['platform']}，命中 {len(rule_out)} 条，通过 {sum(r['ok'] for r in rule_out)} 条", t0)
+    rule_out = rule_results(rules["rules"], hits)
+    log("检索国家 / 平台规则", f"{script['country']} × {script['platform']}，命中 {len(rule_out)} 条，通过 {sum(r['ok'] is True for r in rule_out)} 条", t0)
 
     # 剪映草稿
     draft_name = draft_name_for(topic_title) if args.topic else DEMO_DRAFT_NAME

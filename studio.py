@@ -11,6 +11,7 @@ import subprocess
 import sys
 import tempfile
 import threading
+from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import unquote, urlparse
 
@@ -43,8 +44,78 @@ def read_result():
     return result
 
 
+RULES_PATH = os.path.join(ROOT, "data", "rules.json")
+
+
+def read_rules_document():
+    with open(RULES_PATH, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def save_rules_document(body):
+    rules = body.get("rules")
+    if not isinstance(rules, list) or not 1 <= len(rules) <= 200:
+        raise ValueError("规则要是一个 1–200 条的列表。")
+    clean, seen = [], set()
+    for i, item in enumerate(rules):
+        if not isinstance(item, dict):
+            raise ValueError(f"第 {i+1} 条规则格式不正确。")
+        rid = str(item.get("id") or f"R{i+1}").strip()
+        if not re.fullmatch(r"[A-Za-z0-9_-]{1,24}", rid):
+            raise ValueError(f"第 {i+1} 条规则编号须为 1–24 位字母、数字、下划线或短横线。")
+        if not isinstance(item.get("enabled", True), bool):
+            raise ValueError(f"第 {i+1} 条规则的 enabled 须为 true 或 false。")
+        name = str(item.get("name") or "").strip()[:80]
+        if not name:
+            raise ValueError(f"第 {i+1} 条规则缺少名称。")
+        if rid in seen:
+            raise ValueError(f"规则编号重复：{rid}")
+        seen.add(rid)
+        clean.append({
+            "id": rid, "name": name,
+            "why": str(item.get("why") or "")[:300],
+            "scope": str(item.get("scope") or "英国 × TikTok")[:80],
+            "category": str(item.get("category") or "团队规则")[:40],
+            "source": str(item.get("source") or "")[:500],
+            "check": str(item.get("check") or "")[:500],
+            "suggestion": str(item.get("suggestion") or "")[:300],
+            "enabled": bool(item.get("enabled", True)),
+        })
+    with lock:
+        previous = read_rules_document()
+        now = datetime.now(timezone.utc)
+        doc = {"scope": previous["scope"],
+               "version": max(int(now.timestamp() * 1000), int(previous.get("version") or 0) + 1),
+               "updated_at": now.isoformat(), "rules": clean}
+        script_store.atomic_json(RULES_PATH, doc)
+    return doc
+
+
 def read_script_session():
     return script_store.current(OUT)
+
+
+def quality_candidates():
+    """脚本库里的回流候选：按规则检查通过率排序，真实表现等复盘接入。"""
+    library = script_store.read(OUT)
+    items = []
+    for session in library.get("sessions", []):
+        for variant in session.get("scripts", {}).get("variants", []):
+            checks = variant.get("checks") or []
+            if not checks:
+                continue
+            passed = sum(1 for check in checks if check.get("ok"))
+            items.append({
+                "session_id": session["id"], "variant": variant["id"],
+                "title": session.get("title", ""), "country": session.get("country", ""),
+                "platform": session.get("platform", ""), "revision": session.get("revision", 1),
+                "created_at": session.get("created_at", ""), "score": round(100 * passed / len(checks)),
+                "passed": passed, "total": len(checks),
+                "failed": [c.get("msg", "") for c in checks if not c.get("ok")][:3],
+                "claims": len(variant.get("claims") or []), "lines": len(variant.get("lines") or []),
+            })
+    items.sort(key=lambda item: (item["score"], item["created_at"]), reverse=True)
+    return {"items": items[:8], "source": "本地脚本库规则检查；真实播放与采用数据待接复盘"}
 
 
 def page():
@@ -111,6 +182,13 @@ class H(BaseHTTPRequestHandler):
         if path == "/api/status":
             with lock:
                 return self._send(200, dict(job))
+        if path == "/api/scripts/quality":
+            return self._send(200, quality_candidates())
+        if path == "/api/rules":
+            try:
+                return self._send(200, read_rules_document())
+            except (OSError, ValueError):
+                return self._send(500, {"error": "规则库读取失败。"})
         if path == "/api/keys":
             return self._send(200, {"deepseek": bool(llm.model_config("script")["api_key"]), "minimax": llm.has("MINIMAX_API_KEY"), "video": bool(llm.model_config("video")["api_key"]),
                                     "models": llm.models_in_use()})
@@ -210,7 +288,21 @@ class H(BaseHTTPRequestHandler):
                 return self._send(400, {"error": str(e)})
             except Exception:
                 return self._send(500, {"error": "评测失败，请检查依赖和服务配置后重试。"})
-        if path in ("/api/scripts", "/api/produce", "/api/scripts/open", "/api/scripts/save", "/api/scripts/rewrite", "/api/scripts/import"):
+        if path == "/api/rules":
+            if self.headers.get("Origin") not in (f"http://localhost:{PORT}", f"http://127.0.0.1:{PORT}"):
+                return self._send(403, {"error": "请从本地工作台操作。"})
+            try:
+                if not 0 < int(self.headers.get("Content-Length", 0)) <= 524288:
+                    raise ValueError("规则请求过大或为空。")
+                body = self._json()
+                if not isinstance(body, dict):
+                    raise ValueError("规则请求格式不正确。")
+                return self._send(200, save_rules_document(body))
+            except (ValueError, TypeError) as e:
+                return self._send(400, {"error": str(e)})
+            except OSError:
+                return self._send(500, {"error": "规则库写入失败。"})
+        if path in ("/api/scripts", "/api/produce", "/api/scripts/open", "/api/scripts/save", "/api/scripts/rewrite", "/api/scripts/import", "/api/scripts/derive"):
             if self.headers.get("Origin") not in (f"http://localhost:{PORT}", f"http://127.0.0.1:{PORT}"):
                 return self._send(403, {"error": "请从本地工作台操作。"})
             try:
@@ -226,6 +318,17 @@ class H(BaseHTTPRequestHandler):
                     return self._send(409, {"error": "已有生成任务正在进行。"})
                 job.update(running=True, log=[], error=None)
             try:
+                if path == "/api/scripts/derive":
+                    if not llm.model_config("script")["api_key"]:
+                        raise ValueError("请先配置脚本模型密钥。")
+                    session = next((item for item in script_store.read(OUT)["sessions"]
+                                    if item["id"] == body.get("session_id")), None)
+                    if session is None:
+                        raise ValueError("找不到母稿，请刷新脚本库。")
+                    result = script_edit.derive(session, body["variant"], body.get("mode"), body.get("kept"), body.get("changes"))
+                    with lock:
+                        job["running"] = False
+                    return self._send(200, result)
                 if path == "/api/scripts":
                     topic = (body.get("topic") or "").strip()[:80]
                     if not topic:
