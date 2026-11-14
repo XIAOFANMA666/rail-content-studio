@@ -20,7 +20,7 @@ def load_env():
                 env[k.strip()] = v.strip()
     for k in ("DEEPSEEK_API_KEY", "DEEPSEEK_VIDEO_MODEL", "MINIMAX_API_KEY", "MINIMAX_BASE_URL", "MINIMAX_GROUP_ID", "MINIMAX_TTS_MODEL",
               "LLM_BASE_URL", "LLM_API_KEY", "SCRIPT_BASE_URL", "SCRIPT_API_KEY", "SCRIPT_MODEL",
-              "VIDEO_BASE_URL", "VIDEO_API_KEY", "VIDEO_MODEL"):
+              "VIDEO_BASE_URL", "VIDEO_API_KEY", "VIDEO_MODEL", "PEXELS_API_KEY"):
         if os.environ.get(k):
             env[k] = os.environ[k]
     return env

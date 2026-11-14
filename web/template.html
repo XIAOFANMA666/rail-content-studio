@@ -76,6 +76,24 @@
 @media(max-width:640px){html{overflow-x:clip}}
 @media(prefers-reduced-motion:reduce){.workspace,.modal-card{animation:none}html{scroll-behavior:auto}}
 
+
+.ml-intro{display:flex;justify-content:space-between;gap:24px;align-items:center;border-bottom:1px solid var(--line);padding:0 0 24px;margin-bottom:20px}
+.ml-intro h2{font-size:26px;letter-spacing:-.6px;margin:4px 0 8px}.ml-intro p,.ml-intro a{font-size:13px;color:var(--muted);margin:0}
+.ml-config{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 24px}.ml-config span{font-size:12px;padding:4px 9px;border:1px solid var(--line);border-radius:5px}
+.ml-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin:20px 0}.ml-card{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel)}
+.ml-card>button{display:block;border:0;background:var(--panel-2);padding:0;width:100%;position:relative;text-align:left;min-height:140px}.ml-card img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}.ml-placeholder{display:grid;place-items:center;aspect-ratio:16/9;color:var(--muted);font-size:13px}
+.ml-card-copy{padding:16px}.ml-card h3{font-size:15px;margin:0 0 8px;overflow-wrap:anywhere}.ml-card p{font-size:12px;color:var(--muted);margin:6px 0;overflow-wrap:anywhere}.ml-card a{font-size:12px}.ml-card .btn{margin-top:12px}
+.ml-section-heading,.ml-pages{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:24px}.ml-section-heading h3{font-size:18px}
+.ml-filter{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.ml-filter label{font-size:12px;color:var(--muted);display:grid;gap:7px}
+.ml-filter input,.ml-filter select{width:100%;padding:10px;border:1px solid var(--line);border-radius:6px;color:var(--fg);background:var(--panel);min-width:0}
+.ml-task{border-block-end:1px solid var(--line);padding:20px 0}.ml-task h3{font-size:16px;margin:0 0 10px}.ml-task p{font-size:12px;color:var(--muted);overflow-wrap:anywhere}.ml-task pre{font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere}.ml-task .btn{margin-right:8px}
+.ml-dialog{width:min(1080px,calc(100vw - 40px));max-height:90vh;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:28px;overflow:auto}.ml-dialog::backdrop{background:#0008}
+.ml-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px}.ml-dialog header{display:flex;justify-content:space-between;gap:16px;align-items:center}.ml-dialog h2{font-size:23px;margin:0 0 16px}.ml-dialog h3{font-size:16px;margin:22px 0 10px}.ml-dialog p,.ml-dialog li{font-size:13px;line-height:1.8;overflow-wrap:anywhere}
+.ml-dialog video{width:100%;max-height:380px;background:#111;border-radius:6px}.ml-frames{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.ml-frame{padding:0;border:0;background:none;text-align:left;font-size:11px;color:var(--muted)}.ml-frame img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+.ml-detail-facts{font-size:12px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}.ml-decision{border-top:1px solid var(--line);margin-top:22px;padding-top:18px}.ml-decision .ops-form{gap:12px}.ml-decision .ops-form label{min-width:0}.ml-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.ml-note{padding:10px 12px;background:var(--panel-2);border-radius:6px;color:var(--muted)}
+@media(max-width:1100px){.ml-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.ml-filter{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:700px){.ml-grid,.ml-detail-grid{grid-template-columns:1fr}.ml-filter{grid-template-columns:repeat(2,minmax(0,1fr))}.ml-dialog{padding:18px;width:calc(100vw - 20px)}.ml-intro{align-items:start;flex-direction:column}.ml-intro h2{font-size:22px}#mlTabs{flex-wrap:wrap}}
+
 </style>
 </head>
 <body>
@@ -212,7 +230,49 @@
       </div>
     </section>
     <section id="publishView" class="workspace" hidden aria-label="发布管理"><div class="publish-grid"><section><div class="section-head"><h2>发布准备</h2><span id="publishVersion" class="mono"></span></div><div id="publishGate" class="handoff-note"></div><form id="publishForm" class="ops-form"><label class="wide">发布标题<input id="publishTitle" required maxlength="200"></label><label class="wide">话题标签<input id="publishTags" maxlength="500" placeholder="#TrainTravel #UKTravel"></label><label>发布账号<input id="publishAccount" required maxlength="100"></label><label>发布时间<input type="datetime-local" id="publishTime" required></label><label class="wide">作品链接<input type="url" id="publishUrl" required placeholder="https://" maxlength="2000"></label><label class="checkbox-field wide"><input id="publishedManually" type="checkbox" required>已由运营在目标平台人工发布</label><div class="wide ops-form-actions"><button class="btn primary" id="savePublication" type="submit">保存发布登记</button></div></form><p id="publishStatus" class="empty" role="status"></p></section><aside><h2>交接内容</h2><dl class="handoff-facts" id="publishFacts"></dl><div class="planned-capability"><h3>标题标签推荐</h3><span class="capability-tag">计划功能</span><p>当前支持人工填写；AI 推荐与平台热度数据尚未接入。</p></div></aside></div><section class="publication-history"><div class="section-head"><h2>发布记录</h2><span>人工登记 · 未向平台核验</span></div><div id="publicationList"></div></section></section>
-    <section id="assetsView" class="workspace" hidden aria-label="内容资产"><div class="asset-toolbar"><input type="search" id="assetSearch" placeholder="搜索素材名称、地点、标签" aria-label="搜索内容资产"><button class="btn" type="button" id="assetRules">剪辑规则与来源</button><span id="assetTotal"></span></div><div id="assetCollection" class="asset-collection"></div></section>
+    <section id="assetsView" class="workspace" hidden aria-label="内容资产">
+<div id="mlPanel" class="ml-panel" hidden>
+  <div class="ml-intro"><div><span class="eyebrow">MEDIA LIBRARY</span><h2>从素材需求到生产资产</h2><p>寻找实拍、核对内容、人工审批，再用于粗剪。</p></div><a href="https://www.pexels.com" target="_blank" rel="noopener">视频来源：Pexels ↗</a></div>
+  <div id="mlConfig" class="ml-config"></div>
+  <div class="seg-tabs" id="mlTabs" aria-label="素材库工作区">
+    <button type="button" data-ml-tab="find" class="on">找素材</button>
+    <button type="button" data-ml-tab="pending">待审批</button>
+    <button type="button" data-ml-tab="approved">正式素材库</button>
+    <button type="button" data-ml-tab="tasks">搜索与分析任务</button>
+  </div>
+  <p id="mlStatus" role="status" aria-live="polite"></p>
+  <section id="mlFind">
+    <form id="mlSearchForm" class="ops-form">
+      <label class="wide">素材需求<textarea id="mlQuery" rows="3" maxlength="500" required placeholder="例如：瑞士雪山间行驶的列车，适合旅行短视频，避免明显品牌"></textarea></label>
+      <label>期望地点<input id="mlPlace" maxlength="100" placeholder="例如：瑞士；搜索条件不等于地点已确认"></label>
+      <label>画面方向<select id="mlOrientation"><option value="">不限</option><option value="portrait">竖屏</option><option value="landscape">横屏</option><option value="square">方形</option></select></label>
+      <label>最低视频宽度<select id="mlWidth"><option value="720">720 像素</option><option value="1080">1080 像素</option><option value="0">不限</option></select></label>
+      <label>最短素材时长（秒）<input id="mlDuration" type="number" min="0.1" max="180" step="0.1" value="2" required></label>
+      <label class="wide">英文搜索词（可选，每行一组，最多三组）<textarea id="mlQueries" rows="2" maxlength="500" placeholder="留空时使用已配置的脚本模型拆解需求；无模型时按本地词表转换"></textarea></label>
+      <label class="checkbox-field wide"><input type="checkbox" id="mlAuto" checked>搜索后自动下载并分析前五条候选（配置模型时会产生模型费用）</label>
+      <div class="wide"><p class="note">每次最多收集二十条，单条不超过 100 MB、三分钟。分析抽样八帧；未经人工批准不会进入正式素材库。</p><button class="btn primary" id="mlSearchGo" type="submit">开始找素材</button></div>
+    </form>
+    <div class="ml-section-heading"><h3>本次候选</h3><button type="button" class="btn small" id="mlPendingGo">查看全部待审批</button></div>
+    <div id="mlFound" class="ml-grid"></div>
+  </section>
+  <section id="mlBrowse" hidden>
+    <form id="mlFilterForm" class="ml-filter">
+      <label>搜索<input id="mlFilterQuery" type="search" maxlength="500" placeholder="名称、地点，或“雪山火车”"></label>
+      <label>地点<input id="mlFilterPlace" maxlength="100" placeholder="已确认地点"></label>
+      <label>方向<select id="mlFilterOrientation"><option value="">全部方向</option><option value="portrait">竖屏</option><option value="landscape">横屏</option><option value="square">方形</option></select></label>
+      <label>最低宽度<select id="mlFilterWidth"><option value="">不限</option><option value="720">720px</option><option value="1080">1080px</option></select></label>
+      <label>最短秒数<input id="mlFilterDuration" type="number" min="0" max="180" step="0.1" value="0"></label>
+      <label>风险<select id="mlFilterRisk"><option value="">全部</option><option value="flagged">有已记录风险</option></select></label>
+      <label>素材范围<select id="mlFilterSource"><option value="">全部来源</option><option value="legacy">历史素材</option><option value="new">新增素材</option></select></label>
+      <label id="mlStateLabel">状态<select id="mlFilterState"><option value="approved">已入库</option><option value="disabled">已停用</option><option value="rejected">已驳回</option></select></label>
+      <button class="btn" type="submit">查询</button>
+    </form>
+    <p id="mlCount" class="note"></p><div id="mlResults" class="ml-grid"></div>
+    <div class="ml-pages"><button class="btn" id="mlPrev" type="button">上一页</button><button class="btn" id="mlNext" type="button">下一页</button></div>
+  </section>
+  <section id="mlTasks" hidden><p class="note">任务保存在本机。取消会保留已取得的候选；重启后未完成任务标为中断，点击重试后才重新执行。</p><div id="mlTaskList"></div></section>
+</div>
+<div id="mlLegacy"><div class="asset-toolbar"><input type="search" id="assetSearch" placeholder="搜索素材名称、地点、标签" aria-label="搜索内容资产"><button class="btn" type="button" id="assetRules">剪辑规则与来源</button><span id="assetTotal"></span></div><div id="assetCollection" class="asset-collection"></div></div></section>
     <section id="analyticsView" class="workspace" hidden aria-label="数据复盘"><div class="analytics-scope"><span class="capability-tag">模拟数据</span><span>现有 CSV 演示记录；尚未关联本机任务的真实平台表现</span><button class="btn text" type="button" data-view="topics">进入下一轮选题 →</button></div><div class="works-toolbar"><a class="btn" href="docs/platform-data.html" target="_blank" rel="noopener">真实数据接入说明 ↗</a></div><div id="analyticsContent"></div></section>
     <section id="connectionsView" class="workspace" hidden aria-label="流程与连接">
       <div class="connection-intro"><h2>一条作品怎么完成</h2><span id="connectionMode"></span></div>
@@ -281,7 +341,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('infoTooltip').h
 window.addEventListener('resize',hideInfo);
 document.addEventListener('scroll',()=>{if(infoAnchor&&document.activeElement===infoAnchor)showInfo(infoAnchor);else hideInfo()},true);
 const fmt=t=>{const m=Math.floor(t/60),s=t-m*60;return String(m).padStart(2,'0')+':'+s.toFixed(1).padStart(4,'0')};
-const thumb=id=>`thumbs/${id}.jpg`;
+const thumb=id=>R.clips[id]?.thumbnail||`thumbs/${id}.jpg`;
 const state={gen:false,t:0,playing:false,seg:0,shot:0};
 S.forEach(seg=>seg.shots.forEach(sh=>{sh.orig=sh.clip;sh.orig_src_in=sh.src_in}));
 const voiceName=R.skill.voice.used||R.skill.voice.voice;
@@ -347,6 +407,7 @@ function renderInspect(){
    <div class="seg-head"><div><div class="seg-en">${esc(seg.en)}</div><div class="seg-zh">${esc(seg.zh)}</div></div></div>
    <div class="matching-info">${infoButton('当前分句的素材要求','画面标签：'+seg.need.join('、')+'；地点：'+(seg.places.join('、')||'不限'))}</div>
    ${seg.gap?`<div class="gap">${esc(seg.gap)}</div>`:''}
+   ${STUDIO&&!HOSTED?'<button type="button" class="btn small" data-ml-gap>联网补充本句素材</button>':''}
    ${seg.shots.length>1?`<div class="shot-tabs">${seg.shots.map((x,i)=>`<button data-shot="${i}" class="${i===state.shot?'on':''}">镜头 ${i+1}</button>`).join('')}</div>`:''}
    <div class="cands">${seg.candidates.map(c=>{const sel=c.id===sh.clip;const flags=(c.excluded?`<span class="chip bad">${esc(c.excluded)}</span>`:'')+(c.issues.includes('brand')?'<span class="chip warn">品牌露出</span>':'')+(c.issues.includes('people')?'<span class="chip">有路人（不可辨认）</span>':'');
      return `<div class="cand ${sel?'sel':''} ${c.excluded?'x':''}"><img src="${thumb(c.id)}" alt=""><div><div class="nm">${esc(c.title)}</div><div class="meta">${c.clip_s} 秒 ${infoButton('素材匹配依据','匹配标签：'+(c.matched.join('、')||'无')+'；清晰度：'+c.quality+'/5；匹配度：'+Math.round(c.coverage*100)+'%（基于标签匹配）')}</div>${flags?`<div class="chips">${flags}</div>`:''}</div><div class="pct"><span class="mono">${Math.round(c.coverage*100)}%</span><br>${sel?'<span class="meta">使用中</span>':`<button data-use="${c.id}">${c.excluded?'仍要替换':'替换'}</button>`}</div></div>`}).join('')}</div>`;
@@ -1076,6 +1137,214 @@ if(!HOSTED&&['#script','#skill'].includes(location.hash))({'#script':openScript,
 renderTopicPool();
 renderVideoFeed();
 if(STUDIO&&!HOSTED)refreshVideoFeed();else $('refreshVideoFeed').disabled=true;
+</script>
+<script>
+
+/* Production media workflow. Uses the existing page and player; no frontend dependency. */
+const mlState={tab:'find',offset:0,total:0,items:[],tasks:[],config:null,taskId:null,detail:null,busy:false,loading:false};
+const mlLabels={candidate:'待分析',review:'待审批',needs_info:'待补充',rejected:'已驳回',approved:'已入库',disabled:'已停用',legacy:'历史素材',queued:'排队',running:'处理中',done:'完成',partial:'部分完成',failed:'失败',cancelled:'已取消',interrupted:'已中断'};
+const mlEl=id=>document.getElementById(id);
+function mlMessage(message){mlEl('mlStatus').textContent=message}
+function mlUrl(value){try{const u=new URL(value,location.href);return ['http:','https:'].includes(u.protocol)?u.href:''}catch(_){return ''}}
+async function mlRequest(path,body){
+ const r=await fetch('/api/media/'+path,body===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+ const d=await r.json();if(!r.ok)throw new Error(d.error||'素材操作失败');return d;
+}
+function mlTab(tab){
+ mlState.tab=tab;mlState.offset=0;
+ mlEl('mlFind').hidden=tab!=='find';mlEl('mlBrowse').hidden=!['pending','approved'].includes(tab);mlEl('mlTasks').hidden=tab!=='tasks';
+ mlEl('mlStateLabel').hidden=tab==='pending';
+ mlEl('mlTabs').querySelectorAll('button').forEach(b=>{b.classList.toggle('on',b.dataset.mlTab===tab);b.setAttribute('aria-pressed',String(b.dataset.mlTab===tab))});
+ mlRefresh().catch(e=>mlMessage(e.message));
+}
+function mlCard(m){
+ const technical=m.technical||{}, seconds=technical.duration||m.clip_s;
+ return '<article class="ml-card"><button type="button" data-ml-open="'+esc(m.id)+'" aria-label="查看素材：'+esc(m.title)+'">'+
+ (m.thumbnail?'<img src="'+esc(mlUrl(m.thumbnail))+'" alt="" loading="lazy">':'<span class="ml-placeholder">候选尚未下载 · 查看详情开始分析</span>')+
+ '</button><div class="ml-card-copy"><span class="band">'+esc(mlLabels[m.status]||m.status)+'</span><h3>'+esc(m.title)+'</h3>'+
+ '<p>'+esc((m.places||[]).join(' / ')||m.location||'地点待核实')+(seconds?' · '+Number(seconds).toFixed(1)+' 秒':'')+'</p>'+
+ '<p>'+esc((m.tags||[]).slice(0,6).join(' / ')||'等待分析或人工标注')+'</p>'+
+ ((m.issues||[]).length?'<p class="warn">已记录风险：'+esc(m.issues.join(' / '))+'</p>':'')+
+ '<p>'+esc(m.author||'作者信息待补充')+' · '+esc(m.source||'Pexels')+'</p>'+
+ '<a href="'+esc(mlUrl(m.source_url||m.pexels))+'" target="_blank" rel="noopener">原始来源 ↗</a> '+
+ '<button type="button" class="btn small" data-ml-open="'+esc(m.id)+'">查看与处理</button></div></article>';
+}
+async function mlBrowse(){
+ const params=new URLSearchParams({status:mlState.tab==='pending'?'pending':mlEl('mlFilterState').value,q:mlEl('mlFilterQuery').value,
+ place:mlEl('mlFilterPlace').value,orientation:mlEl('mlFilterOrientation').value,min_width:mlEl('mlFilterWidth').value,
+ min_duration:mlEl('mlFilterDuration').value,risk:mlEl('mlFilterRisk').value,source:mlEl('mlFilterSource').value,offset:mlState.offset});
+ const result=await mlRequest('list?'+params);mlState.items=result.items;mlState.total=result.total;
+ mlEl('mlResults').innerHTML=result.items.map(mlCard).join('')||'<p class="empty">没有符合条件的素材。</p>';
+ mlEl('mlCount').textContent='共 '+result.total+' 条 · '+result.query_basis+(result.query_terms.length?' · 检索词：'+result.query_terms.join(' / '):'');
+ mlEl('mlPrev').disabled=mlState.offset===0;mlEl('mlNext').disabled=mlState.offset+60>=result.total;
+}
+function mlTasksRender(){
+ mlEl('mlTaskList').innerHTML=mlState.tasks.map(t=>'<article class="ml-task"><h3>'+esc(t.request.query||('分析 '+t.request.id))+
+ ' <span class="band">'+esc(mlLabels[t.status]||t.status)+'</span></h3><p>'+esc(t.progress||'')+'</p><p>'+esc(t.created_at||'')+
+ ' · '+(t.candidate_ids||[]).length+' 条候选 · 已处理 '+(t.processed||0)+'</p>'+
+ (t.queries?'<p>搜索词：'+esc(t.queries.join(' / '))+' · '+esc(t.planning||'')+'</p>':'')+
+ ((t.errors||[]).length?'<pre>'+esc(t.errors.map(e=>e.id+'：'+e.message).join('\n'))+'</pre>':'')+
+ '<button class="btn small" type="button" data-ml-task-candidates="'+esc(t.id)+'">查看候选</button>'+
+ (['running','queued'].includes(t.status)?'<button class="btn small" data-ml-cancel="'+esc(t.id)+'" type="button">取消</button>':
+ '<button class="btn small" data-ml-retry="'+esc(t.id)+'" type="button">重试任务</button>')+
+ ((t.usage||[]).length?'<details><summary>实际模型用量</summary><pre>'+esc(JSON.stringify(t.usage,null,2))+'</pre></details>':'')+'</article>').join('')||'<p class="empty">尚无搜索或分析任务。</p>';
+}
+async function mlFound(){
+ const task=mlState.tasks.find(t=>t.id===mlState.taskId);if(!task){mlEl('mlFound').innerHTML='<p class="empty">输入需求开始找素材，候选会显示在这里。</p>';return}
+ const candidates=await Promise.all((task.candidate_ids||[]).map(id=>mlRequest('detail?id='+encodeURIComponent(id))));
+ mlEl('mlFound').innerHTML=candidates.map(mlCard).join('')||'<p class="empty">'+esc(task.progress||'尚未取得候选')+'</p>';
+}
+async function mlRefresh(){
+ if(!STUDIO||HOSTED||mlState.loading)return;mlState.loading=true;
+ try{
+  const [config,tasks]=await Promise.all([mlRequest('config'),mlRequest('tasks')]);mlState.config=config;mlState.tasks=tasks.items;
+  mlEl('mlConfig').innerHTML=[['Pexels 搜索',config.pexels],['搜索词规划模型',config.planner],['画面分析模型',config.vision],['FFmpeg',config.ffmpeg]].map(([name,ready])=>'<span>'+esc(name)+' · '+(ready?'已配置':'未配置')+'</span>').join('');
+  mlEl('mlSearchGo').disabled=!config.pexels||mlState.busy;
+  if(mlState.tab==='tasks')mlTasksRender();
+  else if(mlState.tab==='find')await mlFound();
+  else await mlBrowse();
+ }finally{mlState.loading=false}
+}
+async function mlSyncClips(){
+ const data=await mlRequest('clips');
+ data.clips.forEach(c=>{R.clips[c.id]={...c,clip_s:c.clip_s};});
+ renderInlineLibrary();
+ return data.clips;
+}
+function mlDetailMarkup(m){
+ const a=m.analysis,technical=m.technical||{},pending=['candidate','review','needs_info'].includes(m.status);
+ const file=m.file||m.candidate_file;
+ return '<header><h2>'+esc(m.title)+'</h2><button class="btn" type="button" data-ml-close>关闭</button></header>'+
+ '<p class="note">'+esc(mlLabels[m.status]||m.status)+' · '+esc(m.id)+' · 修订 '+m.revision+'</p><div class="ml-detail-grid"><div>'+
+ (file?'<video id="mlPlayer" src="'+esc(mlUrl(file))+'" controls playsinline preload="metadata"></video>':'<p class="ml-note">尚未下载。点击“下载并分析”取得原片和关键帧。</p>')+
+ '<h3>关键帧 · 点击定位</h3><div class="ml-frames">'+(m.frames||[]).map(f=>'<button type="button" class="ml-frame" data-ml-seek="'+f.second+'"><img src="'+esc(mlUrl(f.file))+'" alt="">'+f.second+'s</button>').join('')+'</div>'+
+ '<h3>来源与规格</h3><p><a href="'+esc(mlUrl(m.source_url))+'" target="_blank" rel="noopener">原始素材 ↗</a> · '+esc(m.author||'作者待补充')+
+ ' · <a href="'+esc(mlUrl(m.license_url||'https://www.pexels.com/license/'))+'" target="_blank" rel="noopener">来源授权说明 ↗</a></p>'+
+ '<div class="ml-detail-facts">'+esc(technical.width?technical.width+' × '+technical.height+' · '+technical.duration.toFixed(2)+'s · '+technical.fps+'fps · '+(technical.bytes/1048576).toFixed(1)+' MB':'等待文件检测')+
+ '</div><p>'+esc(m.place_evidence?'地点依据：'+m.place_evidence:'地点未确认；来源标题和模型推测不能直接作为事实。')+'</p>'+
+ '<p>'+esc((m.technical_warnings||[]).join('；'))+'</p></div><div>'+
+ '<h3>内容分析与初审</h3>'+
+ (a?'<p>'+esc(a.description)+'</p><p><b>需求匹配：'+esc(a.match)+'</b> · '+esc(a.reason)+'</p><p>裁切：'+esc(a.crop_risk)+'</p><p>画质观察：'+esc(a.quality_notes)+'</p>'+
+ '<p>待核实地点建议：'+esc(a.suggested_places.join(' / ')||'无')+'</p>'+
+ '<h3>逐帧观察</h3><ul>'+a.observations.map(o=>'<li>'+o.second+'s · '+esc(o.description)+'</li>').join('')+'</ul>'+
+ '<h3>可见风险</h3>'+(a.risks.length?'<ul>'+a.risks.map(r=>'<li><button class="btn small" type="button" data-ml-seek="'+r.second+'">'+r.second+'s</button> '+esc(r.type)+' · '+esc(r.evidence)+'</li>').join('')+'</ul>':'<p>采样帧中未报告风险；请检查完整原片。</p>'):
+ '<p>'+esc(m.analysis_error||'尚未执行画面分析')+'</p>')+
+ '<p class="ml-note">本次为八帧抽样初审，不代表全片审核。审批人需播放原片，核对来源授权及用途。</p>'+
+ '<h3>处理记录</h3><ul>'+(m.events||[]).map(e=>'<li>'+esc(e.at)+' · '+esc(e.actor)+' · '+esc(e.action)+'<br>'+esc(e.note)+'</li>').join('')+'</ul></div></div>'+
+ '<div class="ml-decision"><h3>'+(pending?'人工审批':'素材使用与管理')+'</h3><form id="mlDecisionForm" class="ops-form">'+
+ (pending?'<label>素材名称<input id="mlTitleEdit" maxlength="200" value="'+esc(m.title)+'" required></label>'+
+ '<label>英文画面标签（逗号分隔）<input id="mlTagsEdit" maxlength="2000" value="'+esc((m.tags||[]).join(', '))+'"></label>'+
+ '<label class="wide">内容描述<textarea id="mlDescEdit" maxlength="2000" rows="2">'+esc(m.description||'')+'</textarea></label>'+
+ '<label>已确认地点（逗号分隔，未知留空）<input id="mlPlacesEdit" maxlength="1000" value="'+esc((m.places||[]).join(', '))+'"></label>'+
+ '<label>人工画质评价<select id="mlQualityEdit">'+[1,2,3,4,5].map(v=>'<option '+(v===(m.quality||3)?'selected':'')+'>'+v+'</option>').join('')+'</select></label>'+
+ '<label class="wide">地点依据<input id="mlPlaceEvidence" maxlength="1000" value="'+esc(m.place_evidence||'')+'" placeholder="来源说明、可验证地标等；无法确认不要填写地点"></label>'+
+ '<label class="wide">来源授权与用途核对说明<textarea id="mlRightsNote" rows="2" maxlength="1000">'+esc(m.rights_note||'')+'</textarea></label>'+
+ '<label class="checkbox-field wide"><input type="checkbox" id="mlWatched">已检查完整原片</label>'+
+ '<label class="checkbox-field wide"><input type="checkbox" id="mlRights">已核对来源授权和本次使用条件</label>':'')+
+ '<label>处理人<input id="mlActor" maxlength="80" required placeholder="填写审批人姓名"></label>'+
+ '<label class="wide">审批意见 / 风险处理依据<textarea id="mlNote" maxlength="2000" rows="2" placeholder="有风险、分析失败、要求补充或驳回时请说明原因"></textarea></label>'+
+ '<p id="mlDecisionStatus" role="status" class="wide"></p><div class="wide ml-actions">'+
+ (pending?'<button class="btn" type="button" data-ml-analyze>下载并分析 / 重新分析</button><button class="btn primary" type="submit" data-ml-decision="approve">批准入库</button><button class="btn" type="submit" data-ml-decision="needs_info">要求补充</button><button class="btn" type="submit" data-ml-decision="reject">驳回</button>':
+ m.status==='approved'?'<button class="btn primary" type="button" data-ml-use>替换当前粗剪镜头</button><button class="btn" type="submit" data-ml-decision="disable">停用</button>':
+ m.status==='disabled'?'<button class="btn" type="submit" data-ml-decision="enable">恢复使用</button>':'')+
+ '</div></form></div>';
+}
+async function mlOpen(id){
+ if(/^m\d+$/.test(id)){previewMaterial(id);return}
+ const m=await mlRequest('detail?id='+encodeURIComponent(id));mlState.detail=m;
+ const dialog=mlEl('mlDialog');dialog.innerHTML=mlDetailMarkup(m);if(!dialog.open)dialog.showModal();
+}
+function mlSplit(value){return value.split(/[,，、\n]+/).map(s=>s.trim()).filter(Boolean)}
+async function mlDecision(action){
+ if(mlState.busy)return;mlState.busy=true;
+ const m=mlState.detail,body={id:m.id,revision:m.revision,action,actor:mlEl('mlActor').value,note:mlEl('mlNote').value};
+ if(action==='approve')Object.assign(body,{title:mlEl('mlTitleEdit').value,description:mlEl('mlDescEdit').value,
+ tags:mlSplit(mlEl('mlTagsEdit').value),places:mlSplit(mlEl('mlPlacesEdit').value),quality:Number(mlEl('mlQualityEdit').value),
+ place_evidence:mlEl('mlPlaceEvidence').value,rights_note:mlEl('mlRightsNote').value,watched:mlEl('mlWatched').checked,rights_confirmed:mlEl('mlRights').checked});
+ const buttons=[...mlEl('mlDialog').querySelectorAll('button')];buttons.forEach(b=>b.disabled=true);
+ try{
+  await mlRequest('decide',body);await mlSyncClips();mlEl('mlDialog').close();
+  mlMessage(action==='approve'?'已入库，可在正式素材库查询并用于粗剪。':'处理已保存');await mlRefresh();
+ }catch(e){mlEl('mlDecisionStatus').textContent=e.message}
+ finally{mlState.busy=false;buttons.forEach(b=>b.disabled=false)}
+}
+function mlPlaceConflict(a,b){
+ if(!a.length||!b.length)return false;
+ const countries=new Set(['英国','法国','意大利','荷兰','瑞士','德国','西班牙','葡萄牙','奥地利','比利时','墨西哥']);
+ const ac=a.filter(p=>!countries.has(p)),bc=b.filter(p=>!countries.has(p));
+ if(ac.length&&bc.length)return !ac.some(p=>bc.includes(p));
+ const an=a.filter(p=>countries.has(p)),bn=b.filter(p=>countries.has(p));
+ return an.length&&bn.length&&!an.some(p=>bn.includes(p));
+}
+async function mlUse(){
+ if(state.running||!state.gen)throw new Error('请先生成或打开粗剪，再选择要替换的镜头');
+ const clips=await mlSyncClips(),c=clips.find(c=>c.id===mlState.detail.id);
+ if(!c)throw new Error('素材已停用或文件缺失');
+ const seg=S[state.seg],shot=seg.shots[state.shot];
+ if(c.clip_s<shot.dur)throw new Error('素材时长不足以覆盖当前镜头，请选择更长素材或重新制作粗剪');
+ if(mlPlaceConflict(seg.places||[],c.places||[]))throw new Error('素材已确认地点与当前分句冲突，不能在这里替换');
+ const need=seg.need||[],matched=need.filter(t=>c.tags.includes(t)),coverage=need.length?matched.length/need.length:0;
+ if(!seg.candidates.some(x=>x.id===c.id))seg.candidates.push({id:c.id,title:c.title,coverage,matched,quality:c.quality,issues:c.issues,excluded:null,clip_s:c.clip_s});
+ shot.clip=c.id;shot.title=c.title;shot.quality=c.quality;shot.issues=c.issues;shot.coverage=coverage;
+ shot.src_in=Math.max(0,Math.min(shot.src_in||0,c.clip_s-shot.dur));shot.excluded=null;vid(c.id);
+ mlEl('mlDialog').close();setView('create');renderAll();
+ mlMessage('已替换预览；请回制作工作台写入剪映工程。');
+}
+if(STUDIO&&!HOSTED){
+ const panel=mlEl('mlPanel');panel.hidden=false;mlEl('mlLegacy').hidden=true;
+ const dialog=document.createElement('dialog');dialog.id='mlDialog';dialog.className='ml-dialog';dialog.setAttribute('aria-label','素材详情与审批');document.body.appendChild(dialog);
+ mlEl('mlTabs').addEventListener('click',e=>{const b=e.target.closest('[data-ml-tab]');if(b)mlTab(b.dataset.mlTab)});
+ panel.addEventListener('click',async e=>{const b=e.target.closest('[data-ml-open]');if(b)try{await mlOpen(b.dataset.mlOpen)}catch(err){mlMessage(err.message)}});
+ mlEl('mlPendingGo').onclick=()=>mlTab('pending');
+ mlEl('mlFilterForm').onsubmit=e=>{e.preventDefault();mlState.offset=0;mlBrowse().catch(err=>mlMessage(err.message))};
+ mlEl('mlPrev').onclick=()=>{mlState.offset=Math.max(0,mlState.offset-60);mlBrowse().catch(err=>mlMessage(err.message))};
+ mlEl('mlNext').onclick=()=>{mlState.offset+=60;mlBrowse().catch(err=>mlMessage(err.message))};
+ mlEl('mlSearchForm').onsubmit=async e=>{
+  e.preventDefault();if(mlState.busy)return;mlState.busy=true;mlEl('mlSearchGo').disabled=true;
+  try{
+   const task=await mlRequest('search',{query:mlEl('mlQuery').value,place:mlEl('mlPlace').value,orientation:mlEl('mlOrientation').value,
+    min_width:Number(mlEl('mlWidth').value),min_duration:Number(mlEl('mlDuration').value),
+    queries:mlEl('mlQueries').value.split('\n').map(s=>s.trim()).filter(Boolean),auto_analyze:mlEl('mlAuto').checked,context:panel.dataset.context||''});
+   mlState.taskId=task.id;mlMessage('搜索已开始，可在任务页查看进度。');
+  }catch(err){mlMessage(err.message)}
+  finally{mlState.busy=false;mlEl('mlSearchGo').disabled=!mlState.config?.pexels;mlRefresh().catch(err=>mlMessage(err.message))}
+ };
+ mlEl('mlTaskList').onclick=async e=>{
+  const b=e.target.closest('button');if(!b||mlState.busy)return;
+  try{
+   if(b.dataset.mlTaskCandidates){mlState.taskId=b.dataset.mlTaskCandidates;mlTab('find');return}
+   if(b.dataset.mlCancel)await mlRequest('cancel',{id:b.dataset.mlCancel});
+   if(b.dataset.mlRetry){const task=await mlRequest('retry',{id:b.dataset.mlRetry});mlState.taskId=task.id}
+   await mlRefresh();
+  }catch(err){mlMessage(err.message)}
+ };
+ dialog.addEventListener('submit',e=>{if(e.target.id==='mlDecisionForm'){e.preventDefault();if(e.submitter?.dataset.mlDecision)mlDecision(e.submitter.dataset.mlDecision)}});
+ dialog.addEventListener('click',async e=>{
+  const b=e.target.closest('button');if(!b)return;
+  if(b.hasAttribute('data-ml-close'))dialog.close();
+  if(b.dataset.mlSeek!==undefined){const p=mlEl('mlPlayer');if(p){p.currentTime=Number(b.dataset.mlSeek);p.play().catch(()=>{})}}
+  if(b.hasAttribute('data-ml-use'))try{await mlUse()}catch(err){mlEl('mlDecisionStatus').textContent=err.message}
+  if(b.hasAttribute('data-ml-analyze')){
+   b.disabled=true;
+   try{await mlRequest('analyze',{id:mlState.detail.id});mlEl('mlDecisionStatus').textContent='已加入分析任务；完成后点击“刷新详情”。';b.textContent='刷新详情';b.removeAttribute('data-ml-analyze');b.setAttribute('data-ml-reopen','')}
+   catch(err){mlEl('mlDecisionStatus').textContent=err.message}finally{b.disabled=false}
+  }else if(b.hasAttribute('data-ml-reopen'))try{await mlOpen(mlState.detail.id)}catch(err){mlEl('mlDecisionStatus').textContent=err.message}
+ });
+ document.querySelectorAll('[data-view="assets"]').forEach(b=>b.addEventListener('click',()=>mlRefresh().catch(e=>mlMessage(e.message))));
+ document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-ml-gap]');if(!b)return;
+  const seg=S[state.seg];mlEl('mlDuration').value=String(Math.max(.1,seg.shots[state.shot]?.dur||2));mlEl('mlQuery').value=seg.zh||seg.en;mlEl('mlPlace').value=(seg.places||[]).join(' ');
+  mlEl('mlQueries').value=(seg.need||[]).length?(seg.need||[]).join(' '):'';panel.dataset.context='分句 '+(seg.i+1)+'：'+seg.en;
+  setView('assets');mlTab('find');
+ });
+ if(document.body.dataset.view==='assets')mlRefresh().catch(e=>mlMessage(e.message));
+ setInterval(()=>{if(!mlEl('assetsView').hidden)mlRefresh().catch(e=>mlMessage(e.message))},4000);
+}else{
+ mlEl('mlPanel').hidden=true;
+ const note=document.createElement('p');note.className='ml-note';note.textContent='联网搜索、分析和审批请在本地工作台使用。此页面仅展示随仓库附带的历史素材。';
+ mlEl('assetsView').prepend(note);
+}
+
 </script>
 </body>
 </html>

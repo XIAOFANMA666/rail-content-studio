@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 
 import llm
+import media_library
 
 DATA = Path(__file__).parent / "data"
 
@@ -12,7 +13,8 @@ def load(name):
 
 
 def vocabulary():
-    clips = load("library.json")["clips"]
+    root = DATA.parent
+    clips = media_library.merge_library(root, root / "output", load("library.json"))["clips"]
     return {"tags": sorted({t for c in clips for t in c["tags"]}),
             "places": sorted({p for c in clips for p in c["places"]})}
 

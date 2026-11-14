@@ -19,6 +19,7 @@ import time
 import pyJianYingDraft as jy
 
 import llm
+import media_library
 from draft_review import review_draft
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -54,7 +55,8 @@ def log(step, msg, t0):
 
 def load(name):
     with open(os.path.join(DATA, name), encoding="utf-8") as f:
-        return json.load(f)
+        value = json.load(f)
+    return media_library.merge_library(ROOT, OUT, value) if name == "library.json" else value
 
 
 def words(text):
@@ -246,7 +248,7 @@ def check_rules(plan, skill):
         "R3": {"ok": not brand, "msg": "没有第三方品牌标识" if not brand else f"{len(brand)} 个镜头露出手机品牌标识"},
         "R4": {"ok": not upto_missing, "msg": "价格都写了 up to / extra" if not upto_missing else "有价格没写 up to"},
         "R5": {"ok": not long_sub, "msg": "字幕已按 42 字符自动断行" if not long_sub else "有字幕超过 42 字符"},
-        "R6": {"ok": not wrong_place, "msg": (f"已排除 {n_excl} 个地点不符的镜头，" if n_excl else "") + "所用镜头地点都和脚本一致" if not wrong_place else "有镜头地点和脚本不符"},
+        "R6": {"ok": not wrong_place, "msg": (f"已排除 {n_excl} 个地点不符的镜头，" if n_excl else "") + "未检测到已标注地点冲突；地点未知的镜头仍需人工确认" if not wrong_place else "有镜头地点和脚本不符"},
     }
 
 
@@ -307,7 +309,8 @@ def draft_name_for(topic):
 def clip_meta(clips, durations):
     return {c["id"]: {"title": c["title"], "file": c["file"], "tags": c["tags"], "location": c["location"],
                       "quality": c["quality"], "issues": c["issues"], "pexels": c["pexels"],
-                      "clip_s": round(durations[c["id"]], 2)} for c in clips}
+                      "clip_s": round(durations[c["id"]], 2), "places": c.get("places", []),
+                      "thumbnail": c.get("thumbnail", "thumbs/" + c["id"] + ".jpg")} for c in clips}
 
 
 def save_result(result):
@@ -334,10 +337,14 @@ def redraft(swaps_path, draft_root):
             if shot["clip"] == cid:
                 continue
             cand = next((c for c in seg["candidates"] if c["id"] == cid), None)
+            if cid not in clips:
+                raise ValueError("素材已停用或缺失，请刷新后重新选择")
             c = clips[cid]
             shot.update({"clip": cid, "title": c["title"], "quality": c["quality"], "issues": c["issues"],
                          "coverage": cand["coverage"] if cand else 0, "excluded": cand["excluded"] if cand else None})
             n += 1
+    durations = {c["id"]: jy.VideoMaterial(os.path.join(ROOT, c["file"])).duration / US for c in lib["clips"]}
+    result["clips"].update(clip_meta(lib["clips"], durations))
     hits = check_rules(result["segments"], skill)
     for r in result["rules"]:
         r.update(hits[r["id"]])
