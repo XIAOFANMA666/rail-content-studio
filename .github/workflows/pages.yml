@@ -31,10 +31,27 @@ jobs:
           APIFY_READ_TOKEN: ${{ secrets.APIFY_READ_TOKEN }}
           APIFY_TASK_ID: ${{ vars.APIFY_TASK_ID }}
         run: python tools/sync_tiktok_feed.py
+      - uses: actions/setup-node@v4
+        if: github.event_name != 'push'
+        with:
+          node-version: '24'
+      - name: Generate editorial suggestions with official DeepSeek Harness
+        if: github.event_name != 'push'
+        continue-on-error: true
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: |
+          if [ -z "$DEEPSEEK_API_KEY" ]; then
+            printf '%s\n' 'No DeepSeek credential configured; publishing collection as usual.'
+            exit 0
+          fi
+          npm install --prefix "$RUNNER_TEMP/rail-harness" --no-audit --no-fund @deepseek-ai/dsh@0.2.2-rc.3
+          DSH_BIN="$RUNNER_TEMP/rail-harness/node_modules/.bin/dsh" python tools/generate_tiktok_ideas.py
       - name: Save public feed snapshot
         if: github.event_name != 'push'
         run: |
           git add data/tiktok-feed.json
+          if [ -f data/tiktok-ideas.json ]; then git add data/tiktok-ideas.json; fi
           if ! git diff --cached --quiet; then
             git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Update daily TikTok feed'
             git push origin HEAD:main

@@ -149,6 +149,8 @@ git pull --ff-only
 - GitHub Actions 在北京时间 09:15 起读取该任务最近成功的结果，去重并按累计播放排序，保存 `data/tiktok-feed.json` 后部署原网址。定时运行可能排队，页面显示实际采集时间；超过 36 小时显示更新延迟。读取失败保留上次数据，工作流失败记录可在 Actions 查看。
 - 只读凭证使用仓库密钥 `APIFY_READ_TOKEN`，任务编号使用变量 `APIFY_TASK_ID`。网页只读已发布 JSON，刷新页面或点击刷新列表不会启动付费采集。公开数据只含原链接、文案、作者名、发布时间和累计指标。首次历史运行与本地视频平台缓存分别保存。
 - 手动同步可在 GitHub Actions 的 `Publish studio and daily TikTok feed` 中运行工作流。其他网页改动推送 main 后自动部署；AIHOT 仍为第二版候选。
+- 「AI改编建议」使用官方 DeepSeek Harness 和仓库 `.dsh/skills/` 下的选题灵感与回流、脚本与编导、内容合规三个 Skill。按采集批次最多生成 5 条，展示新选题、人群、中英开头、画面与待核实项。采用后带入任务标题、创作要求和原片链接，由用户确认保存到当前浏览器。分析依据为公开文案与指标，原片只供参考。
+- 每日同步时使用仓库加密密钥 `DEEPSEEK_API_KEY` 生成 `data/tiktok-ideas.json`。同一已生成批次跳过模型调用；生成失败时原始采集继续发布，页面标明上次改编时间。运行日志只记录 Harness 会话、验证状态及建议数量。
 
 - 「选题策划 → 视频热点」支持按平台、关键词、地区和近 1／7／30 天手动采集。YouTube 已实现官方搜索＋视频统计；TikTok／Instagram 已实现标准 JSON 数据服务接收器，需选定供应商并适配字段。配置与格式见 [接入说明](docs/video-hotspots.html)。本次尚无凭据，未实测真实平台取数；不能将代码测试通过视为三平台已接通。
 - `video_trends.py` 管理采集、验证、原链接标准化、去重更新、分平台错误和原子保存。`GET /api/video-trends` 只读本地缓存（同时清理过期数据），`POST /api/video-trends/collect` 从工作台同源手动触发；请求示例 `{"query":"train travel","region":"GB","days":7,"platforms":["YouTube"]}`。每次间隔至少 30 秒，读取不消耗平台额度。
