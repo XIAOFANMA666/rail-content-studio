@@ -108,7 +108,7 @@
 <button type="button" data-view="evaluate" aria-label="审核中心"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 4-5 8-8 9-3-1-8-5-8-9V6zM8 12l3 3 5-6"/></svg><span>审核中心</span></button>
 <button type="button" data-view="publish" aria-label="发布管理"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13v7h14v-7M12 16V3M7 8l5-5 5 5"/></svg><span>发布管理</span></button>
 <button type="button" data-view="analytics" aria-label="数据复盘" id="reviewBtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10h4v10M10 20V4h4v16M16 20V7h4v13"/></svg><span>数据复盘</span></button>
-<span class="nav-caption">团队资产</span><button type="button" data-view="assets" aria-label="内容资产"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h7l2 2h9v12H3zM3 6V4h7l2 2"/></svg><span>内容资产</span></button>
+<span class="nav-caption">团队资产</span><button type="button" data-view="assets" aria-label="素材库"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h7l2 2h9v12H3zM3 6V4h7l2 2"/></svg><span>素材库</span></button>
 </nav>
     <button class="connection-entry compose-only" type="button" data-view="connections" aria-label="流程与连接"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="15" y="15" width="6" height="6" rx="1"/><path d="M6 9v9h9M9 6h9v9"/></svg><span>流程与连接</span></button>
   </aside>
@@ -230,7 +230,7 @@
       </div>
     </section>
     <section id="publishView" class="workspace" hidden aria-label="发布管理"><div class="publish-grid"><section><div class="section-head"><h2>发布准备</h2><span id="publishVersion" class="mono"></span></div><div id="publishGate" class="handoff-note"></div><form id="publishForm" class="ops-form"><label class="wide">发布标题<input id="publishTitle" required maxlength="200"></label><label class="wide">话题标签<input id="publishTags" maxlength="500" placeholder="#TrainTravel #UKTravel"></label><label>发布账号<input id="publishAccount" required maxlength="100"></label><label>发布时间<input type="datetime-local" id="publishTime" required></label><label class="wide">作品链接<input type="url" id="publishUrl" required placeholder="https://" maxlength="2000"></label><label class="checkbox-field wide"><input id="publishedManually" type="checkbox" required>已由运营在目标平台人工发布</label><div class="wide ops-form-actions"><button class="btn primary" id="savePublication" type="submit">保存发布登记</button></div></form><p id="publishStatus" class="empty" role="status"></p></section><aside><h2>交接内容</h2><dl class="handoff-facts" id="publishFacts"></dl><div class="planned-capability"><h3>标题标签推荐</h3><span class="capability-tag">计划功能</span><p>当前支持人工填写；AI 推荐与平台热度数据尚未接入。</p></div></aside></div><section class="publication-history"><div class="section-head"><h2>发布记录</h2><span>人工登记 · 未向平台核验</span></div><div id="publicationList"></div></section></section>
-    <section id="assetsView" class="workspace" hidden aria-label="内容资产">
+    <section id="assetsView" class="workspace" hidden aria-label="素材库">
 <div id="mlPanel" class="ml-panel" hidden>
   <div class="ml-intro"><div><span class="eyebrow">MEDIA LIBRARY</span><h2>从素材需求到生产资产</h2><p>寻找实拍、核对内容、人工审批，再用于粗剪。</p></div><a href="https://www.pexels.com" target="_blank" rel="noopener">视频来源：Pexels ↗</a></div>
   <div id="mlConfig" class="ml-config"></div>
@@ -272,7 +272,7 @@
   </section>
   <section id="mlTasks" hidden><p class="note">任务保存在本机。取消会保留已取得的候选；重启后未完成任务标为中断，点击重试后才重新执行。</p><div id="mlTaskList"></div></section>
 </div>
-<div id="mlLegacy"><div class="asset-toolbar"><input type="search" id="assetSearch" placeholder="搜索素材名称、地点、标签" aria-label="搜索内容资产"><button class="btn" type="button" id="assetRules">剪辑规则与来源</button><span id="assetTotal"></span></div><div id="assetCollection" class="asset-collection"></div></div></section>
+<div id="mlLegacy"><div class="asset-toolbar"><input type="search" id="assetSearch" placeholder="搜索素材名称、地点、标签" aria-label="搜索素材库"><button class="btn" type="button" id="assetRules">剪辑规则与来源</button><span id="assetTotal"></span></div><div id="assetCollection" class="asset-collection"></div></div></section>
     <section id="analyticsView" class="workspace" hidden aria-label="数据复盘"><div class="analytics-scope"><span class="capability-tag">模拟数据</span><span>现有 CSV 演示记录；尚未关联本机任务的真实平台表现</span><button class="btn text" type="button" data-view="topics">进入下一轮选题 →</button></div><div class="works-toolbar"><a class="btn" href="docs/platform-data.html" target="_blank" rel="noopener">真实数据接入说明 ↗</a></div><div id="analyticsContent"></div></section>
     <section id="connectionsView" class="workspace" hidden aria-label="流程与连接">
       <div class="connection-intro"><h2>一条作品怎么完成</h2><span id="connectionMode"></span></div>
@@ -1320,7 +1320,7 @@ $('publishForm').onsubmit=e=>{e.preventDefault();const t=opsTask(),r=opsRecord(t
 function opsAssets(){const query=$('assetSearch').value.trim().toLowerCase(),clips=Object.entries(R.clips).filter(([id,c])=>(id+' '+c.title+' '+c.location+' '+c.tags.join(' ')).toLowerCase().includes(query));$('assetTotal').textContent=clips.length+' / '+Object.keys(R.clips).length+' 段素材';$('assetCollection').innerHTML=clips.map(([id,c])=>`<button type="button" class="asset-item" data-preview-clip="${esc(id)}"><div><img src="${thumb(id)}" alt="" loading="lazy"><span>${Number(c.clip_s).toFixed(1)}s</span></div><strong>${esc(c.title)}</strong><small>${esc(c.location)} · ${esc(c.tags.slice(0,3).join(' / '))}</small></button>`).join('')||'<p class="ops-empty">没有匹配的素材</p>'}
 $('assetSearch').oninput=opsAssets;$('assetRules').onclick=openSkill;$('assetCollection').onclick=e=>{const b=e.target.closest('[data-preview-clip]');if(b)previewMaterial(b.dataset.previewClip)};
 
-const viewInfo={overview:['生产总览',''],topics:['选题策划',''],publish:['发布管理',''],assets:['内容资产',''],connections:['流程与连接',''],scripts:['脚本工作室',''],create:['制作工作台',''],evaluate:['审核中心',''],analytics:['数据复盘','']};
+const viewInfo={overview:['生产总览',''],topics:['选题策划',''],publish:['发布管理',''],assets:['素材库','浏览已入库素材，或搜索候选、分析审核并审批入库。'],connections:['流程与连接',''],scripts:['脚本工作室',''],create:['制作工作台',''],evaluate:['审核中心',''],analytics:['数据复盘','']};
 function setView(view,updateHash=true){
   if(!viewInfo[view])view='overview';if(HOSTED)view='evaluate';
   if(state.playing)setPlaying(false);
@@ -1426,7 +1426,7 @@ if(STUDIO&&!HOSTED)refreshVideoFeed();else $('refreshVideoFeed').disabled=true;
 <script>
 
 /* Production media workflow. Uses the existing page and player; no frontend dependency. */
-const mlState={tab:'find',offset:0,total:0,items:[],tasks:[],config:null,taskId:null,detail:null,busy:false,loading:false};
+const mlState={tab:'approved',offset:0,total:0,items:[],tasks:[],config:null,taskId:null,detail:null,busy:false,loading:false};
 const mlLabels={candidate:'待分析',review:'待审批',needs_info:'待补充',rejected:'已驳回',approved:'已入库',disabled:'已停用',legacy:'历史素材',queued:'排队',running:'处理中',done:'完成',partial:'部分完成',failed:'失败',cancelled:'已取消',interrupted:'已中断'};
 const mlEl=id=>document.getElementById(id);
 function mlMessage(message){mlEl('mlStatus').textContent=message}
@@ -1615,14 +1615,14 @@ if(STUDIO&&!HOSTED){
    catch(err){mlEl('mlDecisionStatus').textContent=err.message}finally{b.disabled=false}
   }else if(b.hasAttribute('data-ml-reopen'))try{await mlOpen(mlState.detail.id)}catch(err){mlEl('mlDecisionStatus').textContent=err.message}
  });
- document.querySelectorAll('[data-view="assets"]').forEach(b=>b.addEventListener('click',()=>mlRefresh().catch(e=>mlMessage(e.message))));
+ document.querySelectorAll('[data-view="assets"]').forEach(b=>b.addEventListener('click',()=>mlTab(mlState.tab)));
  document.addEventListener('click',e=>{
   const b=e.target.closest('[data-ml-gap]');if(!b)return;
   const seg=S[state.seg];mlEl('mlDuration').value=String(Math.max(.1,seg.shots[state.shot]?.dur||2));mlEl('mlQuery').value=seg.zh||seg.en;mlEl('mlPlace').value=(seg.places||[]).join(' ');
   mlEl('mlQueries').value=(seg.need||[]).length?(seg.need||[]).join(' '):'';panel.dataset.context='分句 '+(seg.i+1)+'：'+seg.en;
   setView('assets');mlTab('find');
  });
- if(document.body.dataset.view==='assets')mlRefresh().catch(e=>mlMessage(e.message));
+ if(document.body.dataset.view==='assets')mlTab('approved');
  setInterval(()=>{if(!mlEl('assetsView').hidden)mlRefresh().catch(e=>mlMessage(e.message))},4000);
 }else{
  mlEl('mlPanel').hidden=true;
