@@ -1,0 +1,53 @@
+name: Publish studio and daily TikTok feed
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    # Apify collects at 09:00 Asia/Shanghai. Read the finished result at 09:15.
+    - cron: '15 1 * * *'
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+concurrency:
+  group: studio-pages
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Read finished TikTok collection
+        if: github.event_name != 'push'
+        env:
+          APIFY_READ_TOKEN: ${{ secrets.APIFY_READ_TOKEN }}
+          APIFY_TASK_ID: ${{ vars.APIFY_TASK_ID }}
+        run: python tools/sync_tiktok_feed.py
+      - name: Save public feed snapshot
+        if: github.event_name != 'push'
+        run: |
+          git add data/tiktok-feed.json
+          if ! git diff --cached --quiet; then
+            git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Update daily TikTok feed'
+            git push origin HEAD:main
+          fi
+      - uses: actions/configure-pages@v5
+      - name: Package public website
+        run: |
+          mkdir _site
+          cp index.html .nojekyll _site/
+          cp -R audio clips thumbs data docs draft _site/
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+      - name: Deploy website
+        id: deployment
+        uses: actions/deploy-pages@v4

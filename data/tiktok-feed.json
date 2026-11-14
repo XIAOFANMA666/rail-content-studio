@@ -1,0 +1,338 @@
+{
+  "updated_at": "2026-11-14T10:50:18.722Z",
+  "run_id": "nXqsSqezlZVNkzQq6",
+  "last_run_status": "SUCCEEDED",
+  "schedule": "北京时间每天09:00采集，09:15起同步网页",
+  "region": "GB",
+  "region_basis": "英国代理搜索",
+  "queries": [
+    "UK train travel",
+    "London to Scotland sleeper train"
+  ],
+  "items": [
+    {
+      "id": "7707248133855595798",
+      "platform": "TikTok",
+      "title": "Fall asleep in London and wake up in the Scottish Highlands? Yes, please! 🚆🌙\n\nBoard the Caledonian Sleeper at Euston,\nthen wake up in Inverness 🏔️✨\n\nNo airport, no early morning flight.\nJust a cosy night on the rails 🛏️💤\n\nSave this for your winter escape ❄️\nFollow for more dreamy train routes!\n\n#CaledonianSleeper #SleeperTrain #UKTrainTravel #ScotlandTravel #ScottishHighlands",
+      "original": "https://www.tiktok.com/@thea.traveltips/video/7707248133855595798",
+      "author": "thea.traveltips",
+      "source": "Apify · Clockworks",
+      "published_at": "2026-11-12T11:39:12+00:00",
+      "metrics_at": "2026-11-14T10:50:18.722Z",
+      "metrics_time_basis": "collection",
+      "metrics": {
+        "views": 12630,
+        "likes": 329,
+        "comments": 2,
+        "shares": 88,
+        "saves": 175
+      }
+    },
+    {
+      "id": "7707111893885881622",
+      "platform": "TikTok",
+      "title": "The overnight train from London to Scotland that needs to be on your bucket list 🚆🌙\nHop on the Caledonian Sleeper, get cosy in bed and wake up ready to explore Edinburgh, Glasgow or the Highlands 🛏️✨\nHonestly, this might be our favourite way to travel north 👀\nSend this to the person you’d take with you 🫶 Follow for more UK train finds 🚂\n#caledoniansleeper #caledoniansleepertrain #sleepertrain #scotlandbyrail #fyp",
+      "original": "https://www.tiktok.com/@chloe.getaways/video/7707111893885881622",
+      "author": "chloe.getaways",
+      "source": "Apify · Clockworks",
+      "published_at": "2026-11-12T02:51:07+00:00",
+      "metrics_at": "2026-11-14T10:50:18.722Z",
+      "metrics_time_basis": "collection",
+      "metrics": {
+        "views": 804,
+        "likes": 4,
+        "comments": 0,
+        "shares": 1,
+        "saves": 0
+      }
+    },
+    {
+      "id": "7707482495813455126",
+      "platform": "TikTok",
+      "title": "London to Scotland while you sleep? 🚆💤 Take the Caledonian Sleeper and wake up ready to explore Edinburgh, Glasgow or even Inverness.\nBefore you plan your next UK train trip, search “96bf” on Trip for Black Friday offers. Train tickets are up to 60% off, and Railcard annual passes are 35% off 🎟️ Where would you go first?\n#fyp #uktrainspotting #scotlandtravel #traintravel #traintravelguide",
+      "original": "https://www.tiktok.com/@molly.awaydays/video/7707482495813455126",
+      "author": "molly.awaydays",
+      "source": "Apify · Clockworks",
+      "published_at": "2026-11-13T02:49:10+00:00",
+      "metrics_at": "2026-11-14T10:50:18.722Z",
+      "metrics_time_basis": "collection",
+      "metrics": {
+        "views": 760,
+        "likes": 5,
+        "comments": 0,
+        "shares": 1,
+        "saves": 1
+      }
+    },
+    {
+      "id": "7707603326581378326",
+      "platform": "TikTok",
+      "title": "Omg! 😳 You need to know this! #travel #train #savemoneytips #uk #uktrain",
+      "original": "https://www.tiktok.com/@uktrain_lili/video/7707603326581378326",
+      "author": "uktrain_lili",
+      "source": "Apify · Clockworks",
+      "published_at": "2026-11-13T10:37:33+00:00",
+      "metrics_at": "2026-11-14T10:50:18.722Z",
+      "metrics_time_basis": "collection",
+      "metrics": {
+        "views": 688,
+        "likes": 9,
+        "comments": 0,
+        "shares": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "7707563918138346774",
+      "platform": "TikTok",
+      "title": "20% and no fee to book. Who's in? #ForYou #Trending #UKTrains #CheapTravel #BudgetUK",
+      "original": "https://www.tiktok.com/@opheliayue2/video/7707563918138346774",
+      "author": "opheliayue2",
+      "source": "Apify · Clockworks",
+      "published_at": "2026-11-13T08:04:39+00:00",
+      "metrics_at": "2026-11-14T10:50:18.722Z",
+      "metrics_time_basis": "collection",
+      "metrics": {
+        "views": 665,
+        "likes": 11,
+        "comments": 0,
+        "shares": 1,
+        "saves": 0
+      }
+    },
+    {
+      "id": "7707287048704642326",
+      "platform": "TikTok",
+      "title": "20% off tickets and no booking fees! #UKTravel #TrainDeals #BlackFridayDeals #BudgetTrips #CheapTravel",
+      "original": "https://www.tiktok.com/@porterpon28/video/7707287048704642326",
+      "author": "porterpon28",
+      "source": "Apify · Clockworks",
+      "published_at": "2026-11-12T14:10:11+00:00",
+      "metrics_at": "2026-11-14T10:50:18.722Z",
+      "metrics_time_basis": "collection",
+      "metrics": {
+        "views": 655,
+        "likes": 5,
+        "comments": 0,
+        "shares": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "7707285914527010080",
+      "platform": "TikTok",
+      "title": "Check the 20% discount before paying full fare! #UKTrains #TrainTok #TravelDeals #MoneySaving #TravelHacks",
+      "original": "https://www.tiktok.com/@kaitlinchi0521/video/7707285914527010080",
+      "author": "kaitlinchi0521",
+      "source": "Apify · Clockworks",
+      "published_at": "2026-11-12T14:05:45+00:00",
+      "metrics_at": "2026-11-14T10:50:18.722Z",
+      "metrics_time_basis": "collection",
+      "metrics": {
+        "views": 644,
+        "likes": 8,
+        "comments": 0,
+        "shares": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "7707610639212055830",
+      "platform": "TikTok",
+      "title": "Those in the know unlock extra 20% off #SavingMoney #TrainTips #UKTravel #TrainDeals #CheapTrains",
+      "original": "https://www.tiktok.com/@coledun095758/video/7707610639212055830",
+      "author": "coledun095758",
+      "source": "Apify · Clockworks",
+      "published_at": "2026-11-13T11:05:58+00:00",
+      "metrics_at": "2026-11-14T10:50:18.722Z",
+      "metrics_time_basis": "collection",
+      "metrics": {
+        "views": 640,
+        "likes": 11,
+        "comments": 0,
+        "shares": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "7707564240600681750",
+      "platform": "TikTok",
+      "title": "£1 plus 20% plus no fees plus £10. Booking one? #FYP #ForYou #TrainTok #UKTrains #TrainTravel",
+      "original": "https://www.tiktok.com/@jeannettesen/video/7707564240600681750",
+      "author": "jeannettesen",
+      "source": "Apify · Clockworks",
+      "published_at": "2026-11-13T08:05:55+00:00",
+      "metrics_at": "2026-11-14T10:50:18.722Z",
+      "metrics_time_basis": "collection",
+      "metrics": {
+        "views": 624,
+        "likes": 13,
+        "comments": 0,
+        "shares": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "7707740401855352086",
+      "platform": "TikTok",
+      "title": "Well, I guess there's no better way to get around the UK than trains, especially when I found a ticket that saved me a fortune!🚆🙌\n\nNew around here? Use code IB9 with @TrainPal — 20% off on Railcard, extra 5% off UK & EU tickets, plus a £10 welcome pack 🎉 Link in bio — download the app and start saving. 😉\\\n,\n]",
+      "original": "https://www.tiktok.com/@_ibs09/video/7707740401855352086",
+      "author": "_ibs09",
+      "source": "Apify · Clockworks",
+      "published_at": "2026-11-13T19:29:24+00:00",
+      "metrics_at": "2026-11-14T10:50:18.722Z",
+      "metrics_time_basis": "collection",
+      "metrics": {
+        "views": 511,
+        "likes": 69,
+        "comments": 1,
+        "shares": 2,
+        "saves": 2
+      }
+    },
+    {
+      "id": "7707588861861367042",
+      "platform": "TikTok",
+      "title": "The Britannic luxury-sleeper train ..🚂💕💕\n\n#sleepertrain #uktrains #foru #luxurytrain #moneysavingtips",
+      "original": "https://www.tiktok.com/@hannah888505/video/7707588861861367042",
+      "author": "hannah888505",
+      "source": "Apify · Clockworks",
+      "published_at": "2026-11-14T07:35:00+00:00",
+      "metrics_at": "2026-11-14T10:50:18.722Z",
+      "metrics_time_basis": "collection",
+      "metrics": {
+        "views": 433,
+        "likes": 11,
+        "comments": 0,
+        "shares": 1,
+        "saves": 4
+      }
+    },
+    {
+      "id": "7707285976091053334",
+      "platform": "TikTok",
+      "title": "Black Friday is bringing 20% train savings! #UKTravel #TrainDeals #RailTravel #BudgetTrips #BlackFridayUK",
+      "original": "https://www.tiktok.com/@hopebai07/video/7707285976091053334",
+      "author": "hopebai07",
+      "source": "Apify · Clockworks",
+      "published_at": "2026-11-12T14:06:01+00:00",
+      "metrics_at": "2026-11-14T10:50:18.722Z",
+      "metrics_time_basis": "collection",
+      "metrics": {
+        "views": 341,
+        "likes": 2,
+        "comments": 0,
+        "shares": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "7707205075462065430",
+      "platform": "TikTok",
+      "title": "I Didn’t Know You Could Sleep Your Way to Scotland #CaledonianSleeper #LondonToScotland #SleeperTrain #UKTravel #TrainTravelTips",
+      "original": "https://www.tiktok.com/@chloeroamgb/video/7707205075462065430",
+      "author": "chloeroamgb",
+      "source": "Apify · Clockworks",
+      "published_at": "2026-11-12T08:52:05+00:00",
+      "metrics_at": "2026-11-14T10:50:18.722Z",
+      "metrics_time_basis": "collection",
+      "metrics": {
+        "views": 238,
+        "likes": 6,
+        "comments": 0,
+        "shares": 1,
+        "saves": 0
+      }
+    },
+    {
+      "id": "7706064710428396822",
+      "platform": "TikTok",
+      "title": "The London Train Journey That Saves You a Day #CaledonianSleeper #LondonToScotland #UKTrainTravel #SleeperTrain #TravelHacks",
+      "original": "https://www.tiktok.com/@malinda.kuvalis/video/7706064710428396822",
+      "author": "malinda.kuvalis",
+      "source": "Apify · Clockworks",
+      "published_at": "2026-11-09T07:07:03+00:00",
+      "metrics_at": "2026-11-14T10:50:18.722Z",
+      "metrics_time_basis": "collection",
+      "metrics": {
+        "views": 227,
+        "likes": 19,
+        "comments": 0,
+        "shares": 0,
+        "saves": 2
+      }
+    },
+    {
+      "id": "7707203666301799702",
+      "platform": "TikTok",
+      "title": "No Hotel, No Flight — Just Sleep Your Way to Scotland #CaledonianSleeper #LondonToScotland #SleeperTrain #UKTravel #TravelHacks",
+      "original": "https://www.tiktok.com/@scarlettukstories/video/7707203666301799702",
+      "author": "scarlettukstories",
+      "source": "Apify · Clockworks",
+      "published_at": "2026-11-12T08:46:37+00:00",
+      "metrics_at": "2026-11-14T10:50:18.722Z",
+      "metrics_time_basis": "collection",
+      "metrics": {
+        "views": 216,
+        "likes": 5,
+        "comments": 0,
+        "shares": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "7706428763533462787",
+      "platform": "TikTok",
+      "title": "The Train That Takes You from London to Scotland While You Sleep #CaledonianSleeper #LondonToScotland #SleeperTrain #UKRail #TrainTravelTips",
+      "original": "https://www.tiktok.com/@jess.ontrack/video/7706428763533462787",
+      "author": "jess.ontrack",
+      "source": "Apify · Clockworks",
+      "published_at": "2026-11-10T06:39:50+00:00",
+      "metrics_at": "2026-11-14T10:50:18.722Z",
+      "metrics_time_basis": "collection",
+      "metrics": {
+        "views": 205,
+        "likes": 12,
+        "comments": 0,
+        "shares": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "7707713668821159199",
+      "platform": "TikTok",
+      "title": "🚆 Did you know you can travel from London to Scotland while you sleep?\nThe Caledonian Sleeper lets you skip the airport and hotel, with comfortable cabins, showers, Wi-Fi and breakfast included!\nWake up in Edinburgh, Glasgow or even Inverness. 🌙\n#CaledonianSleeper #UKTrainTravel #ScotlandTravel #UKTravelTips #trainjourney",
+      "original": "https://www.tiktok.com/@cl.cattion/video/7707713668821159199",
+      "author": "cl.cattion",
+      "source": "Apify · Clockworks",
+      "published_at": "2026-11-13T17:46:14+00:00",
+      "metrics_at": "2026-11-14T10:50:18.722Z",
+      "metrics_time_basis": "collection",
+      "metrics": {
+        "views": 101,
+        "likes": 0,
+        "comments": 0,
+        "shares": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "7707588585267973398",
+      "platform": "TikTok",
+      "title": "Nobody tells you these UK train facts. #UKTrain #BlackFridayDeals #TrainTickets #Travel",
+      "original": "https://www.tiktok.com/@raynadudikv/video/7707588585267973398",
+      "author": "raynadudikv",
+      "source": "Apify · Clockworks",
+      "published_at": "2026-11-13T09:40:23+00:00",
+      "metrics_at": "2026-11-14T10:50:18.722Z",
+      "metrics_time_basis": "collection",
+      "metrics": {
+        "views": 67,
+        "likes": 4,
+        "comments": 0,
+        "shares": 0,
+        "saves": 1
+      }
+    }
+  ]
+}

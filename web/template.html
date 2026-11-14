@@ -134,7 +134,7 @@
       </section>
 
       <section class="topic-pool" aria-labelledby="topicPoolHeading">
-        <div class="section-head"><h2>视频热点</h2><a class="btn" href="docs/video-hotspots.html" target="_blank" rel="noopener">配置采集来源 ↗</a></div>
+        <div class="section-head"><h2 id="dailyIdeasHeading">今日灵感</h2><a id="videoSourceHelp" class="btn" href="docs/video-hotspots.html" target="_blank" rel="noopener">配置采集来源 ↗</a></div>
         <form id="videoCollectForm" class="ops-form" style="margin:20px 0">
           <label>搜索关键词<input id="videoQuery" value="train travel" maxlength="100" required></label>
           <label>平台<select id="videoPlatform"><option value="all">全部平台</option><option>YouTube</option><option>TikTok</option><option>Instagram</option></select></label>
@@ -144,9 +144,9 @@
         </form>
         <p id="videoFeedStatus" class="empty" role="status">正在检查视频数据源…</p>
         <p id="videoCollectStatus" class="empty" role="status"></p>
+        <p id="videoFeedNote" class="empty">按平台分别查看累计播放；缺失指标显示「—」。采集会使用接口额度，刷新列表不采集。候选视频不代表爆款或素材授权。</p>
         <div class="works-toolbar"><div class="platform-tabs" role="group" aria-label="视频候选时间范围"><button type="button" class="platform-tab" data-feed-period="recent" aria-pressed="false">近 24 小时</button><button type="button" class="platform-tab" data-feed-period="week" aria-pressed="true">近 7 天</button><button type="button" class="platform-tab" data-feed-period="history" aria-pressed="false">全部已存视频</button></div><button type="button" class="btn" id="refreshVideoFeed">刷新列表</button></div>
         <ul id="videoFeedList" class="topic-pool-list"></ul>
-        <p class="empty">按平台分别查看累计播放；缺失指标显示「—」。采集会使用接口额度，刷新列表不采集。候选视频不代表爆款或素材授权。</p>
 
         <div class="topic-pool-heading"><h2 id="topicPoolHeading">选题池</h2><span id="topicPoolSource">预置示例 · 非每日热点</span></div>
         <ul id="topicPoolList" class="topic-pool-list"></ul>
@@ -447,13 +447,24 @@ function renderVideoFeed(){
   const now=Date.now(),platform=$('videoPlatform').value;
   const rows=(videoFeed?.items||[]).filter(v=>(platform==='all'||v.platform===platform)&&(videoFeedPeriod==='history'||(v.published_at&&Date.parse(v.published_at)<=now&&Date.parse(v.published_at)>=now-(videoFeedPeriod==='recent'?1:7)*86400000)));
   videoRows=rows.slice(0,50);
-  $('videoFeedList').innerHTML=videoRows.length?videoRows.map((v,i)=>`<li class="topic-pool-row"><div><strong>${esc(v.title)}</strong><small>${esc(v.platform)} · ${esc(v.author||v.source)} · 发布 ${v.published_at?esc(v.published_at.slice(0,10)):'时间未知'}</small><small>播放 ${videoMetric(v.metrics?.views)} · 点赞 ${videoMetric(v.metrics?.likes)} · 评论 ${videoMetric(v.metrics?.comments)} · 分享 ${videoMetric(v.metrics?.shares)}</small><small>${esc(v.source)}${v.metrics_at?' · 指标'+(v.metrics_time_basis==='provider'?'时间 ':'取回时间 ')+esc(new Date(v.metrics_at).toLocaleString('zh-CN')):''}</small><a href="${esc(v.original)}" target="_blank" rel="noopener">查看原视频 ↗</a></div><button class="btn" type="button" data-use-video="${i}" ${!STUDIO||HOSTED?'disabled':''}>采用标题 →</button></li>`).join(''):`<li class="topic-pool-row">${!STUDIO||HOSTED?'请在本地工作台连接视频数据源。':!videoFeed?'等待读取已存视频。':'当前范围暂无已存视频。配置数据源后点击「采集视频」。'}</li>`;
+  $('videoFeedList').innerHTML=videoRows.length?videoRows.map((v,i)=>`<li class="topic-pool-row"><div><strong>${esc(v.title)}</strong><small>${esc(v.platform)} · ${esc(v.author||v.source)} · 发布 ${v.published_at?esc(v.published_at.slice(0,10)):'时间未知'}</small><small>播放 ${videoMetric(v.metrics?.views)} · 点赞 ${videoMetric(v.metrics?.likes)} · 评论 ${videoMetric(v.metrics?.comments)} · 分享 ${videoMetric(v.metrics?.shares)}</small><small>${esc(v.source)}${v.metrics_at?' · 指标'+(v.metrics_time_basis==='provider'?'时间 ':'取回时间 ')+esc(new Date(v.metrics_at).toLocaleString('zh-CN')):''}</small><a href="${esc(v.original)}" target="_blank" rel="noopener">查看原视频 ↗</a></div><button class="btn" type="button" data-use-video="${i}" ${HOSTED?'disabled':''}>${STUDIO?'采用标题 →':'复制选题'}</button></li>`).join(''):`<li class="topic-pool-row">${!videoFeed?'正在读取视频…':'当前时间范围暂无视频，可切换全部已存视频。'}</li>`;
   $('collectVideos').disabled=!STUDIO||HOSTED||videoCollectBusy||!(videoFeed?.platforms||[]).some(p=>p.configured&&(platform==='all'||p.name===platform));
 }
 async function refreshVideoFeed(){
-  if(videoFeedBusy||!STUDIO||HOSTED)return;
+  if(videoFeedBusy||HOSTED)return;
   videoFeedBusy=true;$('refreshVideoFeed').disabled=true;
   try{
+    if(!STUDIO){
+      const response=await fetch(new URL('data/tiktok-feed.json',location.href),{cache:'no-store'});
+      if(!response.ok)throw new Error('暂时无法读取每日灵感');
+      const data=await response.json();
+      if(!Array.isArray(data.items)||!Number.isFinite(Date.parse(data.updated_at)))throw new Error('数据格式异常');
+      videoFeed={...data,items:data.items.filter(v=>v.platform==='TikTok'&&/^https:\/\/www\.tiktok\.com\/@[\w.-]+\/video\/\d+$/.test(v.original)&&typeof v.title==='string')};
+      const timestamp=new Date(data.updated_at).toLocaleString('zh-CN',{timeZone:'Asia/Shanghai',hour12:false});
+      const stale=Date.now()-Date.parse(data.updated_at)>36*3600000;
+      $('videoFeedStatus').textContent=`TikTok · ${videoFeed.items.length} 条 · 采集于 ${timestamp}（北京时间）`+(stale?' · 更新延迟，正在展示上次结果':'')+(data.last_run_status!=='SUCCEEDED'?' · 最近任务尚未成功，保留上次数据':'');
+      return;
+    }
     const results=await Promise.allSettled(['/api/video-trends','/api/topic-feed'].map(async url=>{const r=await fetch(url),d=await r.json();if(!r.ok)throw new Error(d.error||'无法读取视频来源');return d}));
     const main=results[0],legacy=results[1];
     const data=main.status==='fulfilled'?main.value:{items:[],platforms:[]};
@@ -479,7 +490,17 @@ $('videoCollectForm').addEventListener('submit',async e=>{
 $('videoPlatform').addEventListener('change',renderVideoFeed);
 $('refreshVideoFeed').addEventListener('click',refreshVideoFeed);
 document.querySelectorAll('[data-feed-period]').forEach(b=>b.addEventListener('click',()=>{videoFeedPeriod=b.dataset.feedPeriod;document.querySelectorAll('[data-feed-period]').forEach(x=>x.setAttribute('aria-pressed',x===b));renderVideoFeed()}));
-$('videoFeedList').addEventListener('click',e=>{const b=e.target.closest('[data-use-video]');if(!b||!STUDIO||HOSTED||state.running||$('askTopic').disabled)return;const row=videoRows[Number(b.dataset.useVideo)];if(!row)return;$('askTopic').value=row.title.slice(0,80);$('askTopic').focus();$('askHint').textContent='已带入参考标题，可调整选题后生成脚本。';renderTopicPool()});
+$('videoFeedList').addEventListener('click',async e=>{
+  const button=e.target.closest('[data-use-video]');if(!button||HOSTED)return;
+  const row=videoRows[Number(button.dataset.useVideo)];if(!row)return;
+  if(!STUDIO){
+    try{await navigator.clipboard.writeText(row.title+'\n参考原片：'+row.original);button.textContent='已复制';}
+    catch(_){$('videoCollectStatus').textContent='复制失败，请选中文案手动复制。';}
+    return;
+  }
+  if(state.running||$('askTopic').disabled)return;
+  $('askTopic').value=row.title.slice(0,80);$('askTopic').focus();$('askHint').textContent='已带入参考标题，可调整选题后生成脚本。';renderTopicPool();
+});
 function renderTopicPool(){
   const pool=R.topic?.pool||[];
   $('topicPoolSource').textContent=`${pool.length} 个预置选题 · 非每日热点`;
@@ -1075,7 +1096,16 @@ if(!HOSTED&&location.hash==='#produced'){setView('create',false);$('productionSt
 if(!HOSTED&&['#script','#skill'].includes(location.hash))({'#script':openScript,'#skill':openSkill})[location.hash]();
 renderTopicPool();
 renderVideoFeed();
-if(STUDIO&&!HOSTED)refreshVideoFeed();else $('refreshVideoFeed').disabled=true;
+if(!HOSTED){
+  if(!STUDIO){
+    $('videoCollectForm').hidden=true;
+    $('videoSourceHelp').hidden=true;
+    $('videoFeedNote').textContent='每天09:00采集，09:15起同步网页（北京时间）。按累计播放排序；原视频中的价格与优惠需核实。';
+    setInterval(refreshVideoFeed,300000);
+    document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshVideoFeed()});
+  }
+  refreshVideoFeed();
+}else $('refreshVideoFeed').disabled=true;
 </script>
 </body>
 </html>
