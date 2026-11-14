@@ -105,6 +105,7 @@
 <span class="nav-caption">内容生产</span><button type="button" data-view="topics" aria-label="选题策划"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM8 9h8M8 13h5"/></svg><span>选题策划</span></button>
 <button type="button" data-view="scripts" aria-label="脚本工作室"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h10l4 4v14H5zM9 10h6M9 14h6M9 18h4"/></svg><span>脚本工作室</span></button>
 <button type="button" data-view="create" aria-label="制作工作台"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v14H3zM8 5v14M16 5v14M3 10h5M16 10h5"/></svg><span>制作工作台</span></button>
+<button type="button" data-view="reference" aria-label="参考视频复刻"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h13v12H3zM8 9l4 2-4 2zM9 20h12V8h-3"/></svg><span>参考视频复刻</span></button>
 <button type="button" data-view="evaluate" aria-label="审核中心"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 4-5 8-8 9-3-1-8-5-8-9V6zM8 12l3 3 5-6"/></svg><span>审核中心</span></button>
 <button type="button" data-view="publish" aria-label="发布管理"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13v7h14v-7M12 16V3M7 8l5-5 5 5"/></svg><span>发布管理</span></button>
 <button type="button" data-view="analytics" aria-label="数据复盘" id="reviewBtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10h4v10M10 20V4h4v16M16 20V7h4v13"/></svg><span>数据复盘</span></button>
@@ -139,6 +140,31 @@
     </section>
     <section id="topicsView" class="workspace" aria-label="选题策划" hidden><div class="planning-grid"><section><div class="section-head"><h2>创作要求</h2><button class="btn text" type="button" data-new-task>新建任务</button></div><div id="topicBrief" class="topic-brief"></div><div id="topicFormSlot"></div></section><section><div class="section-head"><h2>参考与依据</h2><span class="capability-tag">人工提供</span></div><div id="topicReference"></div><div class="planned-capability"><h3>案例拆解</h3><span class="capability-tag">计划功能</span><p>授权案例的结构拆解与引用依据，尚未接入自动分析。</p><a href="https://my.feishu.cn/wiki/GMpewKWsVi7ktnk0WBYcRwSAnIg" target="_blank" rel="noopener">查看需求方案 ↗</a></div></section></div><div id="topicPoolSlot"></div></section>
 
+    <section id="referenceView" class="workspace" aria-label="参考视频复刻" hidden>
+      <div class="section-head"><h2>从一条参考视频开始</h2><span class="capability-tag">素材库联动</span></div>
+      <p class="note">保持分镜内容、景别、动作与时长，替换具体素材。导入后自动解析并匹配，缺口交素材库联网搜索，审批入库后继续。配音、音乐与音效保留参考原音轨。</p>
+      <div id="refFlow" aria-label="复刻执行步骤" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:22px 0">
+        <div><strong>1 · 分镜解析</strong><p class="note">画面模型提取镜头要求</p><small id="refStepAnalysis">未开始</small></div>
+        <div><strong>2 · 逐镜头匹配</strong><p class="note">核对素材与分镜条件</p><small id="refStepMatching">未开始</small></div>
+        <div><strong>3 · 缺口搜索</strong><p class="note">按缺口调用素材搜索</p><small id="refStepSearch">按需启动</small></div>
+        <div><strong>4 · 素材审核</strong><p class="note">检查候选并审批入库</p><small id="refStepReview">候选返回后审核</small></div>
+        <div><strong>5 · 合成视频</strong><p class="note">按参考时间轴生成</p><small id="refStepRender">未开始</small></div>
+      </div>
+      <p class="note">整条流程按固定步骤执行。旧素材库配置搜索模型后，搜索 Agent 会根据结果调整关键词，最多搜索三轮；未配置时使用固定检索。搜索完成不代表素材已通过审核。</p>
+      <p id="refImageSearch" class="note">正在读取图片搜索能力…</p>
+      <form id="refImportForm" class="ops-form" style="margin:24px 0">
+        <label class="wide">参考视频<input id="refFile" type="file" accept=".mp4,.mov,.m4v,video/mp4,video/quicktime" required><small>MP4 / MOV / M4V，最大100MB、3分钟，最多40个镜头。</small></label>
+        <label class="checkbox-field wide"><input id="refConsent" type="checkbox" required>同意将抽样画面发送给已配置的画面模型分析，并在缺素材时联网搜索；会产生模型用量。</label>
+        <div class="wide"><button class="btn primary" id="refImportGo" type="submit">导入并开始复刻 →</button><span id="refConfig" class="note" style="margin-left:16px"></span></div>
+      </form>
+      <p id="refMessage" class="note" role="status" aria-live="polite"></p>
+      <details id="refSettings" style="margin:20px 0"><summary>配置画面解析与素材搜索</summary><p class="note">填写支持图片的 OpenAI 兼容接口；配置仅保存在本机，密钥不会在页面回显。已有配置可留空保留。</p><form id="refSettingsForm" class="ops-form"><label>画面模型接口地址<input id="refBase" type="url" placeholder="https://服务地址/v1" autocomplete="off"></label><label>画面模型名称<input id="refModel" placeholder="服务商提供的模型名称" autocomplete="off"></label><label>画面模型 API Key<input id="refKey" type="password" autocomplete="new-password"></label><label>Pexels API Key<input id="refPexels" type="password" autocomplete="new-password"></label><div class="wide"><button class="btn" type="submit">保存配置</button><span id="refSettingsResult" class="note" style="margin-left:12px"></span></div></form></details>
+      <div class="planning-grid">
+        <section><div class="section-head"><h2>当前任务</h2><button class="btn" type="button" id="refRefresh">刷新</button></div><div id="refHistory" style="margin:16px 0"></div><div id="refJob"></div></section>
+        <section><div class="section-head"><h2>参考与生成结果</h2></div><div id="refPlayers"></div></section>
+      </div>
+      <details id="refEditorWrap" hidden style="margin-top:28px"><summary>检查与调整解析结果</summary><p class="note">镜头、字幕和字体来自抽样推断。可修正时间、内容与样式后重新匹配生成；字体未确认或复杂效果不支持会明确列出。不要把预览当成已验收成片。</p><textarea id="refEditor" aria-label="参考解析结果" spellcheck="false" style="width:100%;min-height:350px;font:12px/1.7 monospace;padding:16px"></textarea><button class="btn" id="refSave" type="button">保存调整并重新生成</button></details>
+    </section>
     <section id="scriptsView" class="workspace" aria-label="选题与脚本">
       <section class="generation-controls" aria-labelledby="creationHeading"><h2 id="creationHeading" class="sr-only">输入选题</h2>
       <section id="askPanel" class="compose-bar" aria-label="输入选题">
@@ -1035,12 +1061,12 @@ $('publishForm').onsubmit=e=>{e.preventDefault();const t=opsTask(),r=opsRecord(t
 function opsAssets(){const query=$('assetSearch').value.trim().toLowerCase(),clips=Object.entries(R.clips).filter(([id,c])=>(id+' '+c.title+' '+c.location+' '+c.tags.join(' ')).toLowerCase().includes(query));$('assetTotal').textContent=clips.length+' / '+Object.keys(R.clips).length+' 段素材';$('assetCollection').innerHTML=clips.map(([id,c])=>`<button type="button" class="asset-item" data-preview-clip="${esc(id)}"><div><img src="${thumb(id)}" alt="" loading="lazy"><span>${Number(c.clip_s).toFixed(1)}s</span></div><strong>${esc(c.title)}</strong><small>${esc(c.location)} · ${esc(c.tags.slice(0,3).join(' / '))}</small></button>`).join('')||'<p class="ops-empty">没有匹配的素材</p>'}
 $('assetSearch').oninput=opsAssets;$('assetRules').onclick=openSkill;$('assetCollection').onclick=e=>{const b=e.target.closest('[data-preview-clip]');if(b)previewMaterial(b.dataset.previewClip)};
 
-const viewInfo={overview:['生产总览',''],topics:['选题策划',''],publish:['发布管理',''],assets:['素材库','浏览已入库素材，或搜索候选、分析审核并审批入库。'],connections:['流程与连接',''],scripts:['脚本工作室',''],create:['制作工作台',''],evaluate:['审核中心',''],analytics:['数据复盘','']};
+const viewInfo={reference:['参考视频复刻','导入参考，解析分镜，匹配素材并生成待验收视频。'],overview:['生产总览',''],topics:['选题策划',''],publish:['发布管理',''],assets:['素材库','浏览已入库素材，或搜索候选、分析审核并审批入库。'],connections:['流程与连接',''],scripts:['脚本工作室',''],create:['制作工作台',''],evaluate:['审核中心',''],analytics:['数据复盘','']};
 function setView(view,updateHash=true){
   if(!viewInfo[view])view='overview';if(HOSTED)view='evaluate';
   if(state.playing)setPlaying(false);
   const player=$('reviewPlayer');if(player)player.pause();
-  ['overview','topics','scripts','create','evaluate','publish','analytics','assets','connections'].forEach(v=>$(v+'View').hidden=v!==view);
+  ['reference','overview','topics','scripts','create','evaluate','publish','analytics','assets','connections'].forEach(v=>$(v+'View').hidden=v!==view);
   document.querySelectorAll('.sidebar button[data-view]').forEach(b=>{if(b.dataset.view===view)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
   const [title,desc]=viewInfo[view];$('viewTitle').textContent=title;$('breadcrumbTitle').textContent=title;$('viewDescription').textContent=desc;$('viewDescription').hidden=!desc;
   $('scriptActions').hidden=view!=='scripts';$('createActions').hidden=view!=='create';document.body.dataset.view=view;$('footWrap').hidden=view!=='create';
@@ -1345,6 +1371,91 @@ if(STUDIO&&!HOSTED){
  mlEl('assetsView').prepend(note);
 }
 
+// Reference import is separate from topic production and never replaces its result.
+let refId=null,refCurrent=null,refPolling=false,refSubmitting=false;
+const refStatusNames={uploaded:'已导入',analyzing:'正在解析',matching:'正在匹配',rendering:'正在生成',awaiting_materials:'等待补库与审批',preview_ready:'预览待验收',needs_review:'需要检查解析',failed:'任务失败',interrupted:'已暂停',cancelling:'正在停止',cancelled:'已取消'};
+async function refApi(url,options){const response=await fetch(url,options);const data=await response.json();if(!response.ok)throw new Error(data.error||'参考任务请求失败');return data}
+async function refConfigLoad(){const c=await refApi('/api/reference/config');$('refConfig').textContent=[!c.ffmpeg?'缺少 FFmpeg':'',!c.ffprobe?'缺少 ffprobe':'',!c.vision?'请先配置画面模型':'',!c.search?'缺口搜索未配置':'',!c.skill?'复刻规则文件缺失':''].filter(Boolean).join(' · ')||'运行依赖已配置，模型连通性将在解析时验证';$('refImageSearch').textContent=c.image_search===true?'图片检索模块可用；本次运动镜头的补搜只取视频，图片不能替代。图片搜索任务请在旧素材库查看。':c.image_search===false?'未发现图片检索模块；本次复刻仍按视频镜头要求匹配素材。':'图片检索状态尚未返回；不会据此视为已完成搜索。';if(!c.vision)$('refSettings').open=true;return c}
+$('refSettingsForm').onsubmit=async e=>{e.preventDefault();try{await refApi('/api/reference/settings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({VIDEO_BASE_URL:$('refBase').value,VIDEO_MODEL:$('refModel').value,VIDEO_API_KEY:$('refKey').value,PEXELS_API_KEY:$('refPexels').value})});$('refKey').value='';$('refPexels').value='';$('refSettingsResult').textContent='已保存；可导入视频或继续暂停的任务';await refConfigLoad()}catch(error){$('refSettingsResult').textContent=error.message}};
+function refMessage(text){$('refMessage').textContent=text||''}
+async function refList(){const data=await refApi('/api/reference/jobs');$('refHistory').innerHTML=(data.items||[]).map(j=>`<button type="button" class="btn small" data-ref-id="${esc(j.id)}" style="margin:0 8px 8px 0">${esc(j.name)} · ${esc(refStatusNames[j.status]||j.status)}</button>`).join('');$('refHistory').querySelectorAll('[data-ref-id]').forEach(b=>b.onclick=()=>refOpen(b.dataset.refId))}
+function refFlowRender(j){
+ const shots=j.analysis?.shots||[],matched=Object.keys(j.matches||{}).length,complete=shots.length>0&&matched===shots.length;
+ const jobs=Array.isArray(j.legacy_jobs)?j.legacy_jobs:[],hasTasks=jobs.length>0||Object.keys(j.search_tasks||{}).length>0||Object.keys(j.legacy_search_tasks||{}).length>0;
+ const searching=jobs.some(t=>['queued','running'].includes(t.state)),items=jobs.flatMap(t=>Array.isArray(t.candidate_items)?t.candidate_items:[]),candidates=jobs.reduce((n,t)=>n+(Number.isFinite(t.candidates)?Math.max(0,t.candidates):0),0);
+ const downloaded=items.filter(c=>c.downloaded===true&&c.kind!=='web'),hasDetailedItems=jobs.some(t=>Array.isArray(t.candidate_items));
+ const content=jobs.flatMap(t=>(Array.isArray(t.candidate_items)?t.candidate_items:[]).filter(c=>c.downloaded===true&&c.kind==='video').map(c=>({...refContentReview(c,j,t.shot_id),approved:c.approved===true}))),contentMatched=content.filter(c=>c.status==='content_match');
+ $('refStepAnalysis').textContent=j.status==='analyzing'?'正在解析':shots.length?'已解析 · 待复核':'未完成';
+ $('refStepMatching').textContent=j.status==='matching'?'正在匹配':complete?'已匹配 · 待复核':(j.gaps||[]).length?'存在素材缺口':matched?'部分匹配':'未完成';
+ $('refStepSearch').textContent=searching?'搜索任务执行中':downloaded.length?'已有下载素材':items.length?'已有来源线索，尚未取得素材':candidates?'已返回候选记录，下载未确认':jobs.some(t=>['failed','读取失败'].includes(t.state))?'搜索失败或状态读取失败':jobs.length&&jobs.every(t=>['done','partial','cancelled','interrupted'].includes(t.state))?'任务已结束，未返回候选':hasTasks?'已提交，状态未返回':complete?'无需补搜':'按需启动';
+ $('refStepReview').textContent=complete?'已采用现有库素材':contentMatched.some(c=>c.approved)?'初筛与来源审批通过，待最终匹配':contentMatched.length?'画面初筛通过，待来源授权审批':content.length&&content.every(c=>c.status==='rejected')?'已检画面不符，继续补搜':content.some(c=>c.status==='deferred'&&c.phase==='budget_exhausted')?'画面检查预算已用完，候选保留':content.some(c=>c.status==='deferred')?'已下载，画面待进一步定位':content.some(c=>c.status==='error')?'画面核对受阻':downloaded.length?'已下载，尚未确认符合分镜':hasDetailedItems&&items.length?'取得素材后审核':candidates?'下载与审核状态待确认':hasTasks?'取得素材后审核':'按需审核新素材';
+ $('refStepRender').textContent=j.status==='rendering'?'正在合成':j.status==='preview_ready'&&j.output_url?'已生成 · 待验收':'未完成';
+}
+function refSafeSource(value){try{const u=new URL(String(value||''));return ['https:','http:'].includes(u.protocol)&&!u.username&&!u.password?u.href:''}catch(_){return ''}}
+function refRetryTime(value){if(value===null||value===undefined||value==='')return '';const n=typeof value==='number'?value:Number(value),d=new Date(Number.isFinite(n)?(n<1e12?n*1000:n):value);return Number.isNaN(d.getTime())?'时间未确认':d.toLocaleString('zh-CN')}
+function refCandidateState(c){
+ const web=c.kind==='web'||['web_lead','lead','web-only'].includes(c.state),failed=['failed','error'].includes(c.state),rejected=['rejected','reject'].includes(c.state);
+ const obtained=web?'网页线索':c.downloaded===true?'已下载':c.downloaded===false?'未下载':'下载未确认';
+ const reviewed=rejected?'已驳回':failed?'处理失败':c.approved===true?'已通过':c.downloaded===true&&(['pending_review','review','needs_info'].includes(c.state)||c.approved===false)?'待审核':'审核未确认';
+ return {obtained,reviewed,web};
+}
+function refContentReview(c,job={},shotId=''){
+ const record=job.material_search?.content_reviews?.[shotId]?.[c.asset_id]||{};
+ const status=c.content_review||record.status,phase=c.content_phase||record.phase,scope=c.content_rejection_scope||record.rejection_scope,reason=c.content_reason||record.reason||'';
+ const label=status==='deferred'?(phase==='budget_exhausted'?'本轮画面检查预算已用完，候选保留':scope==='sampled_frames_only'?'抽样待定位，需进一步定位可用片段':'待进一步定位可用片段'):status==='rejected'&&scope==='sampled_frames_only'?'已抽样画面不符合分镜，未检查区间未下结论':{rejected:'已检画面不符合分镜',content_match:'分镜画面初筛通过',checking:'正在核对画面',error:'画面核对受阻'}[status]||(status?'画面核对状态待确认':'尚未核对是否符合分镜');
+ return {status,phase,scope,reason,label};
+}
+function refCandidateCard(c,job={},shotId=''){
+ const state=refCandidateState(c),kind={video:'视频',image:'图片',web:'网页线索',unknown:'类型未确认'}[c.kind]||'类型未确认',source=refSafeSource(c.source_url);
+ const content=refContentReview(c,job,shotId);
+ return `<li class="ref-candidate" style="list-style:none;border:1px solid var(--line);border-radius:7px;padding:12px;margin:8px 0"><div style="display:flex;gap:8px;flex-wrap:wrap"><strong>${esc(c.title||'未命名来源')}</strong><span class="capability-tag">${esc(kind)}</span><span class="capability-tag">${esc(state.obtained)}</span><span class="capability-tag">来源授权审批：${esc(state.reviewed)}</span></div><p class="note ref-content-review">画面核对：${esc(content.label)}${content.reason?' · '+esc(content.reason):''}</p>${state.web?'<p class="note">这里只取得网页线索，尚不能作为剪辑素材。</p>':c.kind==='image'?'<p class="note">图片不能替代“驶过”等运动视频镜头。</p>':''}${c.reason||c.error?`<p class="note">${esc(c.error||c.reason)}</p>`:''}<p class="note" style="margin-bottom:0">${source?`<a href="${esc(source)}" target="_blank" rel="noopener noreferrer">查看来源 ↗</a>`:'来源链接未提供或无效'}${c.asset_id?` · 素材编号 ${esc(c.asset_id)}`:''}</p></li>`;
+}
+function refLegacyJobs(j){
+ const jobs=Array.isArray(j.legacy_jobs)?j.legacy_jobs:[],scheduler=j.material_search&&typeof j.material_search==='object'?j.material_search:{};
+ const states={queued:'排队中',running:'搜索中',searching:'搜索中',done:'搜索结束',partial:'部分完成',failed:'搜索失败',cancelled:'已取消',interrupted:'已中断',waiting_retry:'等待重试',retry_scheduled:'已安排重试',awaiting_review:'等待素材审核',awaiting_materials:'等待素材',blocked:'搜索受阻',exhausted:'已达到搜索上限',cooldown:'等待来源限流恢复',connection_error:'连接受阻，等待恢复',deferred:'自动等待已暂停',pending_approval:'等待素材审核',ready_to_match:'候选待镜头核验',finished:'本轮搜索已结束',content_review:'核对候选实际画面'};
+ const errorsOf=t=>[...(Array.isArray(t.errors)?t.errors:[]),...(t.error?[t.error]:[])].map(e=>typeof e==='string'?e:e?.message||e?.reason||'搜索出现错误');
+ const retryMeta=t=>{const when=refRetryTime(t.next_retry_at);return `${Number.isInteger(t.plan_attempts)?`<span>完整分镜要求已搜索 ${t.plan_attempts} / 2 次 · </span>`:''}${Number.isInteger(t.attempts)?`<span>已尝试 ${Math.max(0,t.attempts)} 次</span>`:''}${when?`<span> · 下次重试 ${esc(when)}</span>`:''}${t.retry_reason?`<p class="note">重试说明：${esc(t.retry_reason)}</p>`:''}`};
+ const scheduling=(scheduler.state||scheduler.status||scheduler.reason||scheduler.retry_reason||scheduler.next_retry_at)?`<div id="refSearchSchedule" class="note"><strong>素材搜索调度：${esc(states[scheduler.state||scheduler.status]||scheduler.state||scheduler.status||'状态未返回')}</strong>${scheduler.reason?`<p>${esc(scheduler.reason)}</p>`:''}<div>${retryMeta(scheduler)}</div>${errorsOf(scheduler).map(e=>`<p style="color:var(--danger,#b33)">${esc(e)}</p>`).join('')}</div>`:'';
+ const cards=jobs.map(t=>{
+  const record=j.legacy_search_tasks?.[t.shot_id]||{},shotSchedule=Array.isArray(scheduler)?scheduler.find(s=>s.shot_id===t.shot_id)||{}:scheduler.shots?.[t.shot_id]||scheduler[t.shot_id]||{},meta={...record,...shotSchedule,...t};
+  const mode=meta.mode,items=Array.isArray(t.candidate_items)?t.candidate_items:null,downloaded=items?.filter(c=>c.downloaded===true&&!refCandidateState(c).web).length,approved=items?.filter(c=>c.downloaded===true&&c.approved===true&&!refCandidateState(c).web).length;
+  const count=Number.isFinite(t.candidates)?Math.max(0,t.candidates):items?.length;
+  const activity=[];if(Number.isInteger(t.search_rounds)&&t.search_rounds>=0)activity.push(`已搜索${t.search_rounds}轮`);if(Number.isInteger(t.agent_planning_calls)&&t.agent_planning_calls>=0)activity.push(`搜索Agent调整${t.agent_planning_calls}次${t.agent_planning_calls===0?'（未调用改词模型）':''}`);
+  return `<article class="ref-search-task" data-shot="${esc(t.shot_id||'')}" style="border-top:1px solid var(--line);padding:16px 0"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><strong>${esc(t.shot_id||'未关联分镜')}</strong><span class="capability-tag">${mode==='agent'?'搜索 Agent':mode==='fixed'?'固定检索':'模式未返回'}</span><span>${esc(states[t.state]||t.state||'状态未返回')}</span>${t.id!==undefined?`<small>任务 ${esc(t.id)}</small>`:''}</div>${activity.length?`<p class="note ref-search-activity">${esc(activity.join(' · '))}</p>`:''}<p class="note">${count!==undefined?`${count} 条来源记录`:'来源数量未返回'}${items?` · ${downloaded} 条已下载 · ${approved} 条已下载且来源授权审批通过`:' · 下载与审批状态尚未返回'}</p>${meta.reason?`<p class="note">${esc(meta.reason)}</p>`:''}<div class="note">${retryMeta(meta)}</div>${errorsOf(meta).map(e=>`<p class="note" style="color:var(--danger,#b33)">${esc(e)}</p>`).join('')}${items?.length?`<ul style="padding:0;margin:12px 0">${items.map(c=>refCandidateCard(c,j,t.shot_id)).join('')}</ul>`:items?'<p class="note">暂未返回来源明细。</p>':'<p class="note">当前接口未提供来源明细，不能确认素材已到手。</p>'}</article>`;
+ }).join('');
+ return `<section id="refLegacyJobs" style="margin-top:22px"><div class="section-head"><h3>逐镜头素材搜索</h3><a href="http://localhost:8765/" target="_blank" rel="noopener">打开素材库审核 ↗</a></div>${scheduling}${cards||'<p class="note">当前未返回旧素材库搜索任务。若任务使用其他搜索来源，请在素材库任务列表查看。</p>'}<p class="note">来源线索、已下载文件与审核通过的素材分别显示；只有满足分镜要求并通过审核的视频才能用于运动镜头。</p></section>`;
+}
+function refRender(j){
+ refFlowRender(j);
+ refCurrent=j;const busy=j.busy||['analyzing','matching','rendering','cancelling'].includes(j.status);const matches=j.matches||{},shots=j.analysis?.shots||[];
+ $('refJob').innerHTML=`<p><strong>${esc(refStatusNames[j.status]||j.status)}</strong> · ${esc(j.stage||'')}</p>${j.error?`<p class="note" style="color:var(--danger,#b33)">${esc(j.error)}</p>`:''}<p class="note">${shots.length} 个分镜 · ${Object.keys(matches).length} 个已匹配 · ${(j.gaps||[]).length} 个缺口</p><div style="overflow:auto"><table class="ops-table"><thead><tr><th>分镜</th><th>时长</th><th>画面要求</th><th>匹配</th></tr></thead><tbody>${shots.map(s=>`<tr><td>${esc(s.id)}</td><td>${((s.end_frame-s.start_frame)/(j.technical?.fps||30)).toFixed(2)}s</td><td>${esc([s.subject,s.shot_size,s.action,s.direction,s.camera].join(' · '))}</td><td>${esc(matches[s.id]?.clip_id||'待补充')}</td></tr>`).join('')}</tbody></table></div>${(j.gaps||[]).map(g=>`<p class="note">${esc(g.shot_id)}：${esc(g.reason)}${g.search_error?' · '+esc(g.search_error):''}</p>`).join('')}<div style="display:flex;gap:12px;margin:20px 0"><button class="btn" type="button" id="refResume" ${busy?'disabled':''}>继续匹配与生成</button><button class="btn" type="button" id="refCancel" ${busy||j.status==='awaiting_materials'?'':'disabled'}>停止任务</button><button class="btn" type="button" id="refToLibrary">查看素材库与审批</button><a class="btn" href="http://127.0.0.1:8765/" target="_blank" rel="noopener">图片与视频扩展库 ↗</a></div>${(j.differences||[]).length?`<details open><summary>待验收与差异</summary><ul>${j.differences.map(d=>`<li class="note">${esc(d)}</li>`).join('')}</ul></details>`:''}${j.report?`<p class="note">声音：${esc(j.report.audio)}</p><a class="btn" href="/reference-files/${esc(j.id)}/acceptance.json" download="acceptance.json">下载验收记录</a>`:''}`;
+ $('refJob').insertAdjacentHTML('beforeend',refLegacyJobs(j));
+ $('refResume').onclick=()=>refResume();$('refCancel').onclick=async()=>{try{const data=await refApi('/api/reference/cancel',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:refId})});refRender(data)}catch(e){refMessage(e.message)}};$('refToLibrary').onclick=()=>{setView('assets');if(typeof mlTab==='function')mlTab('pending')};
+ const previous=$('refPlayers').dataset.job;
+ if(previous!==j.id||$('refPlayers').dataset.output!==(j.output_url||'')){
+  $('refPlayers').dataset.job=j.id;$('refPlayers').dataset.output=j.output_url||'';
+  $('refPlayers').innerHTML=`<p class="note">参考视频</p><video controls preload="metadata" src="${esc(j.reference_url)}" style="width:100%;max-height:350px;background:#111;border-radius:8px"></video>${j.output_url?`<p class="note">复刻预览 · 尚未人工验收</p><video controls preload="metadata" src="${esc(j.output_url)}" style="width:100%;max-height:350px;background:#111;border-radius:8px"></video><p><a class="btn primary" href="${esc(j.output_url)}" download="replica-preview.mp4">下载预览视频</a></p>`:'<p class="empty">完成解析与素材匹配后，生成视频将在这里显示。</p>'}`;
+ }
+ $('refEditorWrap').hidden=!j.analysis;$('refSave').disabled=busy;
+ if(j.analysis&&document.activeElement!==$('refEditor')&&$('refEditor').dataset.job!==j.id){$('refEditor').value=JSON.stringify(j.analysis,null,2);$('refEditor').dataset.job=j.id}
+ $('refImportGo').disabled=busy||refSubmitting;
+}
+async function refOpen(id){if(!id)return;refId=id;try{const j=await refApi('/api/reference/job?id='+encodeURIComponent(id));if(refId===id)refRender(j)}catch(e){refMessage(e.message)}}
+async function refResume(analysis){if(!refId)return;try{const data=await refApi('/api/reference/resume',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:refId,...(analysis?{analysis}:{})})});refRender(data);refMessage('任务已继续');await refList()}catch(e){refMessage(e.message)}}
+$('refRefresh').onclick=async()=>{try{await refList();await refOpen(refId)}catch(e){refMessage(e.message)}};
+$('refSave').onclick=()=>{try{refResume(JSON.parse($('refEditor').value))}catch(e){refMessage('解析结果不是有效 JSON，请检查后再保存')}};
+$('refImportForm').onsubmit=async e=>{
+ e.preventDefault();if(refSubmitting||!STUDIO||HOSTED)return;const f=$('refFile').files?.[0];if(!f)return;
+ if(f.size>100*1024*1024){refMessage('视频超过100MB，请先压缩或截取');return}
+ if(!/\.(mp4|mov|m4v)$/i.test(f.name)){refMessage('请选择 MP4、MOV 或 M4V');return}
+ refSubmitting=true;$('refImportGo').disabled=true;refMessage('正在上传参考视频，请保持页面开启…');
+ try{const j=await refApi('/api/reference/import',{method:'POST',headers:{'Content-Type':f.type||'application/octet-stream','X-File-Name':encodeURIComponent(f.name)},body:f});refId=j.id;refRender(j);refMessage('导入成功，正在按参考复刻流程处理');await refList()}catch(error){refMessage(error.message)}finally{refSubmitting=false;$('refImportGo').disabled=!!refCurrent?.busy}
+};
+if(STUDIO&&!HOSTED){
+ refConfigLoad().catch(e=>refMessage(e.message));
+ refList().catch(e=>refMessage(e.message));
+ setInterval(async()=>{if(refPolling||!refId||$('referenceView').hidden)return;refPolling=true;try{await refOpen(refId)}finally{refPolling=false}},2500);
+}else{$('refImportGo').disabled=true;$('refConfig').textContent='导入与生成请在本地工作台使用';$('refImageSearch').textContent='图片与视频搜索状态请在本地工作台查看'}
 </script>
 </body>
 </html>

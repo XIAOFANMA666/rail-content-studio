@@ -75,7 +75,12 @@ def models_in_use():
 
 def extra_params(base_url):
     """各家特有的参数。DeepSeek 要显式关掉思考模式才会直接出 JSON；别家不认这个参数，所以不发。"""
-    return {"thinking": {"type": "disabled"}} if "deepseek" in (urlparse(base_url).hostname or "") else {}
+    host = urlparse(base_url).hostname or ""
+    if "deepseek" in host:
+        return {"thinking": {"type": "disabled"}}
+    if "dashscope" in host:
+        return {"enable_thinking": False}
+    return {}
 
 
 def script_json(system, user, temperature=0.9):

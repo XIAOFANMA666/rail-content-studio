@@ -1,0 +1,4 @@
+interface:
+  display_name: "参考视频逐镜头复刻"
+  short_description: "拆解参考视频，用轨道素材库匹配镜头，按原时长和字幕声音规格制作并核验"
+  default_prompt: "使用 $replicate-reference-video 拆解参考视频，先查旧素材库已审片段和轨道现有素材，按有限搜索策略补充缺口，保留完整分镜约束与真实审批，再按参考时长、字幕和声音规格制作视频及差异清单。"

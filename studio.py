@@ -14,6 +14,9 @@ import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import unquote, urlparse
 
+# Make project-local video executables available to all existing pipeline tools.
+os.environ['PATH'] = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.venv', 'bin') + os.pathsep + os.environ.get('PATH', '')
+
 import llm
 import script_store
 import script_edit
@@ -21,6 +24,7 @@ import roughcut_export
 import topic_feed
 import video_trends
 import media_http
+import reference_http
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(ROOT, "output")
@@ -94,6 +98,8 @@ class H(BaseHTTPRequestHandler):
         return json.loads(self.rfile.read(n) or b"{}")
 
     def do_GET(self):
+        if reference_http.handle_get(self, ROOT, OUT):
+            return
         if media_http.handle_get(self, ROOT, OUT):
             return
         path = unquote(urlparse(self.path).path)
@@ -153,6 +159,8 @@ class H(BaseHTTPRequestHandler):
         self.wfile.write(data)
 
     def do_POST(self):
+        if reference_http.handle_post(self, ROOT, OUT, PORT):
+            return
         if media_http.handle_post(self, ROOT, OUT, PORT):
             return
         path = urlparse(self.path).path

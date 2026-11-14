@@ -1,0 +1,103 @@
+{
+  "schema": "reference-material-search-policy/v1",
+  "policy_id": "replicate-reference-video/material-search",
+  "version": 1,
+  "skill_name": "replicate-reference-video",
+  "skill_summary": "先查旧素材库和现有已审素材；按完整分镜语义、准确时长与最终画幅匹配。短英文词仅用于召回，必须实看片段验证全部条件；动态图像需求只用视频，不伪造审批。",
+  "inventory_order": [
+    "legacy_approved",
+    "project_approved",
+    "project_historical"
+  ],
+  "external_provider_order": [
+    "legacy_agent",
+    "configured_project_provider"
+  ],
+  "max_external_tasks_per_shot": 2,
+  "max_legacy_agent_rounds_per_task": 3,
+  "max_concurrent_tasks": 2,
+  "poll_interval_seconds": 3,
+  "max_query_variants": 3,
+  "short_query_max_words": 6,
+  "max_candidates_per_task": 20,
+  "max_auto_analyze_per_task": 5,
+  "source_orientation": "any_crop_verified",
+  "default_kind": "video",
+  "image_requires_explicit_static_requirement": true,
+  "purpose": "internal",
+  "network_retry": {
+    "max_retries": 3,
+    "base_delay_seconds": 15,
+    "multiplier": 2,
+    "max_delay_seconds": 120,
+    "max_total_wait_seconds": 1800,
+    "respect_retry_after": true,
+    "respect_cooldown_until": true,
+    "resume_existing_task": true,
+    "resume_method": "POST",
+    "resume_endpoint": "/api/commons/resume-search",
+    "retryable_http_statuses": [
+      429,
+      502,
+      503,
+      504
+    ],
+    "server_wait_is_minimum": true
+  },
+  "deduplication": {
+    "algorithm": "sha256",
+    "canonical_json": "utf8_sorted_keys_compact_allow_nan_false",
+    "history_key": "request_fingerprint",
+    "persist_before_submit": true,
+    "reuse_all_recorded_tasks": true,
+    "reconcile_unknown_submission_before_retry": true,
+    "second_task_requires": "terminal_no_match_and_revised_query",
+    "network_retry_creates_new_task": false
+  },
+  "request_limits": {
+    "query_chars": 1000,
+    "required_chars": 500,
+    "keywords_chars": 155,
+    "place_chars": 100,
+    "max_duration_seconds": 180
+  },
+  "post_validation": {
+    "required_fields": [
+      "subject",
+      "action",
+      "shot_size",
+      "scene",
+      "direction",
+      "camera",
+      "composition",
+      "duration",
+      "target_crop",
+      "place",
+      "media_type",
+      "rights",
+      "approval"
+    ],
+    "motion_rules_apply_to": "video",
+    "image_duration_basis": "timeline_exposure_frames",
+    "image_hold_requires_explicit_static_requirement": true,
+    "continuous_interval_required": true,
+    "normal_speed": true,
+    "allow_loop": false,
+    "allow_freeze": false,
+    "allow_mirror": false,
+    "source_orientation_is_hard_filter": false,
+    "validate_after_crop": true,
+    "tags_are_evidence": false,
+    "approval_may_be_inferred": false
+  },
+  "outcomes": {
+    "no_results": "A successful completed search returned zero candidates and no provider/network error.",
+    "no_match": "Candidates exist but actual continuous-clip validation rejects all hard constraints.",
+    "failed": "A provider, network, configuration, decoding or validation operation failed; retain error and task identity.",
+    "rate_limited": "Wait until max(exponential delay, Retry-After, cooldown_until); resume the same task within retry budget.",
+    "pending_approval": "A candidate meets content checks but no valid approval has been recorded.",
+    "matched": "Actual interval, final crop, media type, rights and current approval all pass."
+  },
+  "task_budget_scope": "complete_semantic_plan",
+  "historical_incomplete_requests": "retain_candidates_and_source_cooldowns_without_consuming_current_plan_budget"
+}

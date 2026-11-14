@@ -1,0 +1,4 @@
+data/
+search-agent.local.json
+.venv/
+__pycache__/

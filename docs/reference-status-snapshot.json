@@ -1,0 +1,134 @@
+{
+  "observed_at": "2026-11-14T13:58:25.675296+00:00",
+  "reference_job": "565375bced494f159620478352f26e88",
+  "reference_sha256": "64dbb2109a8937a443c757ab52878c8fdc1803b6df5f54df012d5e38a00ca06e",
+  "shots": 32,
+  "video_gaps": 31,
+  "video_matches": [
+    "s14"
+  ],
+  "full_video_exists": false,
+  "image_batch_finished": false,
+  "image_tasks": [
+    {
+      "shot": "s01",
+      "task_id": 85,
+      "state": "partial",
+      "source_records": 3
+    },
+    {
+      "shot": "s02",
+      "task_id": 86,
+      "state": "done",
+      "source_records": 4
+    },
+    {
+      "shot": "s03",
+      "task_id": 87,
+      "state": "partial",
+      "source_records": 2
+    },
+    {
+      "shot": "s04",
+      "task_id": 88,
+      "state": "done",
+      "source_records": 4
+    },
+    {
+      "shot": "s05",
+      "task_id": 89,
+      "state": "done",
+      "source_records": 4
+    },
+    {
+      "shot": "s06",
+      "task_id": 90,
+      "state": "done",
+      "source_records": 4
+    },
+    {
+      "shot": "s07",
+      "task_id": 91,
+      "state": "done",
+      "source_records": 0
+    },
+    {
+      "shot": "s08",
+      "task_id": 92,
+      "state": "done",
+      "source_records": 0
+    },
+    {
+      "shot": "s09",
+      "task_id": 93,
+      "state": "done",
+      "source_records": 0
+    },
+    {
+      "shot": "s10",
+      "task_id": 94,
+      "state": "done",
+      "source_records": 4
+    },
+    {
+      "shot": "s11",
+      "task_id": 95,
+      "state": "done",
+      "source_records": 4
+    },
+    {
+      "shot": "s12",
+      "task_id": 96,
+      "state": "done",
+      "source_records": 4
+    },
+    {
+      "shot": "s13",
+      "task_id": 97,
+      "state": "done",
+      "source_records": 4
+    },
+    {
+      "shot": "s14",
+      "task_id": 98,
+      "state": "done",
+      "source_records": 0
+    },
+    {
+      "shot": "s15",
+      "task_id": 99,
+      "state": "done",
+      "source_records": 4
+    },
+    {
+      "shot": "s16",
+      "task_id": 100,
+      "state": "done",
+      "source_records": 4
+    },
+    {
+      "shot": "s17",
+      "task_id": 101,
+      "state": "partial",
+      "source_records": 4
+    },
+    {
+      "shot": "s18",
+      "task_id": 102,
+      "state": "done",
+      "source_records": 4
+    },
+    {
+      "shot": "s19",
+      "task_id": 103,
+      "state": "failed",
+      "source_records": 0
+    },
+    {
+      "shot": "s20",
+      "task_id": 104,
+      "state": "queued",
+      "source_records": 0
+    }
+  ]
+}

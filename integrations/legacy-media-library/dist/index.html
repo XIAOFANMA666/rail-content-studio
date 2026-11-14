@@ -1,0 +1,59 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>镜头库 · 本地素材管理</title><link rel="stylesheet" href="/style.css">
+<header><button class="brand" data-go="home"><b>◈</b> 镜头库 <small>火车票短视频</small></button><button data-go="review" class="review-link">待审核 <span id="count">0</span></button></header>
+<main>
+<nav id="task-nav" aria-label="素材工作区" hidden><button data-go="home">← 首页</button><button data-go="import">导入已有素材</button><button data-go="library">按脚本找镜头</button><button data-go="web">网上找素材</button></nav>
+<section id="home">
+<div class="hero"><div class="eyebrow">MEDIA WORKSPACE</div><h1>你现在想做什么？</h1><p>从一个任务开始，完成后直接进入下一步。</p></div>
+<div class="entry-grid">
+<button class="entry" data-go="import"><span>01 · 本地导入</span><strong>导入已有素材</strong><small>上传图片和视频，自动生成描述与标签。</small><b aria-hidden="true">→</b></button>
+<button class="entry" data-go="library"><span>02 · 库内搜索</span><strong>按脚本找镜头</strong><small>贴一句脚本，从已入库素材里找可用画面。</small><b aria-hidden="true">→</b></button>
+<button class="entry" data-go="web"><span>03 · 网上采集</span><strong>网上找素材</strong><small>到 Wikimedia Commons 找候选，集中送审。</small><b aria-hidden="true">→</b></button>
+</div>
+</section>
+<section id="import" hidden>
+<form id="upload" class="panel"><h2>批量导入</h2><p>图片与短视频 · 每批最多 20 个文件 · 单文件最多 50 MB</p>
+<label class="drop">选择要导入的文件<input name="files" type="file" multiple required accept=".jpg,.jpeg,.png,.webp,.heic,.mp4,.mov,.m4v"></label>
+<label>这批素材从哪来<input name="origin" placeholder="原路径、网址或实拍说明"></label><details><summary>导入人</summary><label>姓名<input name="uploader" placeholder="例如：英国组 / 小李"></label></details>
+<button class="primary">上传并处理</button><p id="upload-message" role="status"></p></form>
+<div id="batch-result" aria-live="polite"></div><details class="panel"><summary>导入批次历史</summary><div id="batch-history"></div></details><details class="panel"><summary>全部导入记录</summary><div id="jobs"></div></details>
+</section>
+<section id="review" hidden><div class="toolbar"><h2>人工审核队列</h2><select id="review-filter" aria-label="审核状态"><option value="">全部审核状态</option><option value="pending">待审核</option><option value="hold">待补证</option><option value="rejected">已拒绝</option></select><select id="review-source" aria-label="审核来源"><option value="">全部来源</option><option value="commons">Wikimedia Commons</option></select></div><div id="review-scope"></div><div id="queue" class="grid"></div><div id="commons-leads"></div></section>
+<section id="library" hidden><div class="panel" id="script-search"><h2>按脚本找镜头</h2>
+<form id="shot-search">
+<label>脚本片段<textarea name="script" required maxlength="1000" placeholder="例如：早上醒来，窗外就是苏格兰高地的湖泊。"></textarea></label>
+<div class="search-main"><label>用途<select name="purpose"><option value="internal">内部选材</option><option value="publish">对外发布</option></select></label><button class="primary">查找可用镜头</button></div>
+<details id="search-options"><summary>更多条件</summary><div class="fields">
+<label>已核实地点<input name="location" maxlength="100" placeholder="可覆盖自动识别的地点"></label>
+<label>线路<input name="line" maxlength="100" placeholder="例如 West Highland Line"></label>
+<label>画幅<select name="orientation"><option value="">自动 / 不限</option><option>横屏</option><option>竖屏</option><option>方形</option></select></label>
+<label>最短视频时长（秒）<input name="seconds" type="number" min="0" max="3600" step="any" placeholder="留空时图片也可入选"></label>
+<label>必需特征<input name="required" maxlength="650" placeholder="用逗号分隔，例如 车窗视角"></label>
+</div>
+<label><input type="checkbox" name="infer" checked> 把脚本里识别到的地点、线路和画幅设为必需条件</label>
+</details>
+</form>
+<div id="shot-results" aria-live="polite"></div></div>
+<details class="panel" id="browse-library"><summary>浏览正式素材库</summary><label>搜索素材<input id="query" placeholder="搜描述、地点、线路或标签"></label><div id="categories" class="tags"></div><div id="results" class="grid"></div></details></section>
+<section id="web" hidden><form id="commons-form" class="panel"><h2>网上找素材</h2>
+<label>想找什么画面？<textarea name="script" required maxlength="1000" placeholder="例如：穿过 Glenfinnan 高架桥的蒸汽列车"></textarea></label>
+<div id="web-context"></div>
+<div class="fields"><label><input type="checkbox" name="videoOnly"> 仅视频</label>
+<label>最短视频时长（秒）<input name="seconds" type="number" min="0" max="3600" step="any" placeholder="可选"></label></div>
+<details><summary>搜索设置</summary><div class="fields">
+<label>搜索方式<select name="mode"><option value="fixed">固定搜索</option><option value="agent">Agent 搜索</option></select></label><label>英文搜索词<input name="keywords" maxlength="180" placeholder="留空时按画面需求生成"></label>
+<label>用途<select name="purpose"><option value="internal">内部选材</option><option value="publish">对外发布</option></select></label></div></details>
+<p>关键词会发送给 Wikimedia Commons。使用 Agent 搜索时，脚本、条件和候选摘要也会发送给所配置的模型。</p><p id="agent-status" hidden></p>
+<button class="primary">找候选</button><p id="web-message" role="status"></p>
+</form><details class="panel"><summary>手动提交视频来源链接</summary>
+<form id="video-link-form">
+<label>视频来源页<input type="url" name="url" required maxlength="2000" placeholder="https://"></label>
+<div class="fields"><label>标题<input name="title" maxlength="200"></label><label>作者或权利方<input name="author" maxlength="200"></label></div>
+<div class="fields"><label>授权说明<input name="license" maxlength="300"></label><label>授权条款链接<input type="url" name="licenseUrl" maxlength="2000"></label></div>
+<label>画面或用途备注<input name="note" maxlength="1000"></label>
+<button>提交到审核队列</button><p id="video-link-message" role="status"></p>
+</form></details><div id="commons-jobs"></div></section>
+<p id="notice" role="status"></p>
+</main>
+<dialog id="detail"><div id="content"></div></dialog>
+<script src="/app.js"></script></html>
