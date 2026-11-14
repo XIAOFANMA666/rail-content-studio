@@ -193,7 +193,7 @@ def place_conflict(line_places, clip_places):
     return False
 
 
-def retrieve(line, clips, durations):
+def retrieve(line, clips, durations, min_clip_s=0):
     need = line.get("tags") or concepts_of(line["en"])
     places = line.get("places") if line.get("places") is not None else places_of(line["en"])
     ranked = []
@@ -205,6 +205,8 @@ def retrieve(line, clips, durations):
         excluded = None
         if place_conflict(places, c.get("places", [])):
             excluded = f"地点不符：画面是{c['location']}，脚本说的是{'、'.join(places)}"
+        elif durations[c['id']] + .001 < min_clip_s:
+            excluded = f"时长不足：素材 {durations[c['id']]:.2f} 秒，镜头需要 {min_clip_s:.2f} 秒"
         loc_hit = 1 if (places and set(places) & set(c.get("places", []))) else 0
         ranked.append({"id": c["id"], "title": c["title"], "coverage": round(coverage, 2), "matched": matched,
                        "quality": c["quality"], "issues": c["issues"], "excluded": excluded, "loc_hit": loc_hit,
@@ -328,6 +330,8 @@ def redraft(swaps_path, draft_root):
     result = json.load(open(os.path.join(OUT, "result.json"), encoding="utf-8"))
     swaps = json.load(open(swaps_path, encoding="utf-8"))
     lib, skill = load("library.json"), result["skill"]
+    active = {c['id'] for c in lib['clips']}
+    lib = {**lib, 'clips': media_library.redraft_materials(ROOT, result, lib)}
     clips = {c["id"]: c for c in lib["clips"]}
     n = 0
     for si, by_shot in swaps.items():
@@ -337,7 +341,7 @@ def redraft(swaps_path, draft_root):
             if shot["clip"] == cid:
                 continue
             cand = next((c for c in seg["candidates"] if c["id"] == cid), None)
-            if cid not in clips:
+            if cid not in active:
                 raise ValueError("素材已停用或缺失，请刷新后重新选择")
             c = clips[cid]
             shot.update({"clip": cid, "title": c["title"], "quality": c["quality"], "issues": c["issues"],
@@ -499,14 +503,20 @@ def main():
     plan = []
     n_excluded = 0
     for i, ln in enumerate(lines):
-        need, places, top, bad = retrieve(ln, clips, durations)
+        n_need = int(min(3, max(1, -(-ln['seg_s'] // skill['max_shot_s']))))
+        min_clip_s = ln['seg_s'] / n_need
+        need, places, top, bad = retrieve(ln, clips, durations, min_clip_s)
         n_excluded += len(bad)
         seg = {"i": i, "en": ln["en"], "zh": ln.get("zh", ""), "role": ln.get("role", ""), "start": ln["start"], "dur": ln["seg_s"],
                "voice_s": ln["voice_s"], "audio": ln["audio"], "need": need, "places": places,
                "candidates": top + bad, "shots": [], "stickers": [], "gap": None, "subtitle": wrap(ln["en"], skill["subtitle"]["max_chars_per_line"])}
         if not top:
             seg["gap"] = f"素材缺口：素材库里没有和「{'、'.join(need) or '这句'}」相关的镜头，先用空镜占位，需要补拍或换素材"
-            fallback = sorted([c for c in clips if not place_conflict(places, c.get("places", []))], key=lambda c: -c["quality"])[0]
+            fallbacks = [c for c in clips if not place_conflict(places, c.get("places", []))
+                         and durations[c['id']] + .001 >= min_clip_s]
+            if not fallbacks:
+                raise ValueError('没有时长足够且地点不冲突的素材，请先补充本句素材后重新制作')
+            fallback = max(fallbacks, key=lambda c: c['quality'])
             top = [{"id": fallback["id"], "title": fallback["title"], "coverage": 0, "matched": [], "quality": fallback["quality"],
                     "issues": fallback["issues"], "excluded": None, "loc_hit": 0, "clip_s": round(durations[fallback["id"]], 2)}]
             seg["candidates"] = top + bad
@@ -527,7 +537,10 @@ def main():
             if cand not in picked and not cand["issues"]:
                 picked.append(cand)
         if len(picked) < n_need and not seg["gap"]:
-            seg["gap"] = f"素材缺口：和「{'、'.join(need)}」相关的镜头不够，这句只能用 {len(picked)} 个镜头撑 {seg['dur']:.1f} 秒"
+            seg["gap"] = f"素材缺口：只有 {len(picked)} 个不同镜头，已重复编排以覆盖配音，请补充素材"
+        if len(picked) < n_need:
+            original = list(picked)
+            picked.extend(original[k % len(original)] for k in range(n_need - len(picked)))
         each = round(seg["dur"] / len(picked), 3)
         parts = [(c, seg["start"] + k * each, each if k < len(picked) - 1 else round(seg["dur"] - each * (len(picked) - 1), 3))
                  for k, c in enumerate(picked)]
@@ -549,7 +562,9 @@ def main():
             st, d, kind = seg["start"] + 0.2, seg["dur"] - 0.2, "结尾钩子"
         else:
             st, d, kind = seg["start"] + skill["benefit_sticker_offset_s"], skill["benefit_sticker_len_s"], "利益点贴纸"
-        seg["stickers"].append({"kind": kind, "text": ln["on_screen"], "start": round(st, 3), "dur": round(d, 3)})
+        d = min(d, round(seg['start'] + seg['dur'] - st, 3))
+        if d > 0:
+            seg["stickers"].append({"kind": kind, "text": ln["on_screen"], "start": round(st, 3), "dur": round(d, 3)})
 
     # 规则检查（Demo 规则库：英国 × TikTok）
     hits = check_rules(plan, skill)

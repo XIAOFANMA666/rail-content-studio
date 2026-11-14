@@ -1183,7 +1183,7 @@ function mlTasksRender(){
  ' <span class="band">'+esc(mlLabels[t.status]||t.status)+'</span></h3><p>'+esc(t.progress||'')+'</p><p>'+esc(t.created_at||'')+
  ' · '+(t.candidate_ids||[]).length+' 条候选 · 已处理 '+(t.processed||0)+'</p>'+
  (t.queries?'<p>搜索词：'+esc(t.queries.join(' / '))+' · '+esc(t.planning||'')+'</p>':'')+
- ((t.errors||[]).length?'<pre>'+esc(t.errors.map(e=>e.id+'：'+e.message).join('\n'))+'</pre>':'')+
+ ((t.errors||[]).length?'<pre>'+esc(t.errors.map(e=>(e.id||e.query||'任务')+'：'+e.message).join('\n'))+'</pre>':'')+
  '<button class="btn small" type="button" data-ml-task-candidates="'+esc(t.id)+'">查看候选</button>'+
  (['running','queued'].includes(t.status)?'<button class="btn small" data-ml-cancel="'+esc(t.id)+'" type="button">取消</button>':
  '<button class="btn small" data-ml-retry="'+esc(t.id)+'" type="button">重试任务</button>')+

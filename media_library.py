@@ -141,6 +141,18 @@ def merge_library(root, out, legacy):
     return {**legacy, "clips": legacy["clips"] + approved_clips(root, out)}
 
 
+def redraft_materials(root, result, library):
+    """Retain only previously used snapshots when an asset is later disabled."""
+    clips = {c['id']: c for c in library['clips']}
+    used = {s['clip'] for segment in result['segments'] for s in segment['shots']}
+    for cid in used - clips.keys():
+        snapshot = result.get('clips', {}).get(cid)
+        if not snapshot or not local_path(root, snapshot.get('file', '')).is_file():
+            raise MediaError('旧工程引用的素材已缺失，请补齐文件后重试')
+        clips[cid] = {**snapshot, 'id': cid}
+    return list(clips.values())
+
+
 def safe_url(value, kind="media"):
     if not isinstance(value, str):
         raise MediaError("素材来源地址无效")
@@ -469,8 +481,13 @@ class Service:
             if cached:
                 result = json.loads(cached["data"])
             else:
-                result = fetch_json("https://api.pexels.com/v1/videos/search?" + urlencode(params),
-                                    {"Authorization": llm.load_env()["PEXELS_API_KEY"]})
+                try:
+                    result = fetch_json("https://api.pexels.com/v1/videos/search?" + urlencode(params),
+                                        {"Authorization": llm.load_env()["PEXELS_API_KEY"]})
+                except MediaError as exc:
+                    t = self.task(tid)
+                    self.task_update(tid, errors=t['errors'] + [{'query': query, 'message': str(exc)}])
+                    continue
                 with self.db() as db:
                     db.execute("INSERT OR REPLACE INTO cache VALUES(?,?,?)", (key, time.time(), encode(result)))
                     db.execute("DELETE FROM cache WHERE saved<?", (time.time() - 86400,))
@@ -519,6 +536,7 @@ class Service:
                         db.execute("INSERT INTO media VALUES(?,?,?,?,?,?,?)",
                                    (mid, "Pexels", sid, "candidate", 1, encode(m), now()))
                 ids.append(mid)
+            self.task_update(tid, candidate_ids=list(ids))
             if len(ids) >= 20:
                 break
         self.task_update(tid, candidate_ids=ids, progress="取得 %d 条候选" % len(ids))
@@ -526,7 +544,7 @@ class Service:
             for mid in ids[:5]:
                 self.check(tid)
                 try:
-                    self.analyze(mid, tid)
+                    self.analyze(mid, tid, request=request)
                 except MediaError as exc:
                     if self.task(tid)["status"] == "cancelled":
                         raise
@@ -534,19 +552,26 @@ class Service:
                     self.task_update(tid, errors=t["errors"] + [{"id": mid, "message": str(exc)}])
                 self.task_update(tid, processed=self.task(tid)["processed"] + 1)
 
-    def analyze(self, mid, tid):
+    def analyze(self, mid, tid, request=None):
         with self.mutex:
             m = self.media(mid)
             if m["status"] in ("approved", "disabled", "rejected"):
                 raise MediaError("素材已审批，跳过分析")
             self.check(tid)
+            if request is not None:
+                m['request'] = request
         self.task_update(tid, progress="下载和分析 " + mid)
         directory = self.base / "candidates" / mid
         directory.mkdir(parents=True, exist_ok=True)
         video = directory / "source.mp4"
         if not video.is_file():
             download(m["download_url"], video, lambda: self.check(tid))
-        technical = probe(video)
+        try:
+            technical = probe(video)
+        except MediaError:
+            # An invalid cached download must not poison every later retry.
+            video.unlink(missing_ok=True)
+            raise
         h = hashlib.sha256()
         with video.open("rb") as stream:
             for chunk in iter(lambda: stream.read(1024 * 1024), b""):

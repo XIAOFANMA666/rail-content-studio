@@ -112,6 +112,31 @@ class MediaLibraryTests(unittest.TestCase):
         with self.assertRaises(ml.MediaError):
             media_http.validate_swaps(self.root, self.out, {}, {"0": {"0": m["id"]}})
 
+    def test_disabled_asset_remains_available_only_in_existing_timeline(self):
+        self.seed()
+        self.service.decide(self.approval())
+        clip = ml.approved_clips(self.root, self.out)[0]
+        m = self.service.media(clip['id'])
+        self.service.decide({'id': m['id'], 'revision': m['revision'], 'action': 'disable',
+                             'actor': '测试人', 'note': '停用'})
+        snapshot = {'segments': [{'shots': [{'clip': clip['id']}]}], 'clips': {clip['id']: clip}}
+        materials = ml.redraft_materials(self.root, snapshot, {'clips': []})
+        self.assertEqual(materials[0]['id'], clip['id'])
+        unused = {'segments': [], 'clips': snapshot['clips']}
+        self.assertEqual(ml.redraft_materials(self.root, unused, {'clips': []}), [])
+        self.assertEqual(ml.approved_clips(self.root, self.out), [])
+
+    def test_recall_excludes_material_shorter_than_required_shot(self):
+        import pipeline
+        clips = [{'id': 'short', 'title': 'short', 'tags': ['train'], 'places': [],
+                  'location': '未知', 'quality': 5, 'issues': []},
+                 {'id': 'long', 'title': 'long', 'tags': ['train'], 'places': [],
+                  'location': '未知', 'quality': 3, 'issues': []}]
+        _, _, candidates, excluded = pipeline.retrieve({'en': 'train', 'tags': ['train']},
+                                                       clips, {'short': 1, 'long': 8}, 4)
+        self.assertEqual([c['id'] for c in candidates], ['long'])
+        self.assertIn('时长不足', excluded[0]['excluded'])
+
     def test_needs_info_and_reject_remain_outside_library(self):
         self.seed()
         m = self.service.decide({"id": "px123", "revision": 1, "action": "needs_info",
