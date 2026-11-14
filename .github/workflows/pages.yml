@@ -3,6 +3,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      regenerate:
+        description: Regenerate AI suggestions for the current batch
+        type: boolean
+        default: false
   schedule:
     # Apify collects at 09:00 Asia/Shanghai. Read the finished result at 09:15.
     - cron: '15 1 * * *'
@@ -40,13 +45,19 @@ jobs:
         continue-on-error: true
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          REGENERATE: ${{ inputs.regenerate }}
         run: |
           if [ -z "$DEEPSEEK_API_KEY" ]; then
             printf '%s\n' 'No DeepSeek credential configured; publishing collection as usual.'
             exit 0
           fi
           npm install --prefix "$RUNNER_TEMP/rail-harness" --no-audit --no-fund @deepseek-ai/dsh@0.2.2-rc.3
-          DSH_BIN="$RUNNER_TEMP/rail-harness/node_modules/.bin/dsh" python tools/generate_tiktok_ideas.py
+          export DSH_BIN="$RUNNER_TEMP/rail-harness/node_modules/.bin/dsh"
+          if [ "$REGENERATE" = 'true' ]; then
+            python tools/generate_tiktok_ideas.py --force
+          else
+            python tools/generate_tiktok_ideas.py
+          fi
       - name: Save public feed snapshot
         if: github.event_name != 'push'
         run: |
